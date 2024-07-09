@@ -44,3 +44,23 @@ kotlin {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+
+// Add a task to copy secret files
+tasks.named<JavaCompile>("compileJava") {
+    inputs.files(tasks.named("processResources"))
+}
+
+tasks.named<Copy>("processResources") {
+    dependsOn("copySecret")
+}
+
+tasks.register("copySecret", Copy::class) {
+    from("./server-profile-submodule")
+    include("application*.yml")
+    into("./src/main/resources/")
+}
+
+// Disable jar task
+tasks.named("jar") {
+    enabled = false
+}
