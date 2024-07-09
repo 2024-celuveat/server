@@ -1,0 +1,3 @@
+[submodule "server-profile-submodule"]
+	path = server-profile-submodule
+	url = https://github.com/2024-celuveat/server-profile-submodule.git
