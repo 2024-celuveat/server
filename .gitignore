@@ -28,6 +28,7 @@ out/
 
 ### NetBeans ###
 /nbproject/private/
+
 /nbbuild/
 /dist/
 /nbdist/
@@ -38,3 +39,5 @@ out/
 
 ### Kotlin ###
 .kotlin
+
+src/main/resources/application*
