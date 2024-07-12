@@ -2,6 +2,7 @@ package com.celuveat.member.adapter.out.persistence.entity
 
 import com.celuveat.common.annotation.Mapper
 import com.celuveat.member.domain.Member
+import com.celuveat.member.domain.SocialIdentifier
 
 @Mapper
 class MemberPersistenceMapper {
@@ -11,8 +12,8 @@ class MemberPersistenceMapper {
             id = member.id,
             nickname = member.nickname,
             profileImageUrl = member.profileImageUrl,
-            serverType = member.serverType,
-            oAuthId = member.oAuthId,
+            serverType = member.socialIdentifier.serverType,
+            oAuthId = member.socialIdentifier.oAuthId,
         )
     }
 
@@ -21,8 +22,10 @@ class MemberPersistenceMapper {
             id = memberJpaEntity.id,
             nickname = memberJpaEntity.nickname,
             profileImageUrl = memberJpaEntity.profileImageUrl,
-            serverType = memberJpaEntity.serverType,
-            oAuthId = memberJpaEntity.oAuthId,
+            socialIdentifier = SocialIdentifier(
+                serverType = memberJpaEntity.serverType,
+                oAuthId = memberJpaEntity.oAuthId,
+            )
         )
     }
 }

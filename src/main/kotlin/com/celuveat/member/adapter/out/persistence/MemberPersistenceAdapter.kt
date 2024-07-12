@@ -6,7 +6,7 @@ import com.celuveat.member.adapter.out.persistence.entity.MemberPersistenceMappe
 import com.celuveat.member.application.port.out.FindMemberPort
 import com.celuveat.member.application.port.out.SaveMemberPort
 import com.celuveat.member.domain.Member
-import com.celuveat.member.domain.OAuthServerType
+import com.celuveat.member.domain.SocialIdentifier
 
 @Adapter
 class MemberPersistenceAdapter(
@@ -14,10 +14,11 @@ class MemberPersistenceAdapter(
     private val memberPersistenceMapper: MemberPersistenceMapper,
 ) : SaveMemberPort, FindMemberPort {
 
-    override fun findMemberByOAuthIdAndServerType(oAuthId: String, serverType: OAuthServerType): Member? {
-        return memberJpaRepository.findMemberByOAuthIdAndServerType(oAuthId, serverType)?.let {
-            memberPersistenceMapper.toDomain(it)
-        }
+    override fun findBySocialIdentifier(socialIdentifier: SocialIdentifier): Member? {
+        return memberJpaRepository.findMemberByOAuthIdAndServerType(
+            socialIdentifier.oAuthId,
+            socialIdentifier.serverType
+        )?.let { memberPersistenceMapper.toDomain(it) }
     }
 
     override fun save(member: Member): Member {

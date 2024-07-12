@@ -18,7 +18,7 @@ class OAuthService(
     @Transactional
     override fun login(serverType: OAuthServerType, authCode: String): Long {
         val member = fetchOAuthMemberPort.fetchMember(serverType, authCode)
-        val signInMember = findMemberPort.findMemberByOAuthIdAndServerType(member.oAuthId, serverType)
+        val signInMember = findMemberPort.findBySocialIdentifier(member.socialIdentifier)
             ?: saveMemberPort.save(member)
         return signInMember.id
     }

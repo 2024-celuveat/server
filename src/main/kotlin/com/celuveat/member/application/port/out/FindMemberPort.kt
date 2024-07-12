@@ -1,9 +1,9 @@
 package com.celuveat.member.application.port.out
 
 import com.celuveat.member.domain.Member
-import com.celuveat.member.domain.OAuthServerType
+import com.celuveat.member.domain.SocialIdentifier
 
 interface FindMemberPort {
 
-    fun findMemberByOAuthIdAndServerType(oAuthId: String, serverType: OAuthServerType): Member?
+    fun findBySocialIdentifier(socialIdentifier: SocialIdentifier): Member?
 }

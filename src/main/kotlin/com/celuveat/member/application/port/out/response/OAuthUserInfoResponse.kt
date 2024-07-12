@@ -2,6 +2,7 @@ package com.celuveat.member.application.port.out.response
 
 import com.celuveat.member.domain.Member
 import com.celuveat.member.domain.OAuthServerType
+import com.celuveat.member.domain.SocialIdentifier
 
 data class OAuthUserInfoResponse(
     val id: String,
@@ -14,8 +15,10 @@ data class OAuthUserInfoResponse(
         return Member(
             nickname = nickname,
             profileImageUrl = profileImage,
-            serverType = serverType,
-            oAuthId = id,
+            socialIdentifier = SocialIdentifier(
+                serverType = serverType,
+                oAuthId = id,
+            )
         )
     }
 }
