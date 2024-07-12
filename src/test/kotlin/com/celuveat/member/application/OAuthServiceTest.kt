@@ -1,70 +1,88 @@
 package com.celuveat.member.application
 
-import com.celuveat.common.application.ServiceTest
+import com.celuveat.member.application.port.out.FetchOAuthMemberPort
+import com.celuveat.member.application.port.out.FindMemberPort
+import com.celuveat.member.application.port.out.SaveMemberPort
 import com.celuveat.member.domain.Member
 import com.celuveat.member.domain.OAuthServerType
+import com.celuveat.support.fixtureMonkey
 import com.navercorp.fixturemonkey.kotlin.giveMeBuilder
 import com.navercorp.fixturemonkey.kotlin.set
+import io.kotest.core.spec.style.BehaviorSpec
+import io.kotest.core.test.TestCase
+import io.kotest.core.test.TestResult
 import io.kotest.matchers.shouldBe
+import io.mockk.clearAllMocks
 import io.mockk.every
+import io.mockk.mockk
+import io.mockk.unmockkAll
 import io.mockk.verify
 
-class OAuthServiceTest : ServiceTest() {
+class OAuthServiceTest : BehaviorSpec({
 
-    private val oAuthService = OAuthService(
-        fetchOAuthMemberPort = mocks.fetchOAuthMemberPort,
-        saveMemberPort = mocks.saveMemberPort,
-        findMemberPort = mocks.findMemberPort,
+    val saveMemberPort: SaveMemberPort = mockk()
+    val findMemberPort: FindMemberPort = mockk()
+    val fetchOAuthMemberPort: FetchOAuthMemberPort = mockk()
+
+    val oAuthService = OAuthService(
+        fetchOAuthMemberPort = fetchOAuthMemberPort,
+        saveMemberPort = saveMemberPort,
+        findMemberPort = findMemberPort
     )
 
-    init {
-        Given("소셜 로그인을 통해 회원가입할 때") {
-            val serverType = OAuthServerType.KAKAO
-            val authCode = "authCode"
-            val oAuthId = "oAuthId"
+    Given("소셜 로그인을 통해 회원가입할 때") {
 
-            val member = fixtureMonkey.giveMeBuilder<Member>()
-                .set(Member::id, 0L)
-                .set(Member::oAuthId, oAuthId)
-                .set(Member::serverType, serverType)
-                .sample()
-            val savedMember = member.copy(id = 1L)
+        val serverType = OAuthServerType.KAKAO
+        val authCode = "authCode"
+        val oAuthId = "oAuthId"
 
-            When("최초 회원인 경우") {
-                every { mocks.fetchOAuthMemberPort.fetchMember(serverType, authCode) } returns member
-                every { mocks.findMemberPort.findMemberByOAuthIdAndServerType(member.oAuthId, serverType) } returns null
-                every { mocks.saveMemberPort.save(member) } returns savedMember
+        val member = fixtureMonkey.giveMeBuilder<Member>()
+            .set(Member::id, 0L)
+            .set(Member::oAuthId, oAuthId)
+            .set(Member::serverType, serverType)
+            .sample()
+        val savedMember = member.copy(id = 1L)
 
-                val result = oAuthService.login(serverType, authCode)
+        When("최초 회원인 경우") {
+            every { fetchOAuthMemberPort.fetchMember(serverType, authCode) } returns member
+            every { findMemberPort.findMemberByOAuthIdAndServerType(member.oAuthId, serverType) } returns null
+            every { saveMemberPort.save(member) } returns savedMember
 
-                Then("회원가입이 완료된다") {
-                    result shouldBe 1L
+            val result = oAuthService.login(serverType, authCode)
 
-                    verify { mocks.fetchOAuthMemberPort.fetchMember(serverType, authCode) }
-                    verify { mocks.findMemberPort.findMemberByOAuthIdAndServerType(member.oAuthId, serverType) }
-                    verify { mocks.saveMemberPort.save(member) }
-                }
-            }
+            Then("회원가입이 완료된다") {
+                result shouldBe 1L
 
-            When("이미 가입된 회원인 경우") {
-                every { mocks.fetchOAuthMemberPort.fetchMember(serverType, authCode) } returns member
-                every {
-                    mocks.findMemberPort.findMemberByOAuthIdAndServerType(
-                        member.oAuthId,
-                        serverType
-                    )
-                } returns savedMember
-
-                val result = oAuthService.login(serverType, authCode)
-
-                Then("로그인이 완료된다") {
-                    result shouldBe savedMember.id
-
-                    verify { mocks.fetchOAuthMemberPort.fetchMember(serverType, authCode) }
-                    verify { mocks.findMemberPort.findMemberByOAuthIdAndServerType(member.oAuthId, serverType) }
-                    verify(exactly = 0) { mocks.saveMemberPort.save(member) }
-                }
+                verify { fetchOAuthMemberPort.fetchMember(serverType, authCode) }
+                verify { findMemberPort.findMemberByOAuthIdAndServerType(member.oAuthId, serverType) }
+                verify { saveMemberPort.save(member) }
             }
         }
+
+        When("이미 가입된 회원인 경우") {
+            every { fetchOAuthMemberPort.fetchMember(serverType, authCode) } returns member
+            every {
+                findMemberPort.findMemberByOAuthIdAndServerType(
+                    member.oAuthId,
+                    serverType
+                )
+            } returns savedMember
+
+            val result = oAuthService.login(serverType, authCode)
+
+            Then("로그인이 완료된다") {
+                result shouldBe savedMember.id
+
+                verify { fetchOAuthMemberPort.fetchMember(serverType, authCode) }
+                verify { findMemberPort.findMemberByOAuthIdAndServerType(member.oAuthId, serverType) }
+                verify(exactly = 0) { saveMemberPort.save(member) }
+            }
+        }
+    }
+}) {
+
+    override suspend fun afterEach(testCase: TestCase, result: TestResult) {
+        clearAllMocks()
+        unmockkAll()
     }
 }
