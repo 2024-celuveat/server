@@ -1,5 +1,5 @@
 package com.celuveat.member.domain
 
-enum class OAuthServerType {
+enum class SocialLoginType {
     KAKAO,
 }

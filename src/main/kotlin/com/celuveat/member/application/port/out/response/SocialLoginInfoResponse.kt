@@ -1,14 +1,14 @@
 package com.celuveat.member.application.port.out.response
 
 import com.celuveat.member.domain.Member
-import com.celuveat.member.domain.OAuthServerType
 import com.celuveat.member.domain.SocialIdentifier
+import com.celuveat.member.domain.SocialLoginType
 
-data class OAuthUserInfoResponse(
+data class SocialLoginInfoResponse(
     val id: String,
     val nickname: String,
     val profileImage: String,
-    val serverType: OAuthServerType,
+    val serverType: SocialLoginType,
 ) {
 
     fun toMember(): Member {

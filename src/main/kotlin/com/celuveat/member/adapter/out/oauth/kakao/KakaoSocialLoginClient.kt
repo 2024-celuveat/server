@@ -1,22 +1,22 @@
 package com.celuveat.member.adapter.out.oauth.kakao
 
-import com.celuveat.member.adapter.out.oauth.OAuthClient
-import com.celuveat.member.application.port.out.response.OAuthToken
-import com.celuveat.member.application.port.out.response.OAuthUserInfoResponse
-import com.celuveat.member.domain.OAuthServerType
+import com.celuveat.member.adapter.out.oauth.SocialLoginClient
+import com.celuveat.member.application.port.out.response.SocialLoginInfoResponse
+import com.celuveat.member.application.port.out.response.SocialLoginToken
+import com.celuveat.member.domain.SocialLoginType
 import org.springframework.stereotype.Component
 
 @Component
-class KakaoOAuthClient(
-    private val oAuthProperty: KakaoOAuthProperty,
+class KakaoSocialLoginClient(
+    private val oAuthProperty: KakaoSocialLoginProperty,
     private val kakaoApiClient: KakaoApiClient,
-) : OAuthClient {
+) : SocialLoginClient {
 
-    override fun matchSupportServer(serverType: OAuthServerType): Boolean {
-        return serverType == OAuthServerType.KAKAO
+    override fun matchSupportServer(serverType: SocialLoginType): Boolean {
+        return serverType == SocialLoginType.KAKAO
     }
 
-    override fun fetchAccessToken(authCode: String): OAuthToken {
+    override fun fetchAccessToken(authCode: String): SocialLoginToken {
         val tokenRequestBody = mapOf(
             "grant_type" to "authorization_code",
             "client_id" to oAuthProperty.clientId,
@@ -27,7 +27,7 @@ class KakaoOAuthClient(
         return kakaoApiClient.fetchToken(tokenRequestBody)
     }
 
-    override fun fetchUserInfo(accessToken: String): OAuthUserInfoResponse {
+    override fun fetchUserInfo(accessToken: String): SocialLoginInfoResponse {
         val kakaoOauthUserInfo = kakaoApiClient.fetchUserInfo("Bearer $accessToken")
         return kakaoOauthUserInfo.toOAuthUserInfoResponse()
     }
