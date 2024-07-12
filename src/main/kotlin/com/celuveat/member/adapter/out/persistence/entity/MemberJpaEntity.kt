@@ -1,6 +1,6 @@
 package com.celuveat.member.adapter.out.persistence.entity
 
-import com.celuveat.common.adapter.out.persistence.entity.BaseEntity
+import com.celuveat.common.adapter.out.persistence.entity.RootEntity
 import com.celuveat.member.domain.OAuthServerType
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
@@ -19,4 +19,9 @@ class MemberJpaEntity(
     @Enumerated(EnumType.STRING)
     val serverType: OAuthServerType,
     val oAuthId: String,
-) : BaseEntity()
+) : RootEntity<Long>() {
+
+    override fun id(): Long {
+        return this.id
+    }
+}
