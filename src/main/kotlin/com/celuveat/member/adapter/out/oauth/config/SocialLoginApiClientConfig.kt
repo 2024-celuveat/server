@@ -11,8 +11,7 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory
 
 
 @Configuration
-class OAuthApiClientInterfaceConfig(
-) {
+class SocialLoginApiClientConfig {
     private val log = LoggerFactory.getLogger(this.javaClass)!!
 
     @Bean

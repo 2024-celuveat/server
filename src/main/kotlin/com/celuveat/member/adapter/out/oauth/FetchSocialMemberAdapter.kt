@@ -10,15 +10,15 @@ class FetchSocialMemberAdapter(
     private val socialLoginClients: Set<SocialLoginClient>,
 ) : FetchSocialMemberPort {
 
-    override fun fetchMember(serverType: SocialLoginType, authCode: String): Member {
-        val oAuthClient = getOAuthClient(serverType)
-        val fetchToken = oAuthClient.fetchAccessToken(authCode)
-        val fetchUserInfo = oAuthClient.fetchUserInfo(fetchToken.accessToken)
-        return fetchUserInfo.toMember()
+    override fun fetchMember(socialLoginType: SocialLoginType, authCode: String): Member {
+        val socialLoginClient = getSocialLoginClient(socialLoginType)
+        val socialLoginToken = socialLoginClient.fetchAccessToken(authCode)
+        val socialLoginInfo = socialLoginClient.fetchMemberInfo(socialLoginToken.accessToken)
+        return socialLoginInfo.toMember()
     }
 
-    private fun getOAuthClient(serverType: SocialLoginType): SocialLoginClient {
-        return socialLoginClients.firstOrNull { it.matchSupportServer(serverType) }
-            ?: throw IllegalArgumentException("지원하지 않는 소셜 로그인 타입: $serverType") // TODO 예외 분리
+    private fun getSocialLoginClient(socialLoginType: SocialLoginType): SocialLoginClient {
+        return socialLoginClients.firstOrNull { it.isSupports(socialLoginType) }
+            ?: throw IllegalArgumentException("지원하지 않는 소셜 로그인 타입: $socialLoginType") // TODO 예외 분리
     }
 }

@@ -12,8 +12,8 @@ class KakaoSocialLoginClient(
     private val kakaoApiClient: KakaoApiClient,
 ) : SocialLoginClient {
 
-    override fun matchSupportServer(serverType: SocialLoginType): Boolean {
-        return serverType == SocialLoginType.KAKAO
+    override fun isSupports(socialLoginType: SocialLoginType): Boolean {
+        return socialLoginType == SocialLoginType.KAKAO
     }
 
     override fun fetchAccessToken(authCode: String): SocialLoginToken {
@@ -27,8 +27,8 @@ class KakaoSocialLoginClient(
         return kakaoApiClient.fetchToken(tokenRequestBody)
     }
 
-    override fun fetchUserInfo(accessToken: String): SocialLoginInfoResponse {
-        val kakaoOauthUserInfo = kakaoApiClient.fetchUserInfo("Bearer $accessToken")
-        return kakaoOauthUserInfo.toOAuthUserInfoResponse()
+    override fun fetchMemberInfo(accessToken: String): SocialLoginInfoResponse {
+        val kakaoMemberInfo = kakaoApiClient.fetchMemberInfo("Bearer $accessToken")
+        return kakaoMemberInfo.toOAuthUserInfoResponse()
     }
 }

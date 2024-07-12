@@ -16,13 +16,11 @@ class SocialLoginController(
 
     @GetMapping("/login/{socialType}")
     fun login(
-        @PathVariable socialType: String, // converter로 한번에..?
+        @PathVariable socialLoginType: SocialLoginType, // converter로 한번에..?
         @RequestParam authCode: String,
     ): Long {
-        val socialLoginType = SocialLoginType.from(socialType)
         val memberId = socialLoginUseCase.login(socialLoginType, authCode)
         // authUseCase?
         return 1L
     }
-
 }

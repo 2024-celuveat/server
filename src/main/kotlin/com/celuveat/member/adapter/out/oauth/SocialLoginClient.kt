@@ -5,7 +5,7 @@ import com.celuveat.member.application.port.out.response.SocialLoginToken
 import com.celuveat.member.domain.SocialLoginType
 
 interface SocialLoginClient {
-    fun matchSupportServer(serverType: SocialLoginType): Boolean
+    fun isSupports(socialLoginType: SocialLoginType): Boolean
     fun fetchAccessToken(authCode: String): SocialLoginToken
-    fun fetchUserInfo(accessToken: String): SocialLoginInfoResponse
+    fun fetchMemberInfo(accessToken: String): SocialLoginInfoResponse
 }

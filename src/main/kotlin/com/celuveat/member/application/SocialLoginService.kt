@@ -16,8 +16,8 @@ class SocialLoginService(
 ) : SocialLoginUseCase {
 
     @Transactional
-    override fun login(serverType: SocialLoginType, authCode: String): Long {
-        val member = fetchSocialMemberPort.fetchMember(serverType, authCode)
+    override fun login(socialLoginType: SocialLoginType, authCode: String): Long {
+        val member = fetchSocialMemberPort.fetchMember(socialLoginType, authCode)
         val signInMember = findMemberPort.findBySocialIdentifier(member.socialIdentifier)
             ?: saveMemberPort.save(member)
         return signInMember.id

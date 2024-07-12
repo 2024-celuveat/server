@@ -5,10 +5,9 @@ import com.celuveat.member.domain.SocialLoginType
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 
-// Remove comment after checking the reference below
 // ref - https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api#req-user-info-response
 @JsonNaming(SnakeCaseStrategy::class)
-class KakaoUserInfoResponse(
+class KakaoMemberInfoResponse(
     private val id: String,
     private val kakaoAccount: KakaoAccount,
 ) {
