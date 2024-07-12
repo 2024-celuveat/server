@@ -1,5 +1,7 @@
-package com.celuveat.member.adapter.`in`.rest.request
+package com.celuveat.member.adapter.`in`.rest
 
+import com.celuveat.auth.application.port.`in`.CreateAccessTokenUseCase
+import com.celuveat.member.adapter.`in`.rest.response.LoginResponse
 import com.celuveat.member.application.port.`in`.SocialLoginUseCase
 import com.celuveat.member.domain.SocialLoginType
 import org.springframework.web.bind.annotation.GetMapping
@@ -12,15 +14,16 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class SocialLoginController(
     private val socialLoginUseCase: SocialLoginUseCase,
+    private val createAccessTokenUseCase: CreateAccessTokenUseCase,
 ) {
 
-    @GetMapping("/login/{socialType}")
+    @GetMapping("/login/{socialLoginType}")
     fun login(
-        @PathVariable socialLoginType: SocialLoginType, // converter로 한번에..?
+        @PathVariable socialLoginType: SocialLoginType,  // TODO 이거 되지않나..?
         @RequestParam authCode: String,
-    ): Long {
+    ): LoginResponse {
         val memberId = socialLoginUseCase.login(socialLoginType, authCode)
-        // authUseCase?
-        return 1L
+        val token = createAccessTokenUseCase.create(memberId)
+        return LoginResponse.from(token)
     }
 }
