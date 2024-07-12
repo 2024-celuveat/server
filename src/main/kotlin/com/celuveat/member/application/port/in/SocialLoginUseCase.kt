@@ -2,7 +2,7 @@ package com.celuveat.member.application.port.`in`
 
 import com.celuveat.member.domain.OAuthServerType
 
-interface OAuthSignInUseCase {
+interface SocialLoginUseCase {
 
-    fun signIn(serverType: OAuthServerType, authCode: String): Long
+    fun login(serverType: OAuthServerType, authCode: String): Long
 }
