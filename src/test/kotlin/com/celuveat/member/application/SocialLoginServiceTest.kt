@@ -6,7 +6,7 @@ import com.celuveat.member.application.port.out.SaveMemberPort
 import com.celuveat.member.domain.Member
 import com.celuveat.member.domain.SocialIdentifier
 import com.celuveat.member.domain.SocialLoginType
-import com.celuveat.support.fixtureMonkey
+import com.celuveat.support.sut
 import com.navercorp.fixturemonkey.kotlin.giveMeBuilder
 import com.navercorp.fixturemonkey.kotlin.set
 import io.kotest.core.spec.style.BehaviorSpec
@@ -37,7 +37,7 @@ class SocialLoginServiceTest : BehaviorSpec({
         val socialIdentifier = SocialIdentifier(serverType = serverType, oAuthId = "oAuthId")
         val authCode = "authCode"
 
-        val member = fixtureMonkey.giveMeBuilder<Member>()
+        val member = sut.giveMeBuilder<Member>()
             .set(Member::id, 0L)
             .set(Member::socialIdentifier, socialIdentifier)
             .sample()
