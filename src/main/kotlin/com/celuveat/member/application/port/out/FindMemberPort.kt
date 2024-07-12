@@ -5,5 +5,5 @@ import com.celuveat.member.domain.OAuthServerType
 
 interface FindMemberPort {
 
-    fun findMemberByOAuthIdAndServerType(oauthId: String, serverType: OAuthServerType): Member?
+    fun findMemberByOAuthIdAndServerType(oAuthId: String, serverType: OAuthServerType): Member?
 }

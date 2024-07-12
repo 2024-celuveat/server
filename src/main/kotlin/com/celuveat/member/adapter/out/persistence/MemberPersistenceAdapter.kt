@@ -14,8 +14,8 @@ class MemberPersistenceAdapter(
     private val memberPersistenceMapper: MemberPersistenceMapper,
 ) : SaveMemberPort, FindMemberPort {
 
-    override fun findMemberByOAuthIdAndServerType(oauthId: String, serverType: OAuthServerType): Member? {
-        return memberJpaRepository.findMemberByOAuthIdAndServerType(oauthId, serverType)?.let {
+    override fun findMemberByOAuthIdAndServerType(oAuthId: String, serverType: OAuthServerType): Member? {
+        return memberJpaRepository.findMemberByOAuthIdAndServerType(oAuthId, serverType)?.let {
             memberPersistenceMapper.toDomain(it)
         }
     }
