@@ -1,14 +1,14 @@
 package com.celuveat.member.adapter.out.oauth
 
 import com.celuveat.common.annotation.Adapter
-import com.celuveat.member.application.port.out.FetchOauthMemberPort
+import com.celuveat.member.application.port.out.FetchOAuthMemberPort
 import com.celuveat.member.domain.Member
 import com.celuveat.member.domain.OAuthServerType
 
 @Adapter
-class FetchOauthMemberAdapter(
+class FetchOAuthMemberAdapter(
     private val oAuthClients: Set<OAuthClient>,
-) : FetchOauthMemberPort {
+) : FetchOAuthMemberPort {
 
     override fun fetchMember(serverType: OAuthServerType, authCode: String): Member {
         val oAuthClient = getOAuthClient(serverType)
