@@ -1,6 +1,6 @@
 package com.celuveat.member.adapter.out.oauth.kakao.response
 
-import com.celuveat.member.application.port.out.response.SocialLoginInfoResponse
+import com.celuveat.member.adapter.out.oauth.response.SocialLoginInfoResponse
 import com.celuveat.member.domain.SocialLoginType
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy
 import com.fasterxml.jackson.databind.annotation.JsonNaming

@@ -1,8 +1,8 @@
 package com.celuveat.member.adapter.out.oauth.kakao
 
 import com.celuveat.member.adapter.out.oauth.SocialLoginClient
-import com.celuveat.member.application.port.out.response.SocialLoginInfoResponse
-import com.celuveat.member.application.port.out.response.SocialLoginToken
+import com.celuveat.member.adapter.out.oauth.response.SocialLoginInfoResponse
+import com.celuveat.member.adapter.out.oauth.response.SocialLoginToken
 import com.celuveat.member.domain.SocialLoginType
 import org.springframework.stereotype.Component
 

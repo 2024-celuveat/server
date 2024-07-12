@@ -1,7 +1,7 @@
 package com.celuveat.member.adapter.out.oauth.kakao
 
 import com.celuveat.member.adapter.out.oauth.kakao.response.KakaoMemberInfoResponse
-import com.celuveat.member.application.port.out.response.SocialLoginToken
+import com.celuveat.member.adapter.out.oauth.response.SocialLoginToken
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE
 import org.springframework.web.bind.annotation.RequestHeader

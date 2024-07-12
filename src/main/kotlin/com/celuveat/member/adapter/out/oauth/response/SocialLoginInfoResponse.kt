@@ -1,4 +1,4 @@
-package com.celuveat.member.application.port.out.response
+package com.celuveat.member.adapter.out.oauth.response
 
 import com.celuveat.member.domain.Member
 import com.celuveat.member.domain.SocialIdentifier

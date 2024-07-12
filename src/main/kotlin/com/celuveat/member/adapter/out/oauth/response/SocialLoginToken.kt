@@ -1,4 +1,4 @@
-package com.celuveat.member.application.port.out.response
+package com.celuveat.member.adapter.out.oauth.response
 
 data class SocialLoginToken(
     val accessToken: String,
