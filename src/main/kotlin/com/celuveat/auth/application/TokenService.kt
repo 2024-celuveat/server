@@ -13,15 +13,15 @@ class TokenService(
     private val extractClaimPort: ExtractClaimPort
 ) : CreateAccessTokenUseCase, ExtractMemberIdUseCase {
 
-    companion object {
-        const val MEMBER_ID_CLAIM: String = "memberId"
-    }
-
     override fun create(memberId: Long): Token {
         return createTokenPort.create(MEMBER_ID_CLAIM, memberId.toString())
     }
 
     override fun extract(token: String): Long {
         return extractClaimPort.extract(token, MEMBER_ID_CLAIM).toLong()
+    }
+
+    companion object {
+        const val MEMBER_ID_CLAIM: String = "memberId"
     }
 }
