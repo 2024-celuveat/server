@@ -4,6 +4,7 @@ import com.celuveat.common.annotation.Adapter
 import com.celuveat.member.application.port.out.FetchSocialMemberPort
 import com.celuveat.member.domain.Member
 import com.celuveat.member.domain.SocialLoginType
+import com.celuveat.member.exception.NotSupportedSocialLoginTypeException
 
 @Adapter
 class FetchSocialMemberAdapter(
@@ -19,6 +20,6 @@ class FetchSocialMemberAdapter(
 
     private fun getSocialLoginClient(socialLoginType: SocialLoginType): SocialLoginClient {
         return socialLoginClients.firstOrNull { it.isSupports(socialLoginType) }
-            ?: throw IllegalArgumentException("지원하지 않는 소셜 로그인 타입: $socialLoginType") // TODO 예외 분리
+            ?: throw NotSupportedSocialLoginTypeException(socialLoginType)
     }
 }

@@ -3,11 +3,13 @@ package com.celuveat.auth.adaptor.out
 import com.celuveat.auth.application.port.out.CreateTokenPort
 import com.celuveat.auth.application.port.out.ExtractClaimPort
 import com.celuveat.auth.domain.Token
+import com.celuveat.auth.exception.InvalidJwtTokenException
+import com.celuveat.auth.exception.NoSuchClaimException
 import com.celuveat.common.annotation.Adapter
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
-import java.util.*
+import java.util.Date
 import javax.crypto.SecretKey
 
 @Adapter
@@ -35,12 +37,12 @@ class TokenAdaptor(
 
     override fun extract(token: String, key: String): String {
         return extract(token)[key]
-            ?: throw NoSuchElementException("Claim '$key' not found in token")  // TODO 예외처리
+            ?: throw NoSuchClaimException(key)
     }
 
     override fun extract(token: String): Map<String, String> {
-        try {
-            return Jwts.parser()
+        return try {
+            Jwts.parser()
                 .verifyWith(secretKey)
                 .build()
                 .parseSignedClaims(token)
@@ -48,7 +50,7 @@ class TokenAdaptor(
                 .entries
                 .associate { it.key to it.value.toString() }
         } catch (e: Exception) {
-            throw RuntimeException("invalid JWT", e)  // TODO 예외처리
+            throw InvalidJwtTokenException
         }
     }
 }

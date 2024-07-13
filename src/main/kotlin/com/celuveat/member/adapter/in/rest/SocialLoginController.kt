@@ -19,7 +19,7 @@ class SocialLoginController(
 
     @GetMapping("/login/{socialLoginType}")
     fun login(
-        @PathVariable socialLoginType: SocialLoginType,  // TODO 이거 되지않나..?
+        @PathVariable socialLoginType: SocialLoginType,
         @RequestParam authCode: String,
     ): LoginResponse {
         val memberId = socialLoginUseCase.login(socialLoginType, authCode)
