@@ -38,7 +38,7 @@ class SocialLoginControllerTest(
                 param("authCode", authCode)
             }.andExpect {
                 status { isOk() }
-                content { json("""{"accessToken":"accessToken"}""") }
+                jsonPath("$.accessToken") { value("accessToken") }
             }.andDo {
                 print()
             }
@@ -51,9 +51,7 @@ class SocialLoginControllerTest(
                 param("authCode", authCode)
             }.andExpect {
                 status { isBadRequest() }
-                content {
-                    json("""{"errorMessage":"잘못된 요청입니다."}""")
-                }
+                jsonPath("$.errorMessage") { value("잘못된 요청입니다.") }
             }
         }
     }
