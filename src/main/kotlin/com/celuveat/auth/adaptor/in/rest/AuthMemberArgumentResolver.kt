@@ -16,7 +16,7 @@ class AuthMemberArgumentResolver(
 ) : HandlerMethodArgumentResolver {
 
     override fun supportsParameter(parameter: MethodParameter): Boolean {
-        return parameter.hasParameterAnnotation(AuthMember::class.java)
+        return parameter.hasParameterAnnotation(AuthId::class.java)
                 && parameter.parameterType == Long::class.java
     }
 
