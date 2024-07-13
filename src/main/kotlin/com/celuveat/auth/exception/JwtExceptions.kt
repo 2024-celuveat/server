@@ -8,7 +8,7 @@ sealed class JwtExceptions(
     errorMessage: String,
 ) : CeluveatException(status, errorMessage)
 
-data object InvalidJwtTokenException : CeluveatException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다") {
+data object InvalidJwtTokenException : JwtExceptions(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다") {
     private fun readResolve(): Any = InvalidJwtTokenException
 }
 
