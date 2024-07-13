@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
 
 @RestControllerAdvice
 class ExceptionControllerAdvice {
@@ -23,6 +24,23 @@ class ExceptionControllerAdvice {
         )
         return ResponseEntity.status(e.status).body(
             ExceptionResponse(e.errorMessage)
+        )
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException::class)
+    fun handleConversionFailedException(
+        request: HttpServletRequest,
+        e: MethodArgumentTypeMismatchException
+    ): ResponseEntity<ExceptionResponse> {
+        log.warn(
+            """
+            잘못된 요청이 들어왔습니다.
+            URI: ${request.requestURI}
+            내용: ${e.message}
+            """
+        )
+        return ResponseEntity.badRequest().body(
+            ExceptionResponse("잘못된 요청입니다.")
         )
     }
 
