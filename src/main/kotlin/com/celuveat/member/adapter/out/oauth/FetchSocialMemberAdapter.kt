@@ -13,9 +13,7 @@ class FetchSocialMemberAdapter(
 
     override fun fetchMember(socialLoginType: SocialLoginType, authCode: String): Member {
         val socialLoginClient = getSocialLoginClient(socialLoginType)
-        val socialLoginToken = socialLoginClient.fetchAccessToken(authCode)
-        val socialLoginInfo = socialLoginClient.fetchMemberInfo(socialLoginToken.accessToken)
-        return socialLoginInfo.toMember()
+        return socialLoginClient.fetchMember(authCode)
     }
 
     private fun getSocialLoginClient(socialLoginType: SocialLoginType): SocialLoginClient {
