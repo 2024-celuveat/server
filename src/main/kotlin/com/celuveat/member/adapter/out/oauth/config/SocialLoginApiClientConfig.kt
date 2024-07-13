@@ -37,8 +37,8 @@ class SocialLoginApiClientConfig {
             .defaultStatusHandler(
                 { status: HttpStatusCode -> status.is5xxServerError },
                 { _, response ->
-                    log.error("Server Error Code={}", response.statusCode)
-                    log.error("Server Error Message={}", String(response.body.readAllBytes()))
+                    log.error("External Api Server Error Code={}", response.statusCode)
+                    log.error("External Api Server Error Message={}", String(response.body.readAllBytes()))
                 })
             .build()
         return restClient
