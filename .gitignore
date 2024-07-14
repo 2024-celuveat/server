@@ -41,3 +41,6 @@ out/
 .kotlin
 
 src/main/resources/application*
+
+### Fixture Monkey ###
+.jqwik-database
