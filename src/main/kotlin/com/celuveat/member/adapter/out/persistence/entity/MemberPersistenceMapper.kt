@@ -13,7 +13,7 @@ class MemberPersistenceMapper {
             nickname = member.nickname,
             profileImageUrl = member.profileImageUrl,
             serverType = member.socialIdentifier.serverType,
-            oAuthId = member.socialIdentifier.oAuthId,
+            socialId = member.socialIdentifier.socialId,
         )
     }
 
@@ -24,7 +24,7 @@ class MemberPersistenceMapper {
             profileImageUrl = memberJpaEntity.profileImageUrl,
             socialIdentifier = SocialIdentifier(
                 serverType = memberJpaEntity.serverType,
-                oAuthId = memberJpaEntity.oAuthId,
+                socialId = memberJpaEntity.socialId,
             )
         )
     }

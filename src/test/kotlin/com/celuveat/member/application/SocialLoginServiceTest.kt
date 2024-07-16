@@ -34,7 +34,7 @@ class SocialLoginServiceTest : BehaviorSpec({
     Given("소셜 로그인을 통해 회원가입할 때") {
 
         val serverType = SocialLoginType.KAKAO
-        val socialIdentifier = SocialIdentifier(serverType = serverType, oAuthId = "oAuthId")
+        val socialIdentifier = SocialIdentifier(serverType = serverType, socialId = "socialId")
         val authCode = "authCode"
 
         val member = sut.giveMeBuilder<Member>()

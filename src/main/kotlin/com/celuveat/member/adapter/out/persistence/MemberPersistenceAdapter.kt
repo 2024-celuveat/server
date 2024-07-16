@@ -15,8 +15,8 @@ class MemberPersistenceAdapter(
 ) : SaveMemberPort, FindMemberPort {
 
     override fun findBySocialIdentifier(socialIdentifier: SocialIdentifier): Member? {
-        return memberJpaRepository.findMemberByOAuthIdAndServerType(
-            socialIdentifier.oAuthId,
+        return memberJpaRepository.findMemberBySocialIdAndServerType(
+            socialIdentifier.socialId,
             socialIdentifier.serverType
         )?.let { memberPersistenceMapper.toDomain(it) }
     }
