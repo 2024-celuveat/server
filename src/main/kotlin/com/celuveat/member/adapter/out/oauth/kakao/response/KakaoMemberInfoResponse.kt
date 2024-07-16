@@ -1,6 +1,7 @@
 package com.celuveat.member.adapter.out.oauth.kakao.response
 
-import com.celuveat.member.adapter.out.oauth.response.SocialLoginInfoResponse
+import com.celuveat.member.domain.Member
+import com.celuveat.member.domain.SocialIdentifier
 import com.celuveat.member.domain.SocialLoginType
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy
 import com.fasterxml.jackson.databind.annotation.JsonNaming
@@ -11,12 +12,14 @@ data class KakaoMemberInfoResponse(
     private val kakaoAccount: KakaoAccount,
 ) {
 
-    fun toSocialLoginInfoResponse(): SocialLoginInfoResponse {
-        return SocialLoginInfoResponse(
-            id = id,
+    fun toMember(): Member {
+        return Member(
             nickname = kakaoAccount.profile.nickname,
-            profileImage = kakaoAccount.profile.profileImage,
-            serverType = SocialLoginType.KAKAO,
+            profileImageUrl = kakaoAccount.profile.profileImage,
+            socialIdentifier = SocialIdentifier(
+                serverType = SocialLoginType.KAKAO,
+                socialId = id,
+            )
         )
     }
 }

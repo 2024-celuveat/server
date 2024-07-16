@@ -1,8 +1,8 @@
 package com.celuveat.member.adapter.out.oauth.kakao
 
 import com.celuveat.member.adapter.out.oauth.SocialLoginClient
+import com.celuveat.member.adapter.out.oauth.kakao.response.KakaoMemberInfoResponse
 import com.celuveat.member.adapter.out.oauth.kakao.response.KakaoSocialLoginToken
-import com.celuveat.member.adapter.out.oauth.response.SocialLoginInfoResponse
 import com.celuveat.member.domain.Member
 import com.celuveat.member.domain.SocialLoginType
 import org.springframework.stereotype.Component
@@ -33,8 +33,7 @@ class KakaoSocialLoginClient(
         return kakaoApiClient.fetchToken(tokenRequestBody)
     }
 
-    private fun fetchMemberInfo(accessToken: String): SocialLoginInfoResponse {
-        val kakaoMemberInfo = kakaoApiClient.fetchMemberInfo("Bearer $accessToken")
-        return kakaoMemberInfo.toSocialLoginInfoResponse()
+    private fun fetchMemberInfo(accessToken: String): KakaoMemberInfoResponse {
+        return kakaoApiClient.fetchMemberInfo("Bearer $accessToken")
     }
 }

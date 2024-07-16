@@ -1,6 +1,7 @@
 package com.celuveat.member.adapter.out.oauth.naver.response
 
-import com.celuveat.member.adapter.out.oauth.response.SocialLoginInfoResponse
+import com.celuveat.member.domain.Member
+import com.celuveat.member.domain.SocialIdentifier
 import com.celuveat.member.domain.SocialLoginType
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy
 import com.fasterxml.jackson.databind.annotation.JsonNaming
@@ -12,12 +13,14 @@ data class NaverMemberInfoResponse(
     private val response: Response
 ) {
 
-    fun toSocialLoginInfoResponse(): SocialLoginInfoResponse {
-        return SocialLoginInfoResponse(
-            id = response.id,
+    fun toMember(): Member {
+        return Member(
             nickname = response.nickname,
-            profileImage = response.profileImage,
-            serverType = SocialLoginType.NAVER,
+            profileImageUrl = response.profileImage,
+            socialIdentifier = SocialIdentifier(
+                serverType = SocialLoginType.NAVER,
+                socialId = response.id,
+            )
         )
     }
 }

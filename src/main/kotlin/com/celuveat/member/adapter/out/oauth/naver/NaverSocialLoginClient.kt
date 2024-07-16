@@ -1,8 +1,8 @@
 package com.celuveat.member.adapter.out.oauth.naver
 
 import com.celuveat.member.adapter.out.oauth.SocialLoginClient
+import com.celuveat.member.adapter.out.oauth.naver.response.NaverMemberInfoResponse
 import com.celuveat.member.adapter.out.oauth.naver.response.NaverSocialLoginToken
-import com.celuveat.member.adapter.out.oauth.response.SocialLoginInfoResponse
 import com.celuveat.member.domain.Member
 import com.celuveat.member.domain.SocialLoginType
 import org.springframework.stereotype.Component
@@ -33,8 +33,7 @@ class NaverSocialLoginClient(
         return naverApiClient.fetchToken(tokenRequestBody)
     }
 
-    private fun fetchMemberInfo(accessToken: String): SocialLoginInfoResponse {
-        val naverMemberInfo = naverApiClient.fetchMemberInfo("Bearer $accessToken")
-        return naverMemberInfo.toSocialLoginInfoResponse()
+    private fun fetchMemberInfo(accessToken: String): NaverMemberInfoResponse {
+        return naverApiClient.fetchMemberInfo("Bearer $accessToken")
     }
 }
