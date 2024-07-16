@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class KakaoSocialLoginClient(
-    private val oAuthProperty: KakaoSocialLoginProperty,
+    private val kakaoSocialLoginProperty: KakaoSocialLoginProperty,
     private val kakaoApiClient: KakaoApiClient,
 ) : SocialLoginClient {
 
@@ -25,10 +25,10 @@ class KakaoSocialLoginClient(
     private fun fetchAccessToken(authCode: String): KakaoSocialLoginToken {
         val tokenRequestBody = mapOf(
             "grant_type" to "authorization_code",
-            "client_id" to oAuthProperty.clientId,
-            "redirect_uri" to oAuthProperty.redirectUri,
+            "client_id" to kakaoSocialLoginProperty.clientId,
+            "redirect_uri" to kakaoSocialLoginProperty.redirectUri,
             "code" to authCode,
-            "client_secret" to oAuthProperty.clientSecret
+            "client_secret" to kakaoSocialLoginProperty.clientSecret
         )
         return kakaoApiClient.fetchToken(tokenRequestBody)
     }
