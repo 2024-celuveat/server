@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface MemberJpaRepository : JpaRepository<MemberJpaEntity, Long> {
 
-    fun findMemberByOAuthIdAndServerType(oAuthId: String, oAuthServerType: SocialLoginType): MemberJpaEntity?
+    fun findMemberBySocialIdAndServerType(socialId: String, oAuthServerType: SocialLoginType): MemberJpaEntity?
 }

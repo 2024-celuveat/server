@@ -1,4 +1,4 @@
-package com.celuveat.member.adapter.out.oauth.kakao.response
+package com.celuveat.member.adapter.out.oauth.google.response
 
 import com.celuveat.member.domain.Member
 import com.celuveat.member.domain.SocialIdentifier
@@ -7,29 +7,22 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 
 @JsonNaming(SnakeCaseStrategy::class)
-data class KakaoMemberInfoResponse(
+data class GoogleMemberInfoResponse(
     private val id: String,
-    private val kakaoAccount: KakaoAccount,
+    private val name: String,
+    private val givenName: String,
+    private val picture: String,
+    private val locale: String,
 ) {
 
     fun toMember(): Member {
         return Member(
-            nickname = kakaoAccount.profile.nickname,
-            profileImageUrl = kakaoAccount.profile.profileImage,
+            nickname = name,
+            profileImageUrl = picture,
             socialIdentifier = SocialIdentifier(
-                serverType = SocialLoginType.KAKAO,
+                serverType = SocialLoginType.GOOGLE,
                 socialId = id,
             )
         )
     }
 }
-
-data class KakaoAccount(
-    val profile: Profile,
-)
-
-@JsonNaming(value = SnakeCaseStrategy::class)
-data class Profile(
-    val nickname: String,
-    val profileImage: String,
-)
