@@ -4,7 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "oauth.naver")
 data class NaverSocialLoginProperty(
-    val redirectUri: String,
+    val allowedRedirectUris: Set<String>,
     val clientId: String,
     val clientSecret: String,
     val scope: List<String>,

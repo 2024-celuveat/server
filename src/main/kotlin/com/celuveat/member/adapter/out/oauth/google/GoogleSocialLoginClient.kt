@@ -1,10 +1,12 @@
 package com.celuveat.member.adapter.out.oauth.google
 
+import com.celuveat.common.utils.throwWhen
 import com.celuveat.member.adapter.out.oauth.SocialLoginClient
 import com.celuveat.member.adapter.out.oauth.google.response.GoogleMemberInfoResponse
 import com.celuveat.member.adapter.out.oauth.google.response.GoogleSocialLoginToken
 import com.celuveat.member.domain.Member
 import com.celuveat.member.domain.SocialLoginType
+import com.celuveat.member.exception.NotAllowedRedirectUriException
 import org.springframework.stereotype.Component
 import org.springframework.web.util.UriComponentsBuilder
 
@@ -19,8 +21,13 @@ class GoogleSocialLoginClient(
     }
 
     override fun fetchMember(authCode: String, redirectUrl: String): Member {
+        validateAllowedRedirectUrl(redirectUrl)
         val socialLoginToken = fetchAccessToken(authCode, redirectUrl)
         return fetchMemberInfo(socialLoginToken.accessToken).toMember()
+    }
+
+    private fun validateAllowedRedirectUrl(redirectUrl: String) {
+        throwWhen(googleSocialLoginProperty.allowedRedirectUris.none { it == redirectUrl }) { NotAllowedRedirectUriException }
     }
 
     private fun fetchAccessToken(authCode: String, redirectUrl: String): GoogleSocialLoginToken {

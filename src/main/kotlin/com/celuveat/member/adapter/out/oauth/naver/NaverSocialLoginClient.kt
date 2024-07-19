@@ -1,10 +1,12 @@
 package com.celuveat.member.adapter.out.oauth.naver
 
+import com.celuveat.common.utils.throwWhen
 import com.celuveat.member.adapter.out.oauth.SocialLoginClient
 import com.celuveat.member.adapter.out.oauth.naver.response.NaverMemberInfoResponse
 import com.celuveat.member.adapter.out.oauth.naver.response.NaverSocialLoginToken
 import com.celuveat.member.domain.Member
 import com.celuveat.member.domain.SocialLoginType
+import com.celuveat.member.exception.NotAllowedRedirectUriException
 import org.springframework.stereotype.Component
 import org.springframework.web.util.UriComponentsBuilder
 
@@ -19,8 +21,13 @@ class NaverSocialLoginClient(
     }
 
     override fun fetchMember(authCode: String, redirectUrl: String): Member {
+        validateAllowedRedirectUrl(redirectUrl)
         val socialLoginToken = fetchAccessToken(authCode)
         return fetchMemberInfo(socialLoginToken.accessToken).toMember()
+    }
+
+    private fun validateAllowedRedirectUrl(redirectUrl: String) {
+        throwWhen(naverSocialLoginProperty.allowedRedirectUris.none { it == redirectUrl }) { NotAllowedRedirectUriException }
     }
 
     private fun fetchAccessToken(authCode: String): NaverSocialLoginToken {

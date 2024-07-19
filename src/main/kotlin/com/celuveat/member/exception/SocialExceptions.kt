@@ -13,3 +13,6 @@ data class NotSupportedSocialLoginTypeException(
     val socialLoginType: SocialLoginType
 ) : SocialException(HttpStatus.NOT_FOUND, "${socialLoginType.name}은 지원하지 않습니다")
 
+data object NotAllowedRedirectUriException : SocialException(HttpStatus.BAD_REQUEST, "허용되지 않은 redirect uri입니다") {
+    private fun readResolve(): Any = NotAllowedRedirectUriException
+}
