@@ -2,6 +2,7 @@ package com.celuveat.member.application
 
 import com.celuveat.member.application.port.out.FetchSocialMemberPort
 import com.celuveat.member.application.port.out.FindMemberPort
+import com.celuveat.member.application.port.out.GetSocialLoginUrlPort
 import com.celuveat.member.application.port.out.SaveMemberPort
 import com.celuveat.member.domain.Member
 import com.celuveat.member.domain.SocialIdentifier
@@ -24,11 +25,13 @@ class SocialLoginServiceTest : BehaviorSpec({
     val saveMemberPort: SaveMemberPort = mockk()
     val findMemberPort: FindMemberPort = mockk()
     val fetchSocialMemberPort: FetchSocialMemberPort = mockk()
+    val getSocialLoginUrlPort: GetSocialLoginUrlPort = mockk()
 
     val socialLoginService = SocialLoginService(
         fetchSocialMemberPort = fetchSocialMemberPort,
         saveMemberPort = saveMemberPort,
-        findMemberPort = findMemberPort
+        findMemberPort = findMemberPort,
+        getSocialLoginUrlPort = getSocialLoginUrlPort,
     )
 
     Given("소셜 로그인을 통해 회원가입할 때") {
@@ -71,6 +74,22 @@ class SocialLoginServiceTest : BehaviorSpec({
                 verify { fetchSocialMemberPort.fetchMember(serverType, authCode) }
                 verify { findMemberPort.findBySocialIdentifier(socialIdentifier) }
                 verify(exactly = 0) { saveMemberPort.save(member) }
+            }
+        }
+    }
+
+    Given("소셜 로그인 URL을 조회할 때") {
+        val serverType = SocialLoginType.KAKAO
+        val redirectUrl = "redirectUrl"
+        val socialLoginUrl = "https://social.com/authorize?redirect_uri=$redirectUrl&client_id=clientId"
+        every { getSocialLoginUrlPort.getSocialLoginUrl(redirectUrl, serverType) } returns socialLoginUrl
+        When("소셜 로그인 타입과 리다이렉트될 URL을 전달하면") {
+            val result = socialLoginService.getSocialLoginUrl(redirectUrl, serverType)
+
+            Then("소셜 로그인 URL이 반환된다") {
+                result shouldBe socialLoginUrl
+
+                verify { getSocialLoginUrlPort.getSocialLoginUrl(redirectUrl, serverType) }
             }
         }
     }
