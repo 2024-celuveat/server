@@ -1,5 +1,6 @@
 package com.celuveat.member.adapter.out.oauth.kakao
 
+import com.celuveat.common.utils.doesNotContain
 import com.celuveat.common.utils.throwWhen
 import com.celuveat.member.adapter.out.oauth.SocialLoginClient
 import com.celuveat.member.adapter.out.oauth.kakao.response.KakaoMemberInfoResponse
@@ -27,7 +28,8 @@ class KakaoSocialLoginClient(
     }
 
     private fun validateAllowedRedirectUrl(redirectUrl: String) {
-        throwWhen(kakaoSocialLoginProperty.allowedRedirectUris.none { it == redirectUrl }) { NotAllowedRedirectUriException }
+        val allowedRedirectUris = kakaoSocialLoginProperty.allowedRedirectUris
+        throwWhen(allowedRedirectUris.doesNotContain(redirectUrl)) { NotAllowedRedirectUriException }
     }
 
     private fun fetchAccessToken(authCode: String, redirectUrl: String): KakaoSocialLoginToken {

@@ -1,5 +1,6 @@
 package com.celuveat.member.adapter.out.oauth.google
 
+import com.celuveat.common.utils.doesNotContain
 import com.celuveat.common.utils.throwWhen
 import com.celuveat.member.adapter.out.oauth.SocialLoginClient
 import com.celuveat.member.adapter.out.oauth.google.response.GoogleMemberInfoResponse
@@ -27,7 +28,8 @@ class GoogleSocialLoginClient(
     }
 
     private fun validateAllowedRedirectUrl(redirectUrl: String) {
-        throwWhen(googleSocialLoginProperty.allowedRedirectUris.none { it == redirectUrl }) { NotAllowedRedirectUriException }
+        val allowedRedirectUris = googleSocialLoginProperty.allowedRedirectUris
+        throwWhen(allowedRedirectUris.doesNotContain(redirectUrl)) { NotAllowedRedirectUriException }
     }
 
     private fun fetchAccessToken(authCode: String, redirectUrl: String): GoogleSocialLoginToken {

@@ -1,5 +1,6 @@
 package com.celuveat.member.adapter.out.oauth.naver
 
+import com.celuveat.common.utils.doesNotContain
 import com.celuveat.common.utils.throwWhen
 import com.celuveat.member.adapter.out.oauth.SocialLoginClient
 import com.celuveat.member.adapter.out.oauth.naver.response.NaverMemberInfoResponse
@@ -27,7 +28,8 @@ class NaverSocialLoginClient(
     }
 
     private fun validateAllowedRedirectUrl(redirectUrl: String) {
-        throwWhen(naverSocialLoginProperty.allowedRedirectUris.none { it == redirectUrl }) { NotAllowedRedirectUriException }
+        val allowedRedirectUris = naverSocialLoginProperty.allowedRedirectUris
+        throwWhen(allowedRedirectUris.doesNotContain(redirectUrl)) { NotAllowedRedirectUriException }
     }
 
     private fun fetchAccessToken(authCode: String): NaverSocialLoginToken {
