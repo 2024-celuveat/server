@@ -18,18 +18,18 @@ class GoogleSocialLoginClient(
         return socialLoginType == SocialLoginType.GOOGLE
     }
 
-    override fun fetchMember(authCode: String): Member {
-        val socialLoginToken = fetchAccessToken(authCode)
+    override fun fetchMember(authCode: String, redirectUrl: String): Member {
+        val socialLoginToken = fetchAccessToken(authCode, redirectUrl)
         return fetchMemberInfo(socialLoginToken.accessToken).toMember()
     }
 
-    private fun fetchAccessToken(authCode: String): GoogleSocialLoginToken {
+    private fun fetchAccessToken(authCode: String, redirectUrl: String): GoogleSocialLoginToken {
         val tokenRequestBody = mapOf(
             "grant_type" to "authorization_code",
             "client_id" to googleSocialLoginProperty.clientId,
             "client_secret" to googleSocialLoginProperty.clientSecret,
             "code" to authCode,
-            "redirect_uri" to googleSocialLoginProperty.redirectUri,
+            "redirect_uri" to redirectUrl,
         )
         return googleApiClient.fetchToken(tokenRequestBody)
     }

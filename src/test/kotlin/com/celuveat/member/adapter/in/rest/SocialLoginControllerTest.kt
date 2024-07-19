@@ -30,14 +30,16 @@ class SocialLoginControllerTest(
     context("OAuth 서비스로부터 받은 인가코드로 로그인을 요청한다") {
         val authCode = "authCode"
         val socialLoginType = SocialLoginType.KAKAO
+        val requestOrigin = "http://localhost:3000"
         val jwtAccessToken = Token("accessToken")
 
         test("소셜 로그인 성공") {
-            every { socialLoginUseCase.login(socialLoginType, authCode) } returns 1L
+            every { socialLoginUseCase.login(socialLoginType, authCode, requestOrigin) } returns 1L
             every { createAccessTokenUseCase.create(1L) } returns jwtAccessToken
 
             mockMvc.get("/social-login/login/{socialLoginType}", socialLoginType) {
                 param("authCode", authCode)
+                header("Origin", requestOrigin)
             }.andExpect {
                 status { isOk() }
                 jsonPath("$.accessToken") { value("accessToken") }
@@ -64,7 +66,7 @@ class SocialLoginControllerTest(
         val socialLoginUrl = "https://social.com/authorize?redirect_uri=$requestOrigin&client_id=clientId"
 
         test("소셜 로그인 URL을 성공적으로 반환한다") {
-            every { getSocialLoginUrlUseCase.getSocialLoginUrl(requestOrigin, socialLoginType) } returns socialLoginUrl
+            every { getSocialLoginUrlUseCase.getSocialLoginUrl(socialLoginType, requestOrigin) } returns socialLoginUrl
 
             mockMvc.get("/social-login/login/{socialLoginType}/url", socialLoginType) {
                 header("Origin", requestOrigin)

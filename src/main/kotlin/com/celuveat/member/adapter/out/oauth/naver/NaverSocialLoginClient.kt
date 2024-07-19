@@ -18,7 +18,7 @@ class NaverSocialLoginClient(
         return socialLoginType == SocialLoginType.NAVER
     }
 
-    override fun fetchMember(authCode: String): Member {
+    override fun fetchMember(authCode: String, redirectUrl: String): Member {
         val socialLoginToken = fetchAccessToken(authCode)
         return fetchMemberInfo(socialLoginToken.accessToken).toMember()
     }

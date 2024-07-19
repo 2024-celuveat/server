@@ -12,9 +12,9 @@ class FetchSocialMemberAdapter(
     private val socialLoginClients: Set<SocialLoginClient>,
 ) : FetchSocialMemberPort, GetSocialLoginUrlPort {
 
-    override fun fetchMember(socialLoginType: SocialLoginType, authCode: String): Member {
+    override fun fetchMember(socialLoginType: SocialLoginType, authCode: String, redirectUrl: String): Member {
         val socialLoginClient = getSocialLoginClient(socialLoginType)
-        return socialLoginClient.fetchMember(authCode)
+        return socialLoginClient.fetchMember(authCode, redirectUrl)
     }
 
     private fun getSocialLoginClient(socialLoginType: SocialLoginType): SocialLoginClient {
@@ -22,7 +22,7 @@ class FetchSocialMemberAdapter(
             ?: throw NotSupportedSocialLoginTypeException(socialLoginType)
     }
 
-    override fun getSocialLoginUrl(redirectUrl: String, socialLoginType: SocialLoginType): String {
+    override fun getSocialLoginUrl(socialLoginType: SocialLoginType, redirectUrl: String): String {
         val socialLoginClient = getSocialLoginClient(socialLoginType)
         return socialLoginClient.getSocialLoginUrl(redirectUrl)
     }

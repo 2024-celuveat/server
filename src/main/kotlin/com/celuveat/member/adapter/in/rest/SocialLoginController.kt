@@ -26,8 +26,9 @@ class SocialLoginController(
     fun login(
         @PathVariable socialLoginType: SocialLoginType,
         @RequestParam authCode: String,
+        @RequestHeader(HttpHeaders.ORIGIN) requestOrigin: String,
     ): LoginResponse {
-        val memberId = socialLoginUseCase.login(socialLoginType, authCode)
+        val memberId = socialLoginUseCase.login(socialLoginType, authCode, requestOrigin)
         val token = createAccessTokenUseCase.create(memberId)
         return LoginResponse.from(token)
     }
@@ -38,7 +39,7 @@ class SocialLoginController(
         @RequestHeader(HttpHeaders.ORIGIN) requestOrigin: String,
         response: HttpServletResponse,
     ) {
-        val socialLoginUrl = getSocialLoginUrlUseCase.getSocialLoginUrl(requestOrigin, socialLoginType)
+        val socialLoginUrl = getSocialLoginUrlUseCase.getSocialLoginUrl(socialLoginType, requestOrigin)
         response.sendRedirect(socialLoginUrl)
     }
 }

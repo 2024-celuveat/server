@@ -18,16 +18,16 @@ class KakaoSocialLoginClient(
         return socialLoginType == SocialLoginType.KAKAO
     }
 
-    override fun fetchMember(authCode: String): Member {
-        val socialLoginToken = fetchAccessToken(authCode)
+    override fun fetchMember(authCode: String, redirectUrl: String): Member {
+        val socialLoginToken = fetchAccessToken(authCode, redirectUrl)
         return fetchMemberInfo(socialLoginToken.accessToken).toMember()
     }
 
-    private fun fetchAccessToken(authCode: String): KakaoSocialLoginToken {
+    private fun fetchAccessToken(authCode: String, redirectUrl: String): KakaoSocialLoginToken {
         val tokenRequestBody = mapOf(
             "grant_type" to "authorization_code",
             "client_id" to kakaoSocialLoginProperty.clientId,
-            "redirect_uri" to kakaoSocialLoginProperty.redirectUri,
+            "redirect_uri" to redirectUrl,
             "code" to authCode,
             "client_secret" to kakaoSocialLoginProperty.clientSecret
         )

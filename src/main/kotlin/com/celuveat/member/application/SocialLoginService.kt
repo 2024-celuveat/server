@@ -19,14 +19,14 @@ class SocialLoginService(
 ) : SocialLoginUseCase, GetSocialLoginUrlUseCase {
 
     @Transactional
-    override fun login(socialLoginType: SocialLoginType, authCode: String): Long {
-        val member = fetchSocialMemberPort.fetchMember(socialLoginType, authCode)
+    override fun login(socialLoginType: SocialLoginType, authCode: String, requestOrigin: String): Long {
+        val member = fetchSocialMemberPort.fetchMember(socialLoginType, authCode, requestOrigin)
         val signInMember = findMemberPort.findBySocialIdentifier(member.socialIdentifier)
             ?: saveMemberPort.save(member)
         return signInMember.id
     }
 
-    override fun getSocialLoginUrl(redirectUrl: String, socialLoginType: SocialLoginType): String {
-        return getSocialLoginUrlPort.getSocialLoginUrl(redirectUrl, socialLoginType)
+    override fun getSocialLoginUrl(socialLoginType: SocialLoginType, redirectUrl: String): String {
+        return getSocialLoginUrlPort.getSocialLoginUrl(socialLoginType, redirectUrl)
     }
 }

@@ -4,5 +4,5 @@ import com.celuveat.member.domain.SocialLoginType
 
 interface SocialLoginUseCase {
 
-    fun login(socialLoginType: SocialLoginType, authCode: String): Long
+    fun login(socialLoginType: SocialLoginType, authCode: String, requestOrigin: String): Long
 }
