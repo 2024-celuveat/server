@@ -3,6 +3,7 @@ package com.celuveat.member.adapter.`in`.rest
 import com.celuveat.auth.application.port.`in`.CreateAccessTokenUseCase
 import com.celuveat.auth.application.port.`in`.ExtractMemberIdUseCase
 import com.celuveat.auth.domain.Token
+import com.celuveat.member.application.port.`in`.GetSocialLoginUrlUseCase
 import com.celuveat.member.application.port.`in`.SocialLoginUseCase
 import com.celuveat.member.domain.SocialLoginType
 import com.ninjasquad.springmockk.MockkBean
@@ -22,6 +23,7 @@ class SocialLoginControllerTest(
     @Autowired val mockMvc: MockMvc,
     @MockkBean val socialLoginUseCase: SocialLoginUseCase,
     @MockkBean val createAccessTokenUseCase: CreateAccessTokenUseCase,
+    @MockkBean val getSocialLoginUrlUseCase: GetSocialLoginUrlUseCase,
     @MockkBean val extractMemberIdUseCase: ExtractMemberIdUseCase, // for AuthMemberArgumentResolver
 ) : FunSpec({
 
@@ -49,6 +51,34 @@ class SocialLoginControllerTest(
 
             mockMvc.get("/social-login/login/{socialLoginType}", unsupportedSocialLoginType) {
                 param("authCode", authCode)
+            }.andExpect {
+                status { isBadRequest() }
+                jsonPath("$.errorMessage") { value("잘못된 요청입니다.") }
+            }
+        }
+    }
+
+    context("소셜 로그인 URL을 요청한다") {
+        val socialLoginType = SocialLoginType.KAKAO
+        val requestOrigin = "http://localhost:3000"
+        val socialLoginUrl = "https://social.com/authorize?redirect_uri=$requestOrigin&client_id=clientId"
+
+        test("소셜 로그인 URL을 성공적으로 반환한다") {
+            every { getSocialLoginUrlUseCase.getSocialLoginUrl(requestOrigin, socialLoginType) } returns socialLoginUrl
+
+            mockMvc.get("/social-login/login/{socialLoginType}/url", socialLoginType) {
+                header("Origin", requestOrigin)
+            }.andExpect {
+                status { isFound() }
+                header { string("Location", socialLoginUrl) }
+            }
+        }
+
+        test("지원하지 않는 서버 타입으로 요청 하면 실패한다") {
+            val unsupportedSocialLoginType = "UNSUPPORTED"
+
+            mockMvc.get("/social-login/login/{socialLoginType}/url", unsupportedSocialLoginType) {
+                header("Origin", requestOrigin)
             }.andExpect {
                 status { isBadRequest() }
                 jsonPath("$.errorMessage") { value("잘못된 요청입니다.") }
