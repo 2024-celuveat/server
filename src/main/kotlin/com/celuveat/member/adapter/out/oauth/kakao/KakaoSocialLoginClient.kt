@@ -6,6 +6,7 @@ import com.celuveat.member.adapter.out.oauth.kakao.response.KakaoSocialLoginToke
 import com.celuveat.member.domain.Member
 import com.celuveat.member.domain.SocialLoginType
 import org.springframework.stereotype.Component
+import org.springframework.web.util.UriComponentsBuilder
 
 @Component
 class KakaoSocialLoginClient(
@@ -35,5 +36,16 @@ class KakaoSocialLoginClient(
 
     private fun fetchMemberInfo(accessToken: String): KakaoMemberInfoResponse {
         return kakaoApiClient.fetchMemberInfo("Bearer $accessToken")
+    }
+
+    override fun getSocialLoginUrl(redirectUrl: String): String {
+        return UriComponentsBuilder
+            .fromHttpUrl(kakaoSocialLoginProperty.authorizationUrl)
+            .queryParam("client_id", kakaoSocialLoginProperty.clientId)
+            .queryParam("redirect_uri", redirectUrl)
+            .queryParam("response_type", "code")
+            .queryParam("scope", kakaoSocialLoginProperty.scope.joinToString(","))
+            .build()
+            .toUriString()
     }
 }

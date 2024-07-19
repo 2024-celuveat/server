@@ -9,4 +9,5 @@ data class KakaoSocialLoginProperty(
     val clientSecret: String,
     val scope: List<String>,
     val adminKey: String,
+    val authorizationUrl: String = "https://kauth.kakao.com/oauth/authorize",
 )

@@ -6,4 +6,5 @@ import com.celuveat.member.domain.SocialLoginType
 interface SocialLoginClient {
     fun isSupports(socialLoginType: SocialLoginType): Boolean
     fun fetchMember(authCode: String): Member
+    fun getSocialLoginUrl(redirectUrl: String): String
 }

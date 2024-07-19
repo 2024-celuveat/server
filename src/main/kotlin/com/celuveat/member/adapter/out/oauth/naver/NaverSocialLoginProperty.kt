@@ -9,4 +9,5 @@ data class NaverSocialLoginProperty(
     val clientSecret: String,
     val scope: List<String>,
     val state: String,
+    val authorizationUrl: String = "https://nid.naver.com/oauth2.0/authorize",
 )

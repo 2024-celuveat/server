@@ -6,6 +6,7 @@ import com.celuveat.member.adapter.out.oauth.google.response.GoogleSocialLoginTo
 import com.celuveat.member.domain.Member
 import com.celuveat.member.domain.SocialLoginType
 import org.springframework.stereotype.Component
+import org.springframework.web.util.UriComponentsBuilder
 
 @Component
 class GoogleSocialLoginClient(
@@ -35,5 +36,16 @@ class GoogleSocialLoginClient(
 
     private fun fetchMemberInfo(accessToken: String): GoogleMemberInfoResponse {
         return googleApiClient.fetchMemberInfo("Bearer $accessToken")
+    }
+
+    override fun getSocialLoginUrl(redirectUrl: String): String {
+        return UriComponentsBuilder
+            .fromHttpUrl(googleSocialLoginProperty.authorizationUrl)
+            .queryParam("client_id", googleSocialLoginProperty.clientId)
+            .queryParam("redirect_uri", redirectUrl)
+            .queryParam("response_type", "code")
+            .queryParam("scope", googleSocialLoginProperty.scope.joinToString(","))
+            .build()
+            .toUriString()
     }
 }

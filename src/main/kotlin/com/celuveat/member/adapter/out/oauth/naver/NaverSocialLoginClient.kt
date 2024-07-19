@@ -6,6 +6,7 @@ import com.celuveat.member.adapter.out.oauth.naver.response.NaverSocialLoginToke
 import com.celuveat.member.domain.Member
 import com.celuveat.member.domain.SocialLoginType
 import org.springframework.stereotype.Component
+import org.springframework.web.util.UriComponentsBuilder
 
 @Component
 class NaverSocialLoginClient(
@@ -35,5 +36,16 @@ class NaverSocialLoginClient(
 
     private fun fetchMemberInfo(accessToken: String): NaverMemberInfoResponse {
         return naverApiClient.fetchMemberInfo("Bearer $accessToken")
+    }
+
+    override fun getSocialLoginUrl(redirectUrl: String): String {
+        return UriComponentsBuilder
+            .fromHttpUrl(naverSocialLoginProperty.authorizationUrl)
+            .queryParam("client_id", naverSocialLoginProperty.clientId)
+            .queryParam("redirect_uri", redirectUrl)
+            .queryParam("response_type", "code")
+            .queryParam("state", naverSocialLoginProperty.state)
+            .build()
+            .toUriString()
     }
 }
