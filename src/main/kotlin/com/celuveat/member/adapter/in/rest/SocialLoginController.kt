@@ -4,6 +4,7 @@ import com.celuveat.auth.application.port.`in`.CreateAccessTokenUseCase
 import com.celuveat.member.adapter.`in`.rest.response.LoginResponse
 import com.celuveat.member.application.port.`in`.GetSocialLoginUrlUseCase
 import com.celuveat.member.application.port.`in`.SocialLoginUseCase
+import com.celuveat.member.application.port.`in`.command.SocialLoginCommand
 import com.celuveat.member.domain.SocialLoginType
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpHeaders
@@ -28,7 +29,8 @@ class SocialLoginController(
         @RequestParam authCode: String,
         @RequestHeader(HttpHeaders.ORIGIN) requestOrigin: String,
     ): LoginResponse {
-        val memberId = socialLoginUseCase.login(socialLoginType, authCode, requestOrigin)
+        val command = SocialLoginCommand(socialLoginType, authCode, requestOrigin)
+        val memberId = socialLoginUseCase.login(command)
         val token = createAccessTokenUseCase.create(memberId)
         return LoginResponse.from(token)
     }

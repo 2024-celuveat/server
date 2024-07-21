@@ -5,6 +5,7 @@ import com.celuveat.auth.application.port.`in`.ExtractMemberIdUseCase
 import com.celuveat.auth.domain.Token
 import com.celuveat.member.application.port.`in`.GetSocialLoginUrlUseCase
 import com.celuveat.member.application.port.`in`.SocialLoginUseCase
+import com.celuveat.member.application.port.`in`.command.SocialLoginCommand
 import com.celuveat.member.domain.SocialLoginType
 import com.ninjasquad.springmockk.MockkBean
 import io.kotest.core.spec.style.FunSpec
@@ -34,7 +35,8 @@ class SocialLoginControllerTest(
         val jwtAccessToken = Token("accessToken")
 
         test("소셜 로그인 성공") {
-            every { socialLoginUseCase.login(socialLoginType, authCode, requestOrigin) } returns 1L
+            val command = SocialLoginCommand(socialLoginType, authCode, requestOrigin)
+            every { socialLoginUseCase.login(command) } returns 1L
             every { createAccessTokenUseCase.create(1L) } returns jwtAccessToken
 
             mockMvc.get("/social-login/login/{socialLoginType}", socialLoginType) {

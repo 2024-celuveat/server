@@ -1,5 +1,6 @@
 package com.celuveat.member.application
 
+import com.celuveat.member.application.port.`in`.command.SocialLoginCommand
 import com.celuveat.member.application.port.out.FetchSocialMemberPort
 import com.celuveat.member.application.port.out.FindMemberPort
 import com.celuveat.member.application.port.out.GetSocialLoginUrlPort
@@ -51,9 +52,9 @@ class SocialLoginServiceTest : BehaviorSpec({
             every { fetchSocialMemberPort.fetchMember(serverType, authCode, redirectUrl) } returns member
             every { findMemberPort.findBySocialIdentifier(socialIdentifier) } returns null
             every { saveMemberPort.save(member) } returns savedMember
+            val command = SocialLoginCommand(serverType, authCode, redirectUrl)
 
-            val result = socialLoginService.login(serverType, authCode, redirectUrl)
-
+            val result = socialLoginService.login(command)
             Then("회원가입이 완료된다") {
                 result shouldBe 1L
 
@@ -66,9 +67,9 @@ class SocialLoginServiceTest : BehaviorSpec({
         When("이미 가입된 회원인 경우") {
             every { fetchSocialMemberPort.fetchMember(serverType, authCode, redirectUrl) } returns member
             every { findMemberPort.findBySocialIdentifier(socialIdentifier) } returns savedMember
+            val command = SocialLoginCommand(serverType, authCode, redirectUrl)
 
-            val result = socialLoginService.login(serverType, authCode, redirectUrl)
-
+            val result = socialLoginService.login(command)
             Then("로그인이 완료된다") {
                 result shouldBe savedMember.id
 
