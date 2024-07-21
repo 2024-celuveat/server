@@ -2,10 +2,12 @@ package com.celuveat.common.exception
 
 import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
+import org.springframework.http.HttpStatus.NOT_FOUND
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
+import org.springframework.web.servlet.resource.NoResourceFoundException
 
 @RestControllerAdvice
 class ExceptionControllerAdvice {
@@ -41,6 +43,23 @@ class ExceptionControllerAdvice {
         )
         return ResponseEntity.badRequest().body(
             ExceptionResponse("잘못된 요청입니다.")
+        )
+    }
+
+    @ExceptionHandler(NoResourceFoundException::class)
+    fun handleNoResourceFoundException(
+        request: HttpServletRequest,
+        e: NoResourceFoundException
+    ): ResponseEntity<ExceptionResponse> {
+        log.warn(
+            """
+            존재하지 않는 리소스에 요청이 들어왔습니다.
+            URI: ${request.requestURI}
+            내용: ${e.message}
+            """
+        )
+        return ResponseEntity.status(NOT_FOUND).body(
+            ExceptionResponse("요청한 리소스를 찾을 수 없습니다.")
         )
     }
 

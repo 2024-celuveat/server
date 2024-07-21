@@ -1,8 +1,8 @@
 package com.celuveat.member.application.port.`in`
 
-import com.celuveat.member.domain.SocialLoginType
+import com.celuveat.member.application.port.`in`.command.SocialLoginCommand
 
 interface SocialLoginUseCase {
 
-    fun login(socialLoginType: SocialLoginType, authCode: String): Long
+    fun login(command: SocialLoginCommand): Long
 }
