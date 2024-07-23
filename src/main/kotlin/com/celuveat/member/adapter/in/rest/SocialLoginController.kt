@@ -22,7 +22,6 @@ class SocialLoginController(
     private val createAccessTokenUseCase: CreateAccessTokenUseCase,
     private val getSocialLoginUrlUseCase: GetSocialLoginUrlUseCase,
 ) {
-
     @GetMapping("/login/{socialLoginType}")
     fun login(
         @PathVariable socialLoginType: SocialLoginType,

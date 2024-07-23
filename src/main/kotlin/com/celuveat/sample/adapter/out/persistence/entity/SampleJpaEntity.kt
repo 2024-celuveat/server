@@ -10,5 +10,4 @@ class SampleJpaEntity(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0L,
     var name: String,
-) {
-}
+)

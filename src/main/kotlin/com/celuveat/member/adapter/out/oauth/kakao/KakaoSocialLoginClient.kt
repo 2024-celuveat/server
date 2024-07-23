@@ -16,12 +16,14 @@ class KakaoSocialLoginClient(
     private val kakaoSocialLoginProperty: KakaoSocialLoginProperty,
     private val kakaoApiClient: KakaoApiClient,
 ) : SocialLoginClient {
-
     override fun isSupports(socialLoginType: SocialLoginType): Boolean {
         return socialLoginType == SocialLoginType.KAKAO
     }
 
-    override fun fetchMember(authCode: String, redirectUrl: String): Member {
+    override fun fetchMember(
+        authCode: String,
+        redirectUrl: String,
+    ): Member {
         validateAllowedRedirectUrl(redirectUrl)
         val socialLoginToken = fetchAccessToken(authCode, redirectUrl)
         return fetchMemberInfo(socialLoginToken.accessToken).toMember()
@@ -32,13 +34,16 @@ class KakaoSocialLoginClient(
         throwWhen(allowedRedirectUris.doesNotContain(redirectUrl)) { NotAllowedRedirectUriException }
     }
 
-    private fun fetchAccessToken(authCode: String, redirectUrl: String): KakaoSocialLoginToken {
+    private fun fetchAccessToken(
+        authCode: String,
+        redirectUrl: String,
+    ): KakaoSocialLoginToken {
         val tokenRequestBody = mapOf(
             "grant_type" to "authorization_code",
             "client_id" to kakaoSocialLoginProperty.clientId,
             "redirect_uri" to redirectUrl,
             "code" to authCode,
-            "client_secret" to kakaoSocialLoginProperty.clientSecret
+            "client_secret" to kakaoSocialLoginProperty.clientSecret,
         )
         return kakaoApiClient.fetchToken(tokenRequestBody)
     }

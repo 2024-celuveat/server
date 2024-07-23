@@ -10,9 +10,8 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming
 data class NaverMemberInfoResponse(
     private val resultcode: String,
     private val message: String,
-    private val response: Response
+    private val response: Response,
 ) {
-
     fun toMember(): Member {
         return Member(
             nickname = response.nickname,
@@ -20,7 +19,7 @@ data class NaverMemberInfoResponse(
             socialIdentifier = SocialIdentifier(
                 serverType = SocialLoginType.NAVER,
                 socialId = response.id,
-            )
+            ),
         )
     }
 }
@@ -36,5 +35,5 @@ data class Response(
     val birthday: String,
     val profileImage: String,
     val birthyear: String,
-    val mobile: String
+    val mobile: String,
 )

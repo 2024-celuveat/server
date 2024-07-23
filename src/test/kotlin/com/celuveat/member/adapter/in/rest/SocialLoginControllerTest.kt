@@ -25,7 +25,8 @@ class SocialLoginControllerTest(
     @MockkBean val socialLoginUseCase: SocialLoginUseCase,
     @MockkBean val createAccessTokenUseCase: CreateAccessTokenUseCase,
     @MockkBean val getSocialLoginUrlUseCase: GetSocialLoginUrlUseCase,
-    @MockkBean val extractMemberIdUseCase: ExtractMemberIdUseCase, // for AuthMemberArgumentResolver
+    // for AuthMemberArgumentResolver
+    @MockkBean val extractMemberIdUseCase: ExtractMemberIdUseCase,
 ) : FunSpec({
 
     context("OAuth 서비스로부터 받은 인가코드로 로그인을 요청한다") {
@@ -90,8 +91,10 @@ class SocialLoginControllerTest(
         }
     }
 }) {
-
-    override suspend fun afterEach(testCase: TestCase, result: TestResult) {
+    override suspend fun afterEach(
+        testCase: TestCase,
+        result: TestResult,
+    ) {
         clearAllMocks()
         unmockkAll()
     }

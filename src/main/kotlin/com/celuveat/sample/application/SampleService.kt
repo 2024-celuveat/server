@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service
 class SampleService(
     private val saveSamplePort: SaveSamplePort,
 ) : SaveSampleUseCase {
-
     override fun saveSample(command: SaveSampleCommand): Sample {
         return saveSamplePort.save(command.toSample())
     }

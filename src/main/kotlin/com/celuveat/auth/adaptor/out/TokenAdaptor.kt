@@ -16,11 +16,13 @@ import javax.crypto.SecretKey
 class TokenAdaptor(
     tokenProperty: TokenProperty,
 ) : CreateTokenPort, ExtractClaimPort {
-
     private val secretKey: SecretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(tokenProperty.secretKey))
     private val accessTokenExpirationMillis: Long = tokenProperty.accessTokenExpirationMillis
 
-    override fun create(key: String, claim: String): Token {
+    override fun create(
+        key: String,
+        claim: String,
+    ): Token {
         return create(mapOf(key to claim))
     }
 
@@ -31,11 +33,14 @@ class TokenAdaptor(
                 .issuedAt(Date())
                 .expiration(Date(System.currentTimeMillis() + accessTokenExpirationMillis))
                 .signWith(secretKey, Jwts.SIG.HS512)
-                .compact()
+                .compact(),
         )
     }
 
-    override fun extract(token: String, key: String): String {
+    override fun extract(
+        token: String,
+        key: String,
+    ): String {
         return extract(token)[key]
             ?: throw NoSuchClaimException(key)
     }

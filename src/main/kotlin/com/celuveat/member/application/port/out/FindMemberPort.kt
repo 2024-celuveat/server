@@ -4,6 +4,5 @@ import com.celuveat.member.domain.Member
 import com.celuveat.member.domain.SocialIdentifier
 
 interface FindMemberPort {
-
     fun findBySocialIdentifier(socialIdentifier: SocialIdentifier): Member?
 }

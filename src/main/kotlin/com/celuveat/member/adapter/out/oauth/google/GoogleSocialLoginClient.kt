@@ -16,12 +16,14 @@ class GoogleSocialLoginClient(
     private val googleSocialLoginProperty: GoogleSocialLoginProperty,
     private val googleApiClient: GoogleApiClient,
 ) : SocialLoginClient {
-
     override fun isSupports(socialLoginType: SocialLoginType): Boolean {
         return socialLoginType == SocialLoginType.GOOGLE
     }
 
-    override fun fetchMember(authCode: String, redirectUrl: String): Member {
+    override fun fetchMember(
+        authCode: String,
+        redirectUrl: String,
+    ): Member {
         validateAllowedRedirectUrl(redirectUrl)
         val socialLoginToken = fetchAccessToken(authCode, redirectUrl)
         return fetchMemberInfo(socialLoginToken.accessToken).toMember()
@@ -32,7 +34,10 @@ class GoogleSocialLoginClient(
         throwWhen(allowedRedirectUris.doesNotContain(redirectUrl)) { NotAllowedRedirectUriException }
     }
 
-    private fun fetchAccessToken(authCode: String, redirectUrl: String): GoogleSocialLoginToken {
+    private fun fetchAccessToken(
+        authCode: String,
+        redirectUrl: String,
+    ): GoogleSocialLoginToken {
         val tokenRequestBody = mapOf(
             "grant_type" to "authorization_code",
             "client_id" to googleSocialLoginProperty.clientId,

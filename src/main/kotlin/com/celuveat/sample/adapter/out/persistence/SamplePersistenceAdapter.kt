@@ -10,8 +10,7 @@ import com.celuveat.sample.domain.Sample
 class SamplePersistenceAdapter(
     private val mapper: SamplePersistenceMapper,
     private val sampleJpaRepository: SampleJpaRepository,
-): SaveSamplePort {
-
+) : SaveSamplePort {
     override fun save(sample: Sample): Sample {
         val sampleEntity = mapper.toEntity(sample)
         val saved = sampleJpaRepository.save(sampleEntity)

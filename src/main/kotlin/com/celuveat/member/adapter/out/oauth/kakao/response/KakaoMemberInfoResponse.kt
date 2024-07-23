@@ -11,7 +11,6 @@ data class KakaoMemberInfoResponse(
     private val id: String,
     private val kakaoAccount: KakaoAccount,
 ) {
-
     fun toMember(): Member {
         return Member(
             nickname = kakaoAccount.profile.nickname,
@@ -19,7 +18,7 @@ data class KakaoMemberInfoResponse(
             socialIdentifier = SocialIdentifier(
                 serverType = SocialLoginType.KAKAO,
                 socialId = id,
-            )
+            ),
         )
     }
 }

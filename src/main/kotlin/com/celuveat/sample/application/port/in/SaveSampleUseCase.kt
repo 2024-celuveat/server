@@ -4,6 +4,5 @@ import com.celuveat.sample.application.port.`in`.command.SaveSampleCommand
 import com.celuveat.sample.domain.Sample
 
 interface SaveSampleUseCase {
-
     fun saveSample(command: SaveSampleCommand): Sample
 }

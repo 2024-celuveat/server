@@ -13,11 +13,10 @@ class MemberPersistenceAdapter(
     private val memberJpaRepository: MemberJpaRepository,
     private val memberPersistenceMapper: MemberPersistenceMapper,
 ) : SaveMemberPort, FindMemberPort {
-
     override fun findBySocialIdentifier(socialIdentifier: SocialIdentifier): Member? {
         return memberJpaRepository.findMemberBySocialIdAndServerType(
             socialIdentifier.socialId,
-            socialIdentifier.serverType
+            socialIdentifier.serverType,
         )?.let { memberPersistenceMapper.toDomain(it) }
     }
 

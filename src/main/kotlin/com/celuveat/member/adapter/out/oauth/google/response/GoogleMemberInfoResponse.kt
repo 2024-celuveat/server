@@ -14,7 +14,6 @@ data class GoogleMemberInfoResponse(
     private val picture: String,
     private val locale: String,
 ) {
-
     fun toMember(): Member {
         return Member(
             nickname = name,
@@ -22,7 +21,7 @@ data class GoogleMemberInfoResponse(
             socialIdentifier = SocialIdentifier(
                 serverType = SocialLoginType.GOOGLE,
                 socialId = id,
-            )
+            ),
         )
     }
 }

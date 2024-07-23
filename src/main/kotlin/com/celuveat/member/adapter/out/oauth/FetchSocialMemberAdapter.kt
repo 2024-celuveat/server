@@ -11,8 +11,11 @@ import com.celuveat.member.exception.NotSupportedSocialLoginTypeException
 class FetchSocialMemberAdapter(
     private val socialLoginClients: Set<SocialLoginClient>,
 ) : FetchSocialMemberPort, GetSocialLoginUrlPort {
-
-    override fun fetchMember(socialLoginType: SocialLoginType, authCode: String, redirectUrl: String): Member {
+    override fun fetchMember(
+        socialLoginType: SocialLoginType,
+        authCode: String,
+        redirectUrl: String,
+    ): Member {
         val socialLoginClient = getSocialLoginClient(socialLoginType)
         return socialLoginClient.fetchMember(authCode, redirectUrl)
     }
@@ -22,7 +25,10 @@ class FetchSocialMemberAdapter(
             ?: throw NotSupportedSocialLoginTypeException(socialLoginType)
     }
 
-    override fun getSocialLoginUrl(socialLoginType: SocialLoginType, redirectUrl: String): String {
+    override fun getSocialLoginUrl(
+        socialLoginType: SocialLoginType,
+        redirectUrl: String,
+    ): String {
         val socialLoginClient = getSocialLoginClient(socialLoginType)
         return socialLoginClient.getSocialLoginUrl(redirectUrl)
     }

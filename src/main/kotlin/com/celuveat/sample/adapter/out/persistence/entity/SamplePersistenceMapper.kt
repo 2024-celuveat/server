@@ -5,7 +5,6 @@ import com.celuveat.sample.domain.Sample
 
 @Mapper
 class SamplePersistenceMapper {
-
     fun toEntity(sample: Sample): SampleJpaEntity {
         return SampleJpaEntity(
             id = sample.id,

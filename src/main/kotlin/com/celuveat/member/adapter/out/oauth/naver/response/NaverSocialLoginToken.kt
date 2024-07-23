@@ -5,5 +5,5 @@ data class NaverSocialLoginToken(
     val refreshToken: String,
     val tokenType: String,
     val error: String,
-    val errorDescription: String
+    val errorDescription: String,
 )

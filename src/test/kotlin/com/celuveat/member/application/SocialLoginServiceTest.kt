@@ -96,8 +96,10 @@ class SocialLoginServiceTest : BehaviorSpec({
         }
     }
 }) {
-
-    override suspend fun afterEach(testCase: TestCase, result: TestResult) {
+    override suspend fun afterEach(
+        testCase: TestCase,
+        result: TestResult,
+    ) {
         clearAllMocks()
         unmockkAll()
     }

@@ -6,7 +6,6 @@ import com.celuveat.member.domain.SocialIdentifier
 
 @Mapper
 class MemberPersistenceMapper {
-
     fun toEntity(member: Member): MemberJpaEntity {
         return MemberJpaEntity(
             id = member.id,
@@ -25,7 +24,7 @@ class MemberPersistenceMapper {
             socialIdentifier = SocialIdentifier(
                 serverType = memberJpaEntity.serverType,
                 socialId = memberJpaEntity.socialId,
-            )
+            ),
         )
     }
 }
