@@ -9,5 +9,4 @@ data class GoogleSocialLoginProperty(
     val clientSecret: String,
     val scope: List<String>,
     val authorizationUrl: String = "https://accounts.google.com/o/oauth2/v2/auth",
-) {
-}
+)

@@ -4,5 +4,4 @@ enum class SocialLoginType {
     KAKAO,
     NAVER,
     GOOGLE,
-    ;
 }

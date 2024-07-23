@@ -14,17 +14,16 @@ import org.springframework.web.method.support.ModelAndViewContainer
 class AuthMemberArgumentResolver(
     val extractMemberIdUseCase: ExtractMemberIdUseCase,
 ) : HandlerMethodArgumentResolver {
-
     override fun supportsParameter(parameter: MethodParameter): Boolean {
-        return parameter.hasParameterAnnotation(AuthId::class.java)
-                && parameter.parameterType == Long::class.java
+        return parameter.hasParameterAnnotation(AuthId::class.java) &&
+            parameter.parameterType == Long::class.java
     }
 
     override fun resolveArgument(
         parameter: MethodParameter,
         mavContainer: ModelAndViewContainer?,
         webRequest: NativeWebRequest,
-        binderFactory: WebDataBinderFactory?
+        binderFactory: WebDataBinderFactory?,
     ): Any? {
         val httpServletRequest = webRequest.toHttpServletRequest()
         val authorization = httpServletRequest.getTokenAuthorizationOrThrow()

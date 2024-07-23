@@ -9,5 +9,5 @@ data class GoogleSocialLoginToken(
     val refreshToken: String,
     val expiresIn: Int,
     val tokenType: String,
-    val scope: String
+    val scope: String,
 )

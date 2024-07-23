@@ -4,6 +4,9 @@ import com.celuveat.member.domain.Member
 import com.celuveat.member.domain.SocialLoginType
 
 interface FetchSocialMemberPort {
-
-    fun fetchMember(socialLoginType: SocialLoginType, authCode: String, redirectUrl: String): Member
+    fun fetchMember(
+        socialLoginType: SocialLoginType,
+        authCode: String,
+        redirectUrl: String,
+    ): Member
 }

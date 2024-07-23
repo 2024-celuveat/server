@@ -1,6 +1,9 @@
+import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
+
 plugins {
     id("org.springframework.boot") version "3.3.1"
     id("io.spring.dependency-management") version "1.1.5"
+    id("org.jlleitschuh.gradle.ktlint").version("12.1.1")
     kotlin("plugin.jpa") version "1.9.24"
     kotlin("jvm") version "1.9.24"
     kotlin("plugin.spring") version "1.9.24"
@@ -80,4 +83,10 @@ tasks.register("copySecret", Copy::class) {
 // Disable jar task
 tasks.named("jar") {
     enabled = false
+}
+
+ktlint {
+    reporters {
+        reporter(ReporterType.JSON)
+    }
 }

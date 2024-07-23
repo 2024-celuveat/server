@@ -9,5 +9,5 @@ data class KakaoSocialLoginToken(
     val refreshToken: String,
     val expiresIn: Int,
     val tokenType: String,
-    val refreshTokenExpiresIn: Int
+    val refreshTokenExpiresIn: Int,
 )

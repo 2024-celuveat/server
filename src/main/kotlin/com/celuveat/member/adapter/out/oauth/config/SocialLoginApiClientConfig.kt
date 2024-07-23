@@ -11,7 +11,6 @@ import org.springframework.web.client.RestClient
 import org.springframework.web.client.support.RestClientAdapter
 import org.springframework.web.service.invoker.HttpServiceProxyFactory
 
-
 @Configuration
 class SocialLoginApiClientConfig {
     private val log = LoggerFactory.getLogger(this.javaClass)!!
@@ -34,7 +33,7 @@ class SocialLoginApiClientConfig {
     private fun <T> createHttpInterface(clazz: Class<T>): T {
         val restClient = buildRestClientWithStatusHandler()
         return HttpServiceProxyFactory.builderFor(
-            RestClientAdapter.create(restClient)
+            RestClientAdapter.create(restClient),
         ).build().createClient(clazz)
     }
 
@@ -45,13 +44,15 @@ class SocialLoginApiClientConfig {
                 { _, response ->
                     log.error("Client Error Code={}", response.statusCode)
                     log.error("Client Error Message={}", String(response.body.readAllBytes()))
-                })
+                },
+            )
             .defaultStatusHandler(
                 { status: HttpStatusCode -> status.is5xxServerError },
                 { _, response ->
                     log.error("External Api Server Error Code={}", response.statusCode)
                     log.error("External Api Server Error Message={}", String(response.body.readAllBytes()))
-                })
+                },
+            )
             .build()
         return restClient
     }

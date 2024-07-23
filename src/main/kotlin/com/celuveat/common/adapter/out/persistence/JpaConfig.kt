@@ -5,5 +5,4 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 
 @EnableJpaAuditing
 @Configuration
-class JpaConfig {
-}
+class JpaConfig

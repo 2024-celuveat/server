@@ -10,9 +10,8 @@ import org.springframework.stereotype.Service
 @Service
 class TokenService(
     private val createTokenPort: CreateTokenPort,
-    private val extractClaimPort: ExtractClaimPort
+    private val extractClaimPort: ExtractClaimPort,
 ) : CreateAccessTokenUseCase, ExtractMemberIdUseCase {
-
     override fun create(memberId: Long): Token {
         return createTokenPort.create(MEMBER_ID_CLAIM, memberId.toString())
     }

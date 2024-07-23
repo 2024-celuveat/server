@@ -11,63 +11,68 @@ import org.springframework.web.servlet.resource.NoResourceFoundException
 
 @RestControllerAdvice
 class ExceptionControllerAdvice {
-
     private val log = LoggerFactory.getLogger(ExceptionControllerAdvice::class.java)!!
 
     @ExceptionHandler(CeluveatException::class)
-    fun handleBaseException(request: HttpServletRequest, e: CeluveatException): ResponseEntity<ExceptionResponse> {
+    fun handleBaseException(
+        request: HttpServletRequest,
+        e: CeluveatException,
+    ): ResponseEntity<ExceptionResponse> {
         log.warn(
             """
             잘못된 요청이 들어왔습니다.
             ERROR TYPE: ${e.javaClass.simpleName}
             URI: ${request.requestURI}
             내용: ${e.errorMessage}
-            """
+            """,
         )
         return ResponseEntity.status(e.status).body(
-            ExceptionResponse(e.errorMessage)
+            ExceptionResponse(e.errorMessage),
         )
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException::class)
     fun handleConversionFailedException(
         request: HttpServletRequest,
-        e: MethodArgumentTypeMismatchException
+        e: MethodArgumentTypeMismatchException,
     ): ResponseEntity<ExceptionResponse> {
         log.warn(
             """
             잘못된 요청이 들어왔습니다.
             URI: ${request.requestURI}
             내용: ${e.message}
-            """
+            """,
         )
         return ResponseEntity.badRequest().body(
-            ExceptionResponse("잘못된 요청입니다.")
+            ExceptionResponse("잘못된 요청입니다."),
         )
     }
 
     @ExceptionHandler(NoResourceFoundException::class)
     fun handleNoResourceFoundException(
         request: HttpServletRequest,
-        e: NoResourceFoundException
+        e: NoResourceFoundException,
     ): ResponseEntity<ExceptionResponse> {
         log.warn(
             """
             존재하지 않는 리소스에 요청이 들어왔습니다.
             URI: ${request.requestURI}
             내용: ${e.message}
-            """
+            """,
         )
         return ResponseEntity.status(NOT_FOUND).body(
-            ExceptionResponse("요청한 리소스를 찾을 수 없습니다.")
+            ExceptionResponse("요청한 리소스를 찾을 수 없습니다."),
         )
     }
 
     @ExceptionHandler(Exception::class)
-    fun handleException(request: HttpServletRequest, e: Exception): ResponseEntity<ExceptionResponse> {
+    fun handleException(
+        request: HttpServletRequest,
+        e: Exception,
+    ): ResponseEntity<ExceptionResponse> {
         log.error("예상하지 못한 예외가 발생했습니다. URI: ${request.requestURI}, ${e.message}", e)
         return ResponseEntity.internalServerError().body(
-            ExceptionResponse("서버가 응답할 수 없습니다.")
+            ExceptionResponse("서버가 응답할 수 없습니다."),
         )
     }
 }

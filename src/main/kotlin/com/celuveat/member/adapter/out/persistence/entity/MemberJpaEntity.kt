@@ -15,12 +15,10 @@ class MemberJpaEntity(
     val id: Long = 0,
     val nickname: String,
     val profileImageUrl: String?,
-
     @Enumerated(EnumType.STRING)
     val serverType: SocialLoginType,
     val socialId: String,
 ) : RootEntity<Long>() {
-
     override fun id(): Long {
         return this.id
     }

@@ -16,12 +16,14 @@ class NaverSocialLoginClient(
     private val naverSocialLoginProperty: NaverSocialLoginProperty,
     private val naverApiClient: NaverApiClient,
 ) : SocialLoginClient {
-
     override fun isSupports(socialLoginType: SocialLoginType): Boolean {
         return socialLoginType == SocialLoginType.NAVER
     }
 
-    override fun fetchMember(authCode: String, redirectUrl: String): Member {
+    override fun fetchMember(
+        authCode: String,
+        redirectUrl: String,
+    ): Member {
         validateAllowedRedirectUrl(redirectUrl)
         val socialLoginToken = fetchAccessToken(authCode)
         return fetchMemberInfo(socialLoginToken.accessToken).toMember()
@@ -38,7 +40,7 @@ class NaverSocialLoginClient(
             "client_id" to naverSocialLoginProperty.clientId,
             "client_secret" to naverSocialLoginProperty.clientSecret,
             "code" to authCode,
-            "state" to naverSocialLoginProperty.state
+            "state" to naverSocialLoginProperty.state,
         )
         return naverApiClient.fetchToken(tokenRequestBody)
     }
