@@ -1,0 +1,8 @@
+root = true
+
+[*.{kt,kts}]
+ktlint_standard_package-name = disabled
+
+[src/test/kotlin/**.{kt,kts}]
+ktlint_standard_indent = disabled
+ktlint_standard_string-template-indent = disabled
