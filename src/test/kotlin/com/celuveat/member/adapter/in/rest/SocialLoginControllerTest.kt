@@ -102,7 +102,6 @@ class SocialLoginControllerTest(
         val requestOrigin = "http://localhost:3000"
         val memberId = 1L
 
-
         test("소셜 로그인 회원 탈퇴 성공") {
             val command = WithdrawSocialLoginCommand(memberId, authCode, socialLoginType, requestOrigin)
             every { extractMemberIdUseCase.extract(accessToken) } returns memberId

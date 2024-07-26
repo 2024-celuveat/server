@@ -37,7 +37,7 @@ class FetchSocialMemberAdapter(
     override fun withdraw(
         authCode: String,
         socialLoginType: SocialLoginType,
-        redirectUrl: String
+        redirectUrl: String,
     ) {
         val socialLoginClient = getSocialLoginClient(socialLoginType)
         socialLoginClient.withdraw(authCode, redirectUrl)

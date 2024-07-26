@@ -50,7 +50,6 @@ class SocialLoginController(
         response.sendRedirect(socialLoginUrl)
     }
 
-
     @DeleteMapping("/withdraw/{socialLoginType}")
     fun withdraw(
         @AuthId memberId: Long,
