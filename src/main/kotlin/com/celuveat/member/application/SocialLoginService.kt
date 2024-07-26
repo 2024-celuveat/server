@@ -43,6 +43,7 @@ class SocialLoginService(
         return getSocialLoginUrlPort.getSocialLoginUrl(socialLoginType, redirectUrl)
     }
 
+    @Transactional
     override fun withdraw(command: WithdrawSocialLoginCommand) {
         withdrawSocialMemberPort.withdraw(
             command.authCode,
