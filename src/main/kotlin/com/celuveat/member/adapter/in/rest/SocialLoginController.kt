@@ -22,7 +22,7 @@ class SocialLoginController(
     private val createAccessTokenUseCase: CreateAccessTokenUseCase,
     private val getSocialLoginUrlUseCase: GetSocialLoginUrlUseCase,
 ) {
-    @GetMapping("/login/{socialLoginType}")
+    @GetMapping("/{socialLoginType}")
     fun login(
         @PathVariable socialLoginType: SocialLoginType,
         @RequestParam authCode: String,
@@ -34,7 +34,7 @@ class SocialLoginController(
         return LoginResponse.from(token)
     }
 
-    @GetMapping("/login/{socialLoginType}/url")
+    @GetMapping("/{socialLoginType}/url")
     fun redirectLoginUrl(
         @PathVariable socialLoginType: SocialLoginType,
         @RequestHeader(HttpHeaders.ORIGIN) requestOrigin: String,
