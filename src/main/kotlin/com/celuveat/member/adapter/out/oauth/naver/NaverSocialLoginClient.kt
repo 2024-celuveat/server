@@ -59,4 +59,15 @@ class NaverSocialLoginClient(
             .build()
             .toUriString()
     }
+
+    override fun withdraw(authCode: String, redirectUrl: String) {
+        val accessToken = fetchAccessToken(authCode)
+        val tokenRequestBody = mapOf(
+            "client_id" to naverSocialLoginProperty.clientId,
+            "client_secret" to naverSocialLoginProperty.clientSecret,
+            "access_token" to accessToken.accessToken,
+            "grant_type" to "delete",
+        )
+        naverApiClient.withdraw(tokenRequestBody)
+    }
 }

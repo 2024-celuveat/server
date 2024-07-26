@@ -62,4 +62,9 @@ class GoogleSocialLoginClient(
             .build()
             .toUriString()
     }
+
+    override fun withdraw(authCode: String, redirectUrl: String) {
+        val socialLoginToken = fetchAccessToken(authCode, redirectUrl)
+        googleApiClient.withdraw(socialLoginToken.accessToken)
+    }
 }

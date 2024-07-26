@@ -62,4 +62,9 @@ class KakaoSocialLoginClient(
             .build()
             .toUriString()
     }
+
+    override fun withdraw(authCode: String, redirectUrl: String) {
+        val socialLoginToken = fetchAccessToken(authCode, redirectUrl)
+        kakaoApiClient.withdraw("Bearer ${socialLoginToken.accessToken}")
+    }
 }
