@@ -15,29 +15,26 @@ import org.springframework.web.bind.annotation.RequestParam
 
 @Tag(name = "소셜로그인 API")
 interface SocialLoginApi {
-
     @Operation(summary = "소셜 로그인")
     @GetMapping("/login/{socialLoginType}")
     fun login(
         @Parameter(
             `in` = ParameterIn.PATH,
             required = true,
-            description = "소셜 로그인 타입"
+            description = "소셜 로그인 타입",
         )
         @PathVariable socialLoginType: SocialLoginType,
-
         @Parameter(
             `in` = ParameterIn.QUERY,
             required = true,
-            description = "소셜 로그인 서비스에서 제공해주는 auth code"
+            description = "소셜 로그인 서비스에서 제공해주는 auth code",
         )
         @RequestParam authCode: String,
-
         @Parameter(
             `in` = ParameterIn.HEADER,
             required = true,
             description = "origin (실제 요청 시 별도로 설정하지 않아도 브라우저에서 넣어줌)",
-            example = "http://localhost:3000"
+            example = "http://localhost:3000",
         )
         @RequestHeader(HttpHeaders.ORIGIN) requestOrigin: String,
     ): LoginResponse
@@ -48,15 +45,14 @@ interface SocialLoginApi {
         @Parameter(
             `in` = ParameterIn.PATH,
             required = true,
-            description = "소셜 로그인 타입"
+            description = "소셜 로그인 타입",
         )
         @PathVariable socialLoginType: SocialLoginType,
-
         @Parameter(
             `in` = ParameterIn.HEADER,
             required = true,
             description = "origin (실제 요청 시 별도로 설정하지 않아도 브라우저에서 넣어줌)",
-            example = "http://localhost:3000"
+            example = "http://localhost:3000",
         )
         @RequestHeader(HttpHeaders.ORIGIN) requestOrigin: String,
         response: HttpServletResponse,

@@ -11,12 +11,11 @@ import org.springframework.web.bind.annotation.RequestBody
 
 @Tag(name = "샘플 API")
 interface SampleApi {
-
     @ApiResponses(
         value = [
             ApiResponse(description = "샘플 저장", responseCode = "201"),
-            ApiResponse(responseCode = "400")
-        ]
+            ApiResponse(responseCode = "400"),
+        ],
     )
     @Operation(summary = "샘플 저장")
     @GetMapping("/sample")

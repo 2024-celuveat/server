@@ -12,7 +12,6 @@ import java.net.URI
 class SampleController(
     val saveSampleUseCase: SaveSampleUseCase,
 ) : SampleApi {
-
     @GetMapping("/sample")
     override fun sample(
         @RequestBody request: SaveSampleRequest,
