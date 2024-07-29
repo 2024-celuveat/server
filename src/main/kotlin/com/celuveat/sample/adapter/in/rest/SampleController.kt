@@ -11,9 +11,10 @@ import java.net.URI
 @Controller
 class SampleController(
     val saveSampleUseCase: SaveSampleUseCase,
-) {
+) : SampleApi {
+
     @GetMapping("/sample")
-    fun sample(
+    override fun sample(
         @RequestBody request: SaveSampleRequest,
     ): ResponseEntity<Long> {
         val command = request.toCommand()

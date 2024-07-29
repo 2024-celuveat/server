@@ -1,6 +1,5 @@
 package com.celuveat.member.adapter.`in`.rest
 
-import com.celuveat.auth.adaptor.`in`.rest.AuthId
 import com.celuveat.auth.application.port.`in`.CreateAccessTokenUseCase
 import com.celuveat.member.adapter.`in`.rest.response.LoginResponse
 import com.celuveat.member.application.port.`in`.GetSocialLoginUrlUseCase
@@ -27,9 +26,9 @@ class SocialLoginController(
     private val createAccessTokenUseCase: CreateAccessTokenUseCase,
     private val getSocialLoginUrlUseCase: GetSocialLoginUrlUseCase,
     private val withdrawSocialLoginUseCase: WithdrawSocialLoginUseCase,
-) {
+) : SocialLoginApi {
     @GetMapping("/{socialLoginType}")
-    fun login(
+    override fun login(
         @PathVariable socialLoginType: SocialLoginType,
         @RequestParam authCode: String,
         @RequestHeader(HttpHeaders.ORIGIN) requestOrigin: String,
@@ -41,7 +40,7 @@ class SocialLoginController(
     }
 
     @GetMapping("/url/{socialLoginType}")
-    fun redirectLoginUrl(
+    override fun redirectLoginUrl(
         @PathVariable socialLoginType: SocialLoginType,
         @RequestHeader(HttpHeaders.ORIGIN) requestOrigin: String,
         response: HttpServletResponse,
@@ -51,7 +50,7 @@ class SocialLoginController(
     }
 
     @DeleteMapping("/withdraw/{socialLoginType}")
-    fun withdraw(
+    override fun withdraw(
         @AuthId memberId: Long,
         @RequestParam authCode: String,
         @PathVariable socialLoginType: SocialLoginType,
