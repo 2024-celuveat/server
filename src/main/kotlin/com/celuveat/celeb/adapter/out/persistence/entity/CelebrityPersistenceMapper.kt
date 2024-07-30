@@ -1,6 +1,7 @@
 package com.celuveat.celeb.adapter.out.persistence.entity
 
 import com.celuveat.celeb.domain.Celebrity
+import com.celuveat.celeb.domain.ChannelId
 import com.celuveat.celeb.domain.YoutubeChannel
 import com.celuveat.common.annotation.Mapper
 
@@ -14,7 +15,7 @@ class CelebrityPersistenceMapper {
             introduction = celebrityJpaEntity.introduction,
             youtubeChannels = celebrityJpaEntity.youtubeChannels.map { youtubeChannelJpaEntity ->
                 YoutubeChannel(
-                    channelId = youtubeChannelJpaEntity.channelId,
+                    channelId = ChannelId(youtubeChannelJpaEntity.channelId),
                     channelUrl = youtubeChannelJpaEntity.channelUrl,
                     contentsName = youtubeChannelJpaEntity.contentsName,
                     contentsIntroduction = youtubeChannelJpaEntity.contentsIntroduction,

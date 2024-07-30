@@ -35,7 +35,7 @@ data class YoutubeChannelResult(
         fun from(youtubeChannel: YoutubeChannel): YoutubeChannelResult {
             return YoutubeChannelResult(
                 id = youtubeChannel.id,
-                channelId = youtubeChannel.channelId,
+                channelId = youtubeChannel.channelId.value,
                 channelUrl = youtubeChannel.channelUrl,
                 contentsName = youtubeChannel.contentsName,
                 restaurantCount = youtubeChannel.restaurantCount,

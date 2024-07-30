@@ -36,6 +36,7 @@ class CelebrityPersistenceAdapterTest(
         val savedMember = memberJpaRepository.save(sut.giveMeOne<MemberJpaEntity>())
         val channels = sut.giveMeBuilder<YoutubeChannelJpaEntity>()
             .set(YoutubeChannelJpaEntity::id, 0)
+            .set(YoutubeChannelJpaEntity::channelId, "@channelId")
             .sampleList(3)
         val savedChannels = youtubeChannelJpaRepository.saveAll(channels)
         val savedCelebrities = celebrityJpaRepository.saveAll(
