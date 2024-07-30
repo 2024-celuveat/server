@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController
 class CelebrityController(
     private val getInterestedCelebritiesUseCase: GetInterestedCelebritiesUseCase,
 ) {
-
     @GetMapping("/interested")
     fun getInterestedCelebrities(
         @AuthId memberId: Long,

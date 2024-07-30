@@ -17,7 +17,6 @@ class CelebrityJpaEntity(
     val name: String,
     val profileImageUrl: String,
     val introduction: String,
-
     @OneToMany
     @JoinColumn(name = "celebrity_id", foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT))
     val youtubeChannels: List<YoutubeChannelJpaEntity>,

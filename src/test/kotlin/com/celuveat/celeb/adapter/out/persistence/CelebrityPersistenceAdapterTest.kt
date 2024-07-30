@@ -46,7 +46,7 @@ class CelebrityPersistenceAdapterTest(
                 sut.giveMeBuilder<CelebrityJpaEntity>()
                     .set(CelebrityJpaEntity::youtubeChannels, savedChannels.subList(1, 3))
                     .sample(),
-            )
+            ),
         )
 
         interestedCelebrityJpaRepository.saveAll(
@@ -58,10 +58,9 @@ class CelebrityPersistenceAdapterTest(
                 sut.giveMeBuilder<InterestedCelebrityJpaEntity>()
                     .set(InterestedCelebrityJpaEntity::member, savedMember)
                     .set(InterestedCelebrityJpaEntity::celebrity, savedCelebrities[1])
-                    .sample()
-            )
+                    .sample(),
+            ),
         )
-
 
         // when
         val celebrities = celebrityPersistenceAdapter.findInterestedCelebrities(savedMember.id)

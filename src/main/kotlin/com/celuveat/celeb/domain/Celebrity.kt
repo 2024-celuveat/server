@@ -6,5 +6,4 @@ data class Celebrity(
     val profileImageUrl: String,
     val introduction: String,
     val youtubeChannels: List<YoutubeChannel>,
-) {
-}
+)

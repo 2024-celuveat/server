@@ -10,7 +10,6 @@ data class CelebrityResult(
     val introduction: String,
     val youtubeChannelResults: List<YoutubeChannelResult>,
 ) {
-
     companion object {
         fun from(celebrity: Celebrity): CelebrityResult {
             return CelebrityResult(
@@ -32,7 +31,6 @@ data class YoutubeChannelResult(
     val restaurantCount: Int,
     val subscriberCount: Long,
 ) {
-
     companion object {
         fun from(youtubeChannel: YoutubeChannel): YoutubeChannelResult {
             return YoutubeChannelResult(

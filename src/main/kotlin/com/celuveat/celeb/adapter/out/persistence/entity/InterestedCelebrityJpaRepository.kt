@@ -11,7 +11,7 @@ interface InterestedCelebrityJpaRepository : JpaRepository<InterestedCelebrityJp
         JOIN ic.celebrity c
         JOIN FETCH c.youtubeChannels
         WHERE ic.member.id = :memberId
-    """
+    """,
     )
     fun findAllCelebritiesByMemberId(memberId: Long): List<CelebrityJpaEntity>
 }
