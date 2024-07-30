@@ -10,6 +10,7 @@ class CelebrityService(
     private val findInterestedCelebritiesPort: FindInterestedCelebritiesPort,
 ) : GetInterestedCelebritiesUseCase {
     override fun getInterestedCelebrities(memberId: Long): List<CelebrityResult> {
-        return emptyList()
+        val celebrities = findInterestedCelebritiesPort.findInterestedCelebrities(memberId)
+        return celebrities.map { CelebrityResult.from(it) }
     }
 }
