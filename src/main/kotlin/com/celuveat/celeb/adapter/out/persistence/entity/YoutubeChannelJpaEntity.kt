@@ -12,6 +12,7 @@ class YoutubeChannelJpaEntity(
     val id: Long = 0,
     val channelId: String,
     val channelUrl: String,
+    val channelName: String,
     val contentsName: String,
     val contentsIntroduction: String,
     val restaurantCount: Int,

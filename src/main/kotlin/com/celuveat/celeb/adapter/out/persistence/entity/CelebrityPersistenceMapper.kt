@@ -17,6 +17,7 @@ class CelebrityPersistenceMapper {
                 YoutubeChannel(
                     channelId = ChannelId(youtubeChannelJpaEntity.channelId),
                     channelUrl = youtubeChannelJpaEntity.channelUrl,
+                    channelName = youtubeChannelJpaEntity.channelName,
                     contentsName = youtubeChannelJpaEntity.contentsName,
                     contentsIntroduction = youtubeChannelJpaEntity.contentsIntroduction,
                     restaurantCount = youtubeChannelJpaEntity.restaurantCount,
