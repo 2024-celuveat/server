@@ -1,10 +1,13 @@
 package com.celuveat.member.application
 
 import com.celuveat.member.application.port.`in`.command.SocialLoginCommand
+import com.celuveat.member.application.port.`in`.command.WithdrawSocialLoginCommand
+import com.celuveat.member.application.port.out.DeleteMemberPort
 import com.celuveat.member.application.port.out.FetchSocialMemberPort
 import com.celuveat.member.application.port.out.FindMemberPort
 import com.celuveat.member.application.port.out.GetSocialLoginUrlPort
 import com.celuveat.member.application.port.out.SaveMemberPort
+import com.celuveat.member.application.port.out.WithdrawSocialMemberPort
 import com.celuveat.member.domain.Member
 import com.celuveat.member.domain.SocialIdentifier
 import com.celuveat.member.domain.SocialLoginType
@@ -27,12 +30,16 @@ class SocialLoginServiceTest : BehaviorSpec({
     val findMemberPort: FindMemberPort = mockk()
     val fetchSocialMemberPort: FetchSocialMemberPort = mockk()
     val getSocialLoginUrlPort: GetSocialLoginUrlPort = mockk()
+    val withdrawSocialMemberPort: WithdrawSocialMemberPort = mockk()
+    val deleteMemberPort: DeleteMemberPort = mockk()
 
     val socialLoginService = SocialLoginService(
         fetchSocialMemberPort = fetchSocialMemberPort,
         saveMemberPort = saveMemberPort,
         findMemberPort = findMemberPort,
         getSocialLoginUrlPort = getSocialLoginUrlPort,
+        withdrawSocialMemberPort = withdrawSocialMemberPort,
+        deleteMemberPort = deleteMemberPort,
     )
 
     Given("소셜 로그인을 통해 회원가입할 때") {
@@ -92,6 +99,23 @@ class SocialLoginServiceTest : BehaviorSpec({
                 result shouldBe socialLoginUrl
 
                 verify { getSocialLoginUrlPort.getSocialLoginUrl(serverType, redirectUrl) }
+            }
+        }
+    }
+
+    Given("소셜 로그인 회원 탈퇴 시") {
+        val serverType = SocialLoginType.KAKAO
+        val redirectUrl = "redirectUrl"
+        val authCode = "authCode"
+        val command = WithdrawSocialLoginCommand(1L, authCode, serverType, redirectUrl)
+        every { withdrawSocialMemberPort.withdraw(authCode, serverType, redirectUrl) } returns Unit
+        every { deleteMemberPort.deleteById(command.memberId) } returns Unit
+        When("회원 탈퇴 요청을 전달하면") {
+            socialLoginService.withdraw(command)
+
+            Then("소셜 로그인 회원 탈퇴가 완료된다") {
+                verify { withdrawSocialMemberPort.withdraw(authCode, serverType, redirectUrl) }
+                verify { deleteMemberPort.deleteById(command.memberId) }
             }
         }
     }

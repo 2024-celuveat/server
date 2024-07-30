@@ -21,4 +21,10 @@ interface KakaoApiClient {
     fun fetchMemberInfo(
         @RequestHeader(name = AUTHORIZATION) bearerToken: String,
     ): KakaoMemberInfoResponse
+
+    // ref - https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api#unlink
+    @PostExchange(url = "https://kapi.kakao.com/v1/user/unlink", contentType = APPLICATION_FORM_URLENCODED_VALUE)
+    fun withdraw(
+        @RequestHeader(name = AUTHORIZATION) bearerToken: String,
+    )
 }

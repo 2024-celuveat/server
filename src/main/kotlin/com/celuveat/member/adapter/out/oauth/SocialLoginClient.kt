@@ -12,4 +12,9 @@ interface SocialLoginClient {
     ): Member
 
     fun getSocialLoginUrl(redirectUrl: String): String
+
+    fun withdraw(
+        authCode: String,
+        redirectUrl: String,
+    )
 }

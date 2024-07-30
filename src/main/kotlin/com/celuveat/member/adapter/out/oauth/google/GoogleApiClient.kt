@@ -18,4 +18,10 @@ interface GoogleApiClient {
     fun fetchMemberInfo(
         @RequestHeader(AUTHORIZATION) bearerToken: String,
     ): GoogleMemberInfoResponse
+
+    // ref - https://developers.google.com/identity/protocols/oauth2/web-server#tokenrevoke
+    @PostExchange("https://oauth2.googleapis.com/revoke")
+    fun withdraw(
+        @RequestParam token: String,
+    )
 }
