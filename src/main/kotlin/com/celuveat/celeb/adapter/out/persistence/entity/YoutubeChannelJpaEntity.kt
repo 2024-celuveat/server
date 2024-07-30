@@ -14,6 +14,7 @@ class YoutubeChannelJpaEntity(
     val channelUrl: String,
     val contentsName: String,
     val contentsIntroduction: String,
+    val restaurantCount: Int,
     val subscriberCount: Long,
 ) : RootEntity<Long>() {
     override fun id(): Long {
