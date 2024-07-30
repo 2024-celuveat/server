@@ -40,7 +40,7 @@ class SocialLoginController(
         return LoginResponse.from(token)
     }
 
-    @GetMapping("/{socialLoginType}/url")
+    @GetMapping("/url/{socialLoginType}")
     fun redirectLoginUrl(
         @PathVariable socialLoginType: SocialLoginType,
         @RequestHeader(HttpHeaders.ORIGIN) requestOrigin: String,

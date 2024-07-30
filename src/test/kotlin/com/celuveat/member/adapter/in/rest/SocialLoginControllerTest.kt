@@ -75,7 +75,7 @@ class SocialLoginControllerTest(
         test("소셜 로그인 URL을 성공적으로 반환한다") {
             every { getSocialLoginUrlUseCase.getSocialLoginUrl(socialLoginType, requestOrigin) } returns socialLoginUrl
 
-            mockMvc.get("/social-login/{socialLoginType}/url", socialLoginType) {
+            mockMvc.get("/social-login/url/{socialLoginType}", socialLoginType) {
                 header("Origin", requestOrigin)
             }.andExpect {
                 status { isFound() }
@@ -86,7 +86,7 @@ class SocialLoginControllerTest(
         test("지원하지 않는 서버 타입으로 요청 하면 실패한다") {
             val unsupportedSocialLoginType = "UNSUPPORTED"
 
-            mockMvc.get("/social-login/{socialLoginType}/url", unsupportedSocialLoginType) {
+            mockMvc.get("/social-login/url/{socialLoginType}", unsupportedSocialLoginType) {
                 header("Origin", requestOrigin)
             }.andExpect {
                 status { isBadRequest() }
