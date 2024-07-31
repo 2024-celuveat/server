@@ -4,6 +4,7 @@ import com.celuveat.auth.application.port.`in`.ExtractMemberIdUseCase
 import com.celuveat.celeb.application.port.`in`.GetInterestedCelebritiesUseCase
 import com.celuveat.celeb.application.port.`in`.result.CelebrityResult
 import com.celuveat.support.sut
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.navercorp.fixturemonkey.kotlin.giveMeBuilder
 import com.ninjasquad.springmockk.MockkBean
 import io.kotest.core.spec.style.FunSpec
@@ -16,6 +17,7 @@ import org.springframework.test.web.servlet.get
 @WebMvcTest(CelebrityController::class)
 class CelebrityControllerTest(
     @Autowired val mockMvc: MockMvc,
+    @Autowired val mapper: ObjectMapper,
     @MockkBean val getInterestedCelebritiesUseCase: GetInterestedCelebritiesUseCase,
     // for AuthMemberArgumentResolver
     @MockkBean val extractMemberIdUseCase: ExtractMemberIdUseCase,
@@ -34,7 +36,7 @@ class CelebrityControllerTest(
                 header("Authorization", "Bearer $accessToken")
             }.andExpect {
                 status { isOk() }
-                jsonPath("$[0].id") { value(results[0].id) }
+                content { json(mapper.writeValueAsString(results)) }
             }.andDo {
                 print()
             }
