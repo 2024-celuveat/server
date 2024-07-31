@@ -9,7 +9,6 @@ interface InterestedCelebrityJpaRepository : JpaRepository<InterestedCelebrityJp
         SELECT c
         FROM InterestedCelebrityJpaEntity ic
         JOIN ic.celebrity c
-        JOIN FETCH c.youtubeChannels
         WHERE ic.member.id = :memberId
     """,
     )

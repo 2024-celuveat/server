@@ -33,32 +33,31 @@ class CelebrityPersistenceAdapterTest(
 ) : StringSpec({
     "회원이 관심 목록에 추가한 셀럽을 조회 한다." {
         // given
-        val savedMember = memberJpaRepository.save(sut.giveMeOne<MemberJpaEntity>())
-        val channels = sut.giveMeBuilder<YoutubeChannelJpaEntity>()
+        val savedCelebrities = celebrityJpaRepository.saveAll(sut.giveMeBuilder<CelebrityJpaEntity>().sampleList(2))
+        val celebrityA = savedCelebrities[0]
+        val celebrityB = savedCelebrities[1]
+
+        val channelA = sut.giveMeBuilder<YoutubeChannelJpaEntity>()
             .set(YoutubeChannelJpaEntity::id, 0)
             .set(YoutubeChannelJpaEntity::channelId, "@channelId")
-            .sampleList(3)
-        val savedChannels = youtubeChannelJpaRepository.saveAll(channels)
-        val savedCelebrities = celebrityJpaRepository.saveAll(
-            listOf(
-                sut.giveMeBuilder<CelebrityJpaEntity>()
-                    .set(CelebrityJpaEntity::youtubeChannels, savedChannels.subList(0, 2))
-                    .sample(),
-                sut.giveMeBuilder<CelebrityJpaEntity>()
-                    .set(CelebrityJpaEntity::youtubeChannels, savedChannels.subList(1, 3))
-                    .sample(),
-            ),
-        )
-
+            .set(YoutubeChannelJpaEntity::celebrity, celebrityA)
+            .sampleList(2)
+        val channelB = sut.giveMeBuilder<YoutubeChannelJpaEntity>()
+            .set(YoutubeChannelJpaEntity::id, 0)
+            .set(YoutubeChannelJpaEntity::channelId, "@channelId")
+            .set(YoutubeChannelJpaEntity::celebrity, celebrityB)
+            .sample()
+        youtubeChannelJpaRepository.saveAll(channelA + channelB)
+        val savedMember = memberJpaRepository.save(sut.giveMeOne<MemberJpaEntity>())
         interestedCelebrityJpaRepository.saveAll(
             listOf(
                 sut.giveMeBuilder<InterestedCelebrityJpaEntity>()
                     .set(InterestedCelebrityJpaEntity::member, savedMember)
-                    .set(InterestedCelebrityJpaEntity::celebrity, savedCelebrities[0])
+                    .set(InterestedCelebrityJpaEntity::celebrity, celebrityA)
                     .sample(),
                 sut.giveMeBuilder<InterestedCelebrityJpaEntity>()
                     .set(InterestedCelebrityJpaEntity::member, savedMember)
-                    .set(InterestedCelebrityJpaEntity::celebrity, savedCelebrities[1])
+                    .set(InterestedCelebrityJpaEntity::celebrity, celebrityB)
                     .sample(),
             ),
         )

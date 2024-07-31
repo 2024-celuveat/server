@@ -7,13 +7,16 @@ import com.celuveat.common.annotation.Mapper
 
 @Mapper
 class CelebrityPersistenceMapper {
-    fun toDomain(celebrityJpaEntity: CelebrityJpaEntity): Celebrity {
+    fun toDomain(
+        celebrityJpaEntity: CelebrityJpaEntity,
+        youtubeChannelJpaEntities: List<YoutubeChannelJpaEntity>,
+    ): Celebrity {
         return Celebrity(
             id = celebrityJpaEntity.id,
             name = celebrityJpaEntity.name,
             profileImageUrl = celebrityJpaEntity.profileImageUrl,
             introduction = celebrityJpaEntity.introduction,
-            youtubeChannels = celebrityJpaEntity.youtubeChannels.map { youtubeChannelJpaEntity ->
+            youtubeChannels = youtubeChannelJpaEntities.map { youtubeChannelJpaEntity ->
                 YoutubeChannel(
                     channelId = ChannelId(youtubeChannelJpaEntity.channelId),
                     channelUrl = youtubeChannelJpaEntity.channelUrl,
