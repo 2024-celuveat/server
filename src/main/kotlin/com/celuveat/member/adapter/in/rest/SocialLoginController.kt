@@ -1,5 +1,6 @@
 package com.celuveat.member.adapter.`in`.rest
 
+import com.celuveat.auth.adaptor.`in`.rest.AuthId
 import com.celuveat.auth.application.port.`in`.CreateAccessTokenUseCase
 import com.celuveat.member.adapter.`in`.rest.response.LoginResponse
 import com.celuveat.member.application.port.`in`.GetSocialLoginUrlUseCase
