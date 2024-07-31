@@ -6,9 +6,7 @@ import com.celuveat.celeb.adapter.out.persistence.entity.YoutubeChannelJpaReposi
 import com.celuveat.celeb.application.port.out.FindInterestedCelebritiesPort
 import com.celuveat.celeb.domain.Celebrity
 import com.celuveat.common.annotation.Adapter
-import com.celuveat.common.utils.findByIdOrThrow
 import com.celuveat.member.adapter.out.persistence.entity.MemberJpaRepository
-import com.celuveat.member.exception.NotFoundMemberException
 
 @Adapter
 class CelebrityPersistenceAdapter(
@@ -18,7 +16,7 @@ class CelebrityPersistenceAdapter(
     private val celebrityPersistenceMapper: CelebrityPersistenceMapper,
 ) : FindInterestedCelebritiesPort {
     override fun findInterestedCelebrities(memberId: Long): List<Celebrity> {
-        memberJpaRepository.findByIdOrThrow(memberId) { NotFoundMemberException }
+        memberJpaRepository.getById(memberId)
         val celebrities = interestedCelebrityJpaRepository.findAllCelebritiesByMemberId(memberId)
         val celebrityIds = celebrities.map { it.id }
         val youtubeChannelsByCelebrity = youtubeChannelJpaRepository.findAllByCelebrityIdIn(celebrityIds)
