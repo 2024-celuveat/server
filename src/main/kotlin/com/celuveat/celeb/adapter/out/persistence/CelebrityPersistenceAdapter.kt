@@ -3,7 +3,7 @@ package com.celuveat.celeb.adapter.out.persistence
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityPersistenceMapper
 import com.celuveat.celeb.adapter.out.persistence.entity.InterestedCelebrityJpaRepository
 import com.celuveat.celeb.adapter.out.persistence.entity.YoutubeChannelJpaRepository
-import com.celuveat.celeb.application.port.out.FindInterestedCelebritiesPort
+import com.celuveat.celeb.application.port.out.FindCelebritiesPort
 import com.celuveat.celeb.domain.Celebrity
 import com.celuveat.common.annotation.Adapter
 import com.celuveat.member.adapter.out.persistence.entity.MemberJpaRepository
@@ -14,7 +14,7 @@ class CelebrityPersistenceAdapter(
     private val interestedCelebrityJpaRepository: InterestedCelebrityJpaRepository,
     private val memberJpaRepository: MemberJpaRepository,
     private val celebrityPersistenceMapper: CelebrityPersistenceMapper,
-) : FindInterestedCelebritiesPort {
+) : FindCelebritiesPort {
     override fun findInterestedCelebrities(memberId: Long): List<Celebrity> {
         memberJpaRepository.getById(memberId)
         val celebrities = interestedCelebrityJpaRepository.findAllCelebritiesByMemberId(memberId)
