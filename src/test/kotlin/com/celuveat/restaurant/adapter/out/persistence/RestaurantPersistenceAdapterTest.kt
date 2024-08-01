@@ -89,7 +89,7 @@ class RestaurantPersistenceAdapterTest(
             interestedRestaurantResults.hasNext shouldBe false
             interestedRestaurantResults.contents.map { it.id } shouldContainInOrder listOf(
                 restaurantB.id,
-                restaurantA.id
+                restaurantA.id,
             )
         }
     }

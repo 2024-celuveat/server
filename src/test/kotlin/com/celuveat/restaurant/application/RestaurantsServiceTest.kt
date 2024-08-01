@@ -33,7 +33,7 @@ class RestaurantsServiceTest : BehaviorSpec({
         val interestedRestaurantResult = SliceResult.of(
             contents = sut.giveMeBuilder<Restaurant>().sampleList(3),
             currentPage = 0,
-            hasNext = false
+            hasNext = false,
         )
         val interestedRestaurantResultIds = interestedRestaurantResult.contents.map { it.id }
         every { findRestaurantsPort.findInterestedRestaurants(memberId, page, size) } returns interestedRestaurantResult

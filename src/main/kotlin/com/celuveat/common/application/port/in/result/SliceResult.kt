@@ -11,7 +11,7 @@ data class SliceResult<T>(
             contents = contents.map { converter(it) },
             currentPage = currentPage,
             hasNext = hasNext,
-            size = size
+            size = size,
         )
     }
 

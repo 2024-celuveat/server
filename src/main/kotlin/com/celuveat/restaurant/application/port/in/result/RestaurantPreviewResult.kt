@@ -22,7 +22,7 @@ data class RestaurantPreviewResult(
         fun of(
             restaurant: Restaurant,
             liked: Boolean,
-            visitedCelebrities: List<Celebrity>
+            visitedCelebrities: List<Celebrity>,
         ): RestaurantPreviewResult {
             return RestaurantPreviewResult(
                 id = restaurant.id,
@@ -35,7 +35,7 @@ data class RestaurantPreviewResult(
                 longitude = restaurant.longitude,
                 liked = liked,
                 visitedCelebrities = visitedCelebrities.map { SimpleCelebrityResult(it.name, it.profileImageUrl) },
-                images = restaurant.images.map { RestaurantImageResult.from(it) }
+                images = restaurant.images.map { RestaurantImageResult.from(it) },
             )
         }
     }
@@ -47,14 +47,13 @@ data class RestaurantImageResult(
     val url: String,
     val isThumbnail: Boolean,
 ) {
-
     companion object {
         fun from(restaurantImage: RestaurantImage): RestaurantImageResult {
             return RestaurantImageResult(
                 name = restaurantImage.name,
                 author = restaurantImage.author,
                 url = restaurantImage.url,
-                isThumbnail = restaurantImage.isThumbnail
+                isThumbnail = restaurantImage.isThumbnail,
             )
         }
     }

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController
 class RestaurantController(
     private val getInterestedRestaurantsUseCase: GetInterestedRestaurantsUseCase,
 ) : RestaurantApi {
-
     @GetMapping("/interested")
     override fun getInterestedRestaurants(
         @AuthId memberId: Long,
@@ -27,7 +26,7 @@ class RestaurantController(
                 memberId = memberId,
                 page = page ?: 0,
                 size = size ?: 10,
-            )
+            ),
         )
         return SliceResponse.from(
             sliceResult = interestedRestaurant,

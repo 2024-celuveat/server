@@ -12,7 +12,7 @@ interface VideoFeaturedRestaurantJpaRepository : JpaRepository<VideoFeaturedRest
         JOIN v.youtubeChannel yc
         JOIN yc.celebrity c
         WHERE vfr.restaurant.id IN :restaurantIds
-        """
+        """,
     )
     fun findVisitedCelebrities(restaurantIds: List<Long>): List<VisitedCelebrity>
 }

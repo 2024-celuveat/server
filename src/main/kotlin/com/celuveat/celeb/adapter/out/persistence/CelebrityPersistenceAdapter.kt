@@ -36,7 +36,7 @@ class CelebrityPersistenceAdapter(
                 visitedCelebrities.map {
                     celebrityPersistenceMapper.toDomain(
                         it.celebrity,
-                        youtubeChannelsByCelebrity[it.celebrity.id]!!
+                        youtubeChannelsByCelebrity[it.celebrity.id]!!,
                     )
                 }
             }

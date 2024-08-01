@@ -20,7 +20,7 @@ class RestaurantsService(
             query.size,
         )
         val celebritiesByRestaurants = findCelebritiesPort.findVisitedCelebritiesByRestaurants(
-            interestedRestaurants.contents.map { it.id }
+            interestedRestaurants.contents.map { it.id },
         )
         return interestedRestaurants.convertContent {
             RestaurantPreviewResult.of(

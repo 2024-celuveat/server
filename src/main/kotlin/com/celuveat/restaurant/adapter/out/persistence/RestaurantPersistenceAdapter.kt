@@ -19,7 +19,7 @@ class RestaurantPersistenceAdapter(
     override fun findInterestedRestaurants(
         memberId: Long,
         page: Int,
-        size: Int
+        size: Int,
     ): SliceResult<Restaurant> {
         val pageRequest = PageRequest.of(page, size, LATEST_ID_SORTER)
         val restaurantSlice = interestedRestaurantJpaRepository.findRestaurantByMemberId(memberId, pageRequest)
@@ -29,7 +29,7 @@ class RestaurantPersistenceAdapter(
             contents = restaurantSlice.content.map {
                 restaurantPersistenceMapper.toDomain(
                     it,
-                    imagesByRestaurants[it.id]!!
+                    imagesByRestaurants[it.id]!!,
                 )
             },
             currentPage = page,

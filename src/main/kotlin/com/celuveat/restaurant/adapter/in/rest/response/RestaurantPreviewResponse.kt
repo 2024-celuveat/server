@@ -76,10 +76,10 @@ data class RestaurantPreviewResponse(
                 visitedCelebrities = restaurantPreviewResult.visitedCelebrities.map {
                     SimpleCelebrityResponse(
                         it.name,
-                        it.profileImageUrl
+                        it.profileImageUrl,
                     )
                 },
-                images = restaurantPreviewResult.images.map { RestaurantImageResponse.from(it) }
+                images = restaurantPreviewResult.images.map { RestaurantImageResponse.from(it) },
             )
         }
     }
@@ -113,7 +113,7 @@ data class RestaurantImageResponse(
                 name = restaurantImage.name,
                 author = restaurantImage.author,
                 url = restaurantImage.url,
-                isThumbnail = restaurantImage.isThumbnail
+                isThumbnail = restaurantImage.isThumbnail,
             )
         }
     }
