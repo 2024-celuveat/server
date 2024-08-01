@@ -23,4 +23,8 @@ class CelebrityPersistenceAdapter(
             .groupBy { it.celebrity.id }
         return celebrities.map { celebrityPersistenceMapper.toDomain(it, youtubeChannelsByCelebrity[it.id]!!) }
     }
+
+    override fun findVisitedCelebritiesByRestaurants(restaurantIds: List<Long>): Map<Long, List<Celebrity>> {
+        return mapOf()
+    }
 }

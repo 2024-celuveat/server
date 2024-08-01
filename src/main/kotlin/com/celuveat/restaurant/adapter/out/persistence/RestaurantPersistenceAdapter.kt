@@ -5,7 +5,7 @@ import com.celuveat.common.application.port.`in`.result.SliceResult
 import com.celuveat.restaurant.adapter.out.persistence.entity.InterestedRestaurantJpaRepository
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantImageJpaRepository
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantPersistenceMapper
-import com.celuveat.restaurant.application.port.out.FindInterestedRestaurantsPort
+import com.celuveat.restaurant.application.port.out.FindRestaurantsPort
 import com.celuveat.restaurant.domain.Restaurant
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -15,7 +15,7 @@ class RestaurantPersistenceAdapter(
     private val restaurantImageJpaRepository: RestaurantImageJpaRepository,
     private val interestedRestaurantJpaRepository: InterestedRestaurantJpaRepository,
     private val restaurantPersistenceMapper: RestaurantPersistenceMapper,
-) : FindInterestedRestaurantsPort {
+) : FindRestaurantsPort {
     override fun findInterestedRestaurants(
         memberId: Long,
         page: Int,

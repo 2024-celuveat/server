@@ -4,6 +4,6 @@ const val DEFAULT_INTERESTED_RESTAURANTS_SIZE = 10
 
 data class GetInterestedRestaurantsQuery(
     val memberId: Long,
-    val page: Int,
+    val page: Int = 0,
     val size: Int = DEFAULT_INTERESTED_RESTAURANTS_SIZE,
 )

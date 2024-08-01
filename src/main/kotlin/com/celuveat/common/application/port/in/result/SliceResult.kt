@@ -6,6 +6,14 @@ data class SliceResult<T>(
     val hasNext: Boolean,
     val size: Int,
 ) {
+    fun <R> convertContent(converter: (T) -> R): SliceResult<R> {
+        return SliceResult(
+            contents = contents.map { converter(it) },
+            currentPage = currentPage,
+            hasNext = hasNext,
+            size = size
+        )
+    }
 
     companion object {
         fun <T> of(
