@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: celuveat
+
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+        highlight_sql: true
+
+oauth:
+  kakao:
+    client_id:
+    allowed_redirect_uris:
+    client_secret:
+    admin_key:
+    scope:
+  naver:
+    client_id:
+    allowed_redirect_uris:
+      -
+      -
+      -
+    client_secret:
+    scope:
+    state:
+  google:
+    client_id:
+    allowed_redirect_uris:
+      -
+      -
+      -
+    client_secret:
+    scope:
+
+jwt:
+  secret_key: randomjwtkeyrandomjwtkeyrandomjwtkeyrandomjwtkeyrandomjwtkey
+  access_token_expiration_millis: 7200 # 30 minutes
+
+
+swagger:
+  server-url: http://localhost:8080
