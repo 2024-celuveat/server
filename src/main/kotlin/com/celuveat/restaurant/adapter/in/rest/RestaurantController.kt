@@ -5,9 +5,10 @@ import com.celuveat.common.adapter.out.rest.response.SliceResponse
 import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantPreviewResponse
 import com.celuveat.restaurant.application.port.`in`.GetInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.query.GetInterestedRestaurantsQuery
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RequestMapping("/restaurants")
@@ -18,14 +19,13 @@ class RestaurantController(
     @GetMapping("/interested")
     override fun getInterestedRestaurants(
         @AuthId memberId: Long,
-        @RequestParam("page") page: Int?,
-        @RequestParam("size") size: Int?,
+        @PageableDefault(size = 10, page = 0) pageable: Pageable,
     ): SliceResponse<RestaurantPreviewResponse> {
         val interestedRestaurant = getInterestedRestaurantsUseCase.getInterestedRestaurant(
             GetInterestedRestaurantsQuery(
                 memberId = memberId,
-                page = page ?: 0,
-                size = size ?: 10,
+                page = pageable.pageNumber,
+                size = pageable.pageSize,
             ),
         )
         return SliceResponse.from(
