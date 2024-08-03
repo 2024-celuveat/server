@@ -1,4 +1,4 @@
-package com.celuveat.celeb.adapter.out.persistence.entity
+package com.celuveat.restaurant.adapter.out.persistence.entity
 
 import com.celuveat.common.adapter.out.persistence.entity.RootEntity
 import com.celuveat.member.adapter.out.persistence.entity.MemberJpaEntity
@@ -13,15 +13,15 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 
 @Entity
-class InterestedCelebrityJpaEntity(
+class InterestedRestaurantJpaEntity(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT))
     val member: MemberJpaEntity,
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "celebrity_id", foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    val celebrity: CelebrityJpaEntity,
+    @JoinColumn(name = "restaurant_id", foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    val restaurant: RestaurantJpaEntity,
 ) : RootEntity<Long>() {
     override fun id(): Long {
         return this.id

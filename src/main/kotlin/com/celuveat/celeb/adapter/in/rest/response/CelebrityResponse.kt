@@ -94,3 +94,25 @@ data class YoutubeChannelResponse(
         }
     }
 }
+
+data class SimpleCelebrityResponse(
+    @Schema(
+        description = "연예인 이름",
+        example = "성시경",
+    )
+    val name: String,
+    @Schema(
+        description = "프로필 이미지 URL",
+        example = "https://example.com/profile.jpg",
+    )
+    val profileImageUrl: String,
+) {
+    companion object {
+        fun from(celebrity: CelebrityResult): SimpleCelebrityResponse {
+            return SimpleCelebrityResponse(
+                name = celebrity.name,
+                profileImageUrl = celebrity.profileImageUrl,
+            )
+        }
+    }
+}
