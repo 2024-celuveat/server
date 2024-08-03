@@ -19,4 +19,15 @@ interface InterestedRestaurantJpaRepository : JpaRepository<InterestedRestaurant
         memberId: Long,
         pageable: Pageable,
     ): Slice<RestaurantJpaEntity>
+
+    @EntityGraph(attributePaths = ["restaurant"])
+    fun findByMemberIdAndRestaurantId(
+        memberId: Long,
+        restaurantId: Long,
+    ): InterestedRestaurantJpaEntity?
+
+    fun existsByMemberIdAndRestaurantId(
+        memberId: Long,
+        restaurantId: Long,
+    ): Boolean
 }

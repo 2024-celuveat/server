@@ -3,6 +3,7 @@ package com.celuveat.restaurant.adapter.out.persistence
 import com.celuveat.common.adapter.out.persistence.JpaConfig
 import com.celuveat.member.adapter.out.persistence.entity.MemberJpaEntity
 import com.celuveat.member.adapter.out.persistence.entity.MemberJpaRepository
+import com.celuveat.member.exception.NotFoundMemberException
 import com.celuveat.restaurant.adapter.out.persistence.entity.InterestedRestaurantJpaEntity
 import com.celuveat.restaurant.adapter.out.persistence.entity.InterestedRestaurantJpaRepository
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantImageJpaEntity
@@ -10,15 +11,22 @@ import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantImageJpa
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantJpaEntity
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantJpaRepository
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantPersistenceMapper
+import com.celuveat.restaurant.exception.AlreadyInterestedRestaurantException
+import com.celuveat.restaurant.exception.NotFoundInterestedRestaurantException
+import com.celuveat.restaurant.exception.NotFoundRestaurantException
 import com.celuveat.support.sut
 import com.navercorp.fixturemonkey.kotlin.giveMeBuilder
 import com.navercorp.fixturemonkey.kotlin.giveMeOne
 import com.navercorp.fixturemonkey.kotlin.set
+import io.kotest.assertions.throwables.shouldNotThrowAny
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContainInOrder
 import io.kotest.matchers.shouldBe
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.context.annotation.Import
+
+private const val NOT_EXIST_ID = -1L
 
 @Import(RestaurantPersistenceAdapter::class, RestaurantPersistenceMapper::class, JpaConfig::class)
 @DataJpaTest
@@ -91,6 +99,113 @@ class RestaurantPersistenceAdapterTest(
                 restaurantB.id,
                 restaurantA.id,
             )
+        }
+    }
+
+    context("관심 음식점 조회 시") {
+        // given
+        val savedRestaurant = restaurantJpaRepository.save(sut.giveMeOne<RestaurantJpaEntity>())
+        val savedMember = memberJpaRepository.save(sut.giveMeOne<MemberJpaEntity>())
+        val images = sut.giveMeBuilder<RestaurantImageJpaEntity>()
+            .set(RestaurantImageJpaEntity::id, 0)
+            .set(RestaurantImageJpaEntity::restaurant, savedRestaurant)
+            .set(RestaurantImageJpaEntity::isThumbnail, true, 1)
+            .sampleList(3)
+        restaurantImageJpaRepository.saveAll(images)
+        interestedRestaurantJpaRepository.save(
+            InterestedRestaurantJpaEntity(
+                member = savedMember,
+                restaurant = savedRestaurant,
+            )
+        )
+
+        test("존재하는 관심 음식점인 경우 음식점을 반환한다.") {
+            // when
+            val interestedRestaurant = restaurantPersistenceAdapter.findInterestedRestaurantOrNull(
+                savedMember.id,
+                savedRestaurant.id,
+            )
+
+            // then
+            interestedRestaurant!!.id shouldBe savedRestaurant.id
+        }
+
+        test("존재하지 않는 관심 음식점인 경우 null을 반환한다.") {
+            // when
+            val interestedRestaurant = restaurantPersistenceAdapter.findInterestedRestaurantOrNull(
+                savedMember.id,
+                NOT_EXIST_ID,
+            )
+
+            // then
+            interestedRestaurant shouldBe null
+        }
+    }
+
+    context("관심 음식점 등록 시") {
+        // given
+        val savedMember = memberJpaRepository.save(sut.giveMeOne<MemberJpaEntity>())
+        val savedRestaurant = restaurantJpaRepository.save(sut.giveMeOne<RestaurantJpaEntity>())
+
+        test("관심 음식점을 등록한다.") {
+            // when & then
+            shouldNotThrowAny {
+                restaurantPersistenceAdapter.saveInterestedRestaurant(
+                    savedMember.id,
+                    savedRestaurant.id
+                )
+            }
+        }
+
+        test("이미 등록된 관심 음식점인 경우 예외를 발생한다.") {
+            // when & then
+            shouldThrow<AlreadyInterestedRestaurantException> {
+                restaurantPersistenceAdapter.saveInterestedRestaurant(savedMember.id, savedRestaurant.id)
+                restaurantPersistenceAdapter.saveInterestedRestaurant(savedMember.id, savedRestaurant.id)
+            }
+        }
+
+        test("존재 하지 않는 회원인 경우 예외를 발생한다.") {
+            // when & then
+            shouldThrow<NotFoundMemberException> {
+                restaurantPersistenceAdapter.saveInterestedRestaurant(NOT_EXIST_ID, savedRestaurant.id)
+            }
+        }
+
+        test("존재 하지 않는 음식점인 경우 예외를 발생한다.") {
+            // when & then
+            shouldThrow<NotFoundRestaurantException> {
+                restaurantPersistenceAdapter.saveInterestedRestaurant(savedMember.id, NOT_EXIST_ID)
+            }
+        }
+    }
+
+    context("관심 음식점 삭제 시") {
+        // given
+        val savedMember = memberJpaRepository.save(sut.giveMeOne<MemberJpaEntity>())
+        val savedRestaurant = restaurantJpaRepository.save(sut.giveMeOne<RestaurantJpaEntity>())
+        interestedRestaurantJpaRepository.save(
+            InterestedRestaurantJpaEntity(
+                member = savedMember,
+                restaurant = savedRestaurant,
+            )
+        )
+
+        test("관심 음식점을 삭제한다.") {
+            // when & then
+            shouldNotThrowAny {
+                restaurantPersistenceAdapter.deleteInterestedRestaurant(
+                    savedMember.id,
+                    savedRestaurant.id
+                )
+            }
+        }
+
+        test("존재하지 않는 관심 음식점인 경우 예외를 발생한다.") {
+            // when & then
+            shouldThrow<NotFoundInterestedRestaurantException> {
+                restaurantPersistenceAdapter.deleteInterestedRestaurant(savedMember.id, NOT_EXIST_ID)
+            }
         }
     }
 })
