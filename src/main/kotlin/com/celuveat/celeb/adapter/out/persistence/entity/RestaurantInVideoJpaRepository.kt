@@ -3,11 +3,11 @@ package com.celuveat.celeb.adapter.out.persistence.entity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 
-interface VideoFeaturedRestaurantJpaRepository : JpaRepository<VideoFeaturedRestaurantJpaEntity, Long> {
+interface RestaurantInVideoJpaRepository : JpaRepository<RestaurantInVideoJpaEntity, Long> {
     @Query(
         """
         SELECT new com.celuveat.celeb.adapter.out.persistence.entity.VisitedCelebrity(c, vfr.restaurant.id)
-        FROM VideoFeaturedRestaurantJpaEntity vfr
+        FROM RestaurantInVideoJpaEntity vfr
         JOIN vfr.video v
         JOIN v.youtubeChannel yc
         JOIN yc.celebrity c

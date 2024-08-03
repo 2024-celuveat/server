@@ -5,8 +5,8 @@ import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityJpaRepository
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityPersistenceMapper
 import com.celuveat.celeb.adapter.out.persistence.entity.InterestedCelebrityJpaEntity
 import com.celuveat.celeb.adapter.out.persistence.entity.InterestedCelebrityJpaRepository
-import com.celuveat.celeb.adapter.out.persistence.entity.VideoFeaturedRestaurantJpaEntity
-import com.celuveat.celeb.adapter.out.persistence.entity.VideoFeaturedRestaurantJpaRepository
+import com.celuveat.celeb.adapter.out.persistence.entity.RestaurantInVideoJpaEntity
+import com.celuveat.celeb.adapter.out.persistence.entity.RestaurantInVideoJpaRepository
 import com.celuveat.celeb.adapter.out.persistence.entity.VideoJpaEntity
 import com.celuveat.celeb.adapter.out.persistence.entity.VideoJpaRepository
 import com.celuveat.celeb.adapter.out.persistence.entity.YoutubeChannelJpaEntity
@@ -37,7 +37,7 @@ class CelebrityPersistenceAdapterTest(
     private val celebrityJpaRepository: CelebrityJpaRepository,
     private val youtubeChannelJpaRepository: YoutubeChannelJpaRepository,
     private val restaurantJpaRepository: RestaurantJpaRepository,
-    private val videoFeaturedRestaurantJpaRepository: VideoFeaturedRestaurantJpaRepository,
+    private val restaurantInVideoJpaRepository: RestaurantInVideoJpaRepository,
     private val videoJpaRepository: VideoJpaRepository,
 ) : StringSpec({
     "회원이 관심 목록에 추가한 셀럽을 조회 한다." {
@@ -106,19 +106,19 @@ class CelebrityPersistenceAdapterTest(
         )
 
         val restaurants = restaurantJpaRepository.saveAll(sut.giveMeBuilder<RestaurantJpaEntity>().sampleList(2))
-        videoFeaturedRestaurantJpaRepository.saveAll(
+        restaurantInVideoJpaRepository.saveAll(
             listOf(
-                sut.giveMeBuilder<VideoFeaturedRestaurantJpaEntity>()
-                    .set(VideoFeaturedRestaurantJpaEntity::video, savedVideos[0])
-                    .set(VideoFeaturedRestaurantJpaEntity::restaurant, restaurants[0])
+                sut.giveMeBuilder<RestaurantInVideoJpaEntity>()
+                    .set(RestaurantInVideoJpaEntity::video, savedVideos[0])
+                    .set(RestaurantInVideoJpaEntity::restaurant, restaurants[0])
                     .sample(),
-                sut.giveMeBuilder<VideoFeaturedRestaurantJpaEntity>()
-                    .set(VideoFeaturedRestaurantJpaEntity::video, savedVideos[1])
-                    .set(VideoFeaturedRestaurantJpaEntity::restaurant, restaurants[0])
+                sut.giveMeBuilder<RestaurantInVideoJpaEntity>()
+                    .set(RestaurantInVideoJpaEntity::video, savedVideos[1])
+                    .set(RestaurantInVideoJpaEntity::restaurant, restaurants[0])
                     .sample(),
-                sut.giveMeBuilder<VideoFeaturedRestaurantJpaEntity>()
-                    .set(VideoFeaturedRestaurantJpaEntity::video, savedVideos[2])
-                    .set(VideoFeaturedRestaurantJpaEntity::restaurant, restaurants[1])
+                sut.giveMeBuilder<RestaurantInVideoJpaEntity>()
+                    .set(RestaurantInVideoJpaEntity::video, savedVideos[2])
+                    .set(RestaurantInVideoJpaEntity::restaurant, restaurants[1])
                     .sample(),
             ),
         )
