@@ -55,17 +55,17 @@ data class YoutubeContentResponse(
     )
     val contentsName: String,
     @Schema(
-        description = "컨텐츠 채널 ID",
+        description = "유튜브 채널 ID",
         example = "@sunghikyung",
     )
     val channelId: String,
     @Schema(
-        description = "컨텐츠 채널 URL",
+        description = "유튜브 채널 URL",
         example = "https://www.youtube.com/@sungsikyung",
     )
     val channelUrl: String,
     @Schema(
-        description = "컨텐츠 채널 이름",
+        description = "유튜브 채널 이름",
         example = "성시경 SUNG SI KYUNG",
     )
     val channelName: String,
