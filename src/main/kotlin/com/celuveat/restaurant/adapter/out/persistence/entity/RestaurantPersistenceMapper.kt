@@ -30,4 +30,20 @@ class RestaurantPersistenceMapper {
             },
         )
     }
+
+    fun toDomainWithoutImage(
+        restaurantJpaEntity: RestaurantJpaEntity,
+    ): Restaurant {
+        return Restaurant(
+            id = restaurantJpaEntity.id,
+            name = restaurantJpaEntity.name,
+            category = restaurantJpaEntity.category,
+            roadAddress = restaurantJpaEntity.roadAddress,
+            phoneNumber = restaurantJpaEntity.phoneNumber,
+            naverMapUrl = restaurantJpaEntity.naverMapUrl,
+            latitude = restaurantJpaEntity.latitude,
+            longitude = restaurantJpaEntity.longitude,
+            images = emptyList(),
+        )
+    }
 }
