@@ -47,7 +47,10 @@ class RestaurantPersistenceAdapter(
         )
     }
 
-    override fun findInterestedRestaurantOrNull(memberId: Long, restaurantId: Long): Restaurant? {
+    override fun findInterestedRestaurantOrNull(
+        memberId: Long,
+        restaurantId: Long,
+    ): Restaurant? {
         val interestedRestaurant = interestedRestaurantJpaRepository.findByMemberIdAndRestaurantId(
             memberId,
             restaurantId,
@@ -57,7 +60,10 @@ class RestaurantPersistenceAdapter(
         }
     }
 
-    override fun saveInterestedRestaurant(memberId: Long, restaurantId: Long) {
+    override fun saveInterestedRestaurant(
+        memberId: Long,
+        restaurantId: Long,
+    ) {
         val memberJpaEntity = memberJpaRepository.getById(memberId)
         val restaurantJpaEntity = restaurantJpaRepository.getById(restaurantId)
         validateExistence(memberId, restaurantId)
@@ -65,15 +71,21 @@ class RestaurantPersistenceAdapter(
             InterestedRestaurantJpaEntity(
                 member = memberJpaEntity,
                 restaurant = restaurantJpaEntity,
-            )
+            ),
         )
     }
 
-    private fun validateExistence(memberId: Long, restaurantId: Long) = throwWhen(
-        interestedRestaurantJpaRepository.existsByMemberIdAndRestaurantId(memberId, restaurantId)
+    private fun validateExistence(
+        memberId: Long,
+        restaurantId: Long,
+    ) = throwWhen(
+        interestedRestaurantJpaRepository.existsByMemberIdAndRestaurantId(memberId, restaurantId),
     ) { throw AlreadyInterestedRestaurantException }
 
-    override fun deleteInterestedRestaurant(memberId: Long, restaurantId: Long) {
+    override fun deleteInterestedRestaurant(
+        memberId: Long,
+        restaurantId: Long,
+    ) {
         return interestedRestaurantJpaRepository.findByMemberIdAndRestaurantId(memberId, restaurantId)
             ?.let { interestedRestaurantJpaRepository.delete(it) }
             ?: throw NotFoundInterestedRestaurantException

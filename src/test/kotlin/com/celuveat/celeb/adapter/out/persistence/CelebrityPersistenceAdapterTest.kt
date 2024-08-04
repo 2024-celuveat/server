@@ -72,7 +72,7 @@ class CelebrityPersistenceAdapterTest(
                     .set(CelebrityYoutubeContentJpaEntity::celebrity, celebrityB)
                     .set(CelebrityYoutubeContentJpaEntity::youtubeContent, savedContents[2])
                     .sample(),
-            )
+            ),
         )
         val savedMember = memberJpaRepository.save(sut.giveMeOne<MemberJpaEntity>())
         interestedCelebrityJpaRepository.saveAll(
@@ -125,7 +125,7 @@ class CelebrityPersistenceAdapterTest(
                     .set(CelebrityYoutubeContentJpaEntity::celebrity, celebrityB)
                     .set(CelebrityYoutubeContentJpaEntity::youtubeContent, savedContents[0])
                     .sample(),
-            )
+            ),
         ) // [셀럽A] -> [컨텐츠A, 컨텐츠B], [셀럽B] -> [컨텐츠A] 에 출연함
 
         val savedVideos = videoJpaRepository.saveAll(

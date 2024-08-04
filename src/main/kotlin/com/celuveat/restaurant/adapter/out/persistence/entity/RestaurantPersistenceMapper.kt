@@ -31,9 +31,7 @@ class RestaurantPersistenceMapper {
         )
     }
 
-    fun toDomainWithoutImage(
-        restaurantJpaEntity: RestaurantJpaEntity,
-    ): Restaurant {
+    fun toDomainWithoutImage(restaurantJpaEntity: RestaurantJpaEntity): Restaurant {
         return Restaurant(
             id = restaurantJpaEntity.id,
             name = restaurantJpaEntity.name,

@@ -62,7 +62,8 @@ kotlin {
     compilerOptions {
         freeCompilerArgs.addAll(
             "-Xjsr305=strict",
-            "-Xjvm-default=all", // Enable JVM default annotations
+            // Enable JVM default annotations
+            "-Xjvm-default=all",
         )
     }
 }
