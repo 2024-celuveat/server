@@ -22,7 +22,7 @@ class CelebrityPersistenceAdapter(
         memberJpaRepository.getById(memberId)
         val celebrities = interestedCelebrityJpaRepository.findAllCelebritiesByMemberId(memberId)
         val celebrityIds = celebrities.map { it.id }
-        val youtubeContentsByCelebrity = youtubeContentsByCelebrityIds(celebrityIds)
+        val youtubeContentsByCelebrity = celebritiesToContentMap(celebrityIds)
 
         return celebrities.map { celebrityPersistenceMapper.toDomain(it, youtubeContentsByCelebrity[it.id]!!) }
     }
@@ -30,7 +30,7 @@ class CelebrityPersistenceAdapter(
     override fun findVisitedCelebritiesByRestaurants(restaurantIds: List<Long>): Map<Long, List<Celebrity>> {
         val celebritiesWithRestaurant = restaurantInVideoJpaRepository.findVisitedCelebrities(restaurantIds)
         val celebrityIds = celebritiesWithRestaurant.map { it.celebrity.id }
-        val youtubeContentsByCelebrity = youtubeContentsByCelebrityIds(celebrityIds)
+        val youtubeContentsByCelebrity = celebritiesToContentMap(celebrityIds)
         return celebritiesWithRestaurant.groupBy { it.restaurantId } // restaurantId 별로 그룹핑
             .mapValues { (_, visitedCelebrities) -> // visitedCelebrities 를 celebrity 객체로 변환
                 visitedCelebrities.map {
@@ -42,7 +42,7 @@ class CelebrityPersistenceAdapter(
             }
     }
 
-    private fun youtubeContentsByCelebrityIds(celebrityIds: List<Long>): Map<Long, List<YoutubeContentJpaEntity>> =
+    private fun celebritiesToContentMap(celebrityIds: List<Long>): Map<Long, List<YoutubeContentJpaEntity>> =
         celebrityYoutubeContentJpaRepository.findByCelebrityIdIn(celebrityIds)
             .groupBy { it.celebrity.id }
             .mapValues { (_, celebrityYoutubeContents) -> celebrityYoutubeContents.map { it.youtubeContent } }
