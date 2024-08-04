@@ -2,7 +2,7 @@ package com.celuveat.restaurant.application
 
 import com.celuveat.celeb.application.port.out.FindCelebritiesPort
 import com.celuveat.celeb.domain.Celebrity
-import com.celuveat.celeb.domain.YoutubeChannel
+import com.celuveat.celeb.domain.YoutubeContent
 import com.celuveat.common.application.port.`in`.result.SliceResult
 import com.celuveat.restaurant.application.port.`in`.command.AddInterestedRestaurantCommand
 import com.celuveat.restaurant.application.port.`in`.command.DeleteInterestedRestaurantCommand
@@ -48,13 +48,13 @@ class RestaurantsServiceTest : BehaviorSpec({
         every { findRestaurantPort.findInterestedRestaurants(memberId, page, size) } returns interestedRestaurantResult
         every { findCelebritiesPort.findVisitedCelebritiesByRestaurants(interestedRestaurantResultIds) } returns mapOf(
             interestedRestaurantResultIds[0] to sut.giveMeBuilder<Celebrity>()
-                .setExp(Celebrity::youtubeChannels, generateYoutubeChannels(size = 2))
+                .setExp(Celebrity::youtubeContents, generateYoutubeContents(size = 2))
                 .sampleList(2),
             interestedRestaurantResultIds[1] to sut.giveMeBuilder<Celebrity>()
-                .setExp(Celebrity::youtubeChannels, generateYoutubeChannels(size = 1))
+                .setExp(Celebrity::youtubeContents, generateYoutubeContents(size = 1))
                 .sampleList(2),
             interestedRestaurantResultIds[2] to sut.giveMeBuilder<Celebrity>()
-                .setExp(Celebrity::youtubeChannels, generateYoutubeChannels(size = 1))
+                .setExp(Celebrity::youtubeContents, generateYoutubeContents(size = 1))
                 .sampleList(1),
         )
         When("회원이 관심 식당을 조회하면") {
@@ -104,5 +104,5 @@ class RestaurantsServiceTest : BehaviorSpec({
     }
 })
 
-private fun generateYoutubeChannels(size: Int = 1): List<YoutubeChannel> =
-    sut.giveMeBuilder<YoutubeChannel>().setInner(channelIdSpec).sampleList(size)
+private fun generateYoutubeContents(size: Int = 1): List<YoutubeContent> =
+    sut.giveMeBuilder<YoutubeContent>().setInner(channelIdSpec).sampleList(size)

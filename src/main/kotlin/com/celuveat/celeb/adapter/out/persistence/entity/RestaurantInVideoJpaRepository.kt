@@ -9,7 +9,7 @@ interface RestaurantInVideoJpaRepository : JpaRepository<RestaurantInVideoJpaEnt
         SELECT new com.celuveat.celeb.adapter.out.persistence.entity.VisitedCelebrity(c, vfr.restaurant.id)
         FROM RestaurantInVideoJpaEntity vfr
         JOIN vfr.video v
-        JOIN v.youtubeChannel yc
+        JOIN v.youtubeContent yc
         JOIN yc.celebrity c
         WHERE vfr.restaurant.id IN :restaurantIds
         """,

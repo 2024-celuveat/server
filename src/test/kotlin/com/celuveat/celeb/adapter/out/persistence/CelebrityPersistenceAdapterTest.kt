@@ -9,8 +9,8 @@ import com.celuveat.celeb.adapter.out.persistence.entity.RestaurantInVideoJpaEnt
 import com.celuveat.celeb.adapter.out.persistence.entity.RestaurantInVideoJpaRepository
 import com.celuveat.celeb.adapter.out.persistence.entity.VideoJpaEntity
 import com.celuveat.celeb.adapter.out.persistence.entity.VideoJpaRepository
-import com.celuveat.celeb.adapter.out.persistence.entity.YoutubeChannelJpaEntity
-import com.celuveat.celeb.adapter.out.persistence.entity.YoutubeChannelJpaRepository
+import com.celuveat.celeb.adapter.out.persistence.entity.YoutubeContentJpaEntity
+import com.celuveat.celeb.adapter.out.persistence.entity.YoutubeContentJpaRepository
 import com.celuveat.common.adapter.out.persistence.JpaConfig
 import com.celuveat.member.adapter.out.persistence.entity.MemberJpaEntity
 import com.celuveat.member.adapter.out.persistence.entity.MemberJpaRepository
@@ -35,7 +35,7 @@ class CelebrityPersistenceAdapterTest(
     private val memberJpaRepository: MemberJpaRepository,
     private val interestedCelebrityJpaRepository: InterestedCelebrityJpaRepository,
     private val celebrityJpaRepository: CelebrityJpaRepository,
-    private val youtubeChannelJpaRepository: YoutubeChannelJpaRepository,
+    private val youtubeContentJpaRepository: YoutubeContentJpaRepository,
     private val restaurantJpaRepository: RestaurantJpaRepository,
     private val restaurantInVideoJpaRepository: RestaurantInVideoJpaRepository,
     private val videoJpaRepository: VideoJpaRepository,
@@ -46,17 +46,17 @@ class CelebrityPersistenceAdapterTest(
         val celebrityA = savedCelebrities[0]
         val celebrityB = savedCelebrities[1]
 
-        val channelA = sut.giveMeBuilder<YoutubeChannelJpaEntity>()
-            .set(YoutubeChannelJpaEntity::id, 0)
-            .set(YoutubeChannelJpaEntity::channelId, "@channelId")
-            .set(YoutubeChannelJpaEntity::celebrity, celebrityA)
+        val contentA = sut.giveMeBuilder<YoutubeContentJpaEntity>()
+            .set(YoutubeContentJpaEntity::id, 0)
+            .set(YoutubeContentJpaEntity::channelId, "@channelId")
+            .set(YoutubeContentJpaEntity::celebrity, celebrityA)
             .sampleList(2)
-        val channelB = sut.giveMeBuilder<YoutubeChannelJpaEntity>()
-            .set(YoutubeChannelJpaEntity::id, 0)
-            .set(YoutubeChannelJpaEntity::channelId, "@channelId")
-            .set(YoutubeChannelJpaEntity::celebrity, celebrityB)
+        val contentB = sut.giveMeBuilder<YoutubeContentJpaEntity>()
+            .set(YoutubeContentJpaEntity::id, 0)
+            .set(YoutubeContentJpaEntity::channelId, "@channelId")
+            .set(YoutubeContentJpaEntity::celebrity, celebrityB)
             .sample()
-        youtubeChannelJpaRepository.saveAll(channelA + channelB)
+        youtubeContentJpaRepository.saveAll(contentA + contentB)
         val savedMember = memberJpaRepository.save(sut.giveMeOne<MemberJpaEntity>())
         interestedCelebrityJpaRepository.saveAll(
             listOf(
@@ -77,7 +77,7 @@ class CelebrityPersistenceAdapterTest(
         // then
         assertSoftly {
             celebrities.size shouldBe 2
-            celebrities.forAll { it.youtubeChannels shouldNotBe null }
+            celebrities.forAll { it.youtubeContents shouldNotBe null }
         }
     }
 
@@ -87,21 +87,21 @@ class CelebrityPersistenceAdapterTest(
         val celebrityA = savedCelebrities[0]
         val celebrityB = savedCelebrities[1]
 
-        val channelA = sut.giveMeBuilder<YoutubeChannelJpaEntity>()
-            .set(YoutubeChannelJpaEntity::channelId, "@channelAId")
-            .set(YoutubeChannelJpaEntity::celebrity, celebrityA)
+        val contentA = sut.giveMeBuilder<YoutubeContentJpaEntity>()
+            .set(YoutubeContentJpaEntity::channelId, "@channelAId")
+            .set(YoutubeContentJpaEntity::celebrity, celebrityA)
             .sample()
-        val channelB = sut.giveMeBuilder<YoutubeChannelJpaEntity>()
-            .set(YoutubeChannelJpaEntity::channelId, "@channelBId")
-            .set(YoutubeChannelJpaEntity::celebrity, celebrityB)
+        val contentB = sut.giveMeBuilder<YoutubeContentJpaEntity>()
+            .set(YoutubeContentJpaEntity::channelId, "@channelBId")
+            .set(YoutubeContentJpaEntity::celebrity, celebrityB)
             .sample()
-        val youtubeChannels = youtubeChannelJpaRepository.saveAll(listOf(channelA, channelB))
+        val youtubeContents = youtubeContentJpaRepository.saveAll(listOf(contentA, contentB))
 
         val savedVideos = videoJpaRepository.saveAll(
             listOf(
-                generateVideoWithYoutubeChannel(youtubeChannels[0]).sample(),
-                generateVideoWithYoutubeChannel(youtubeChannels[1]).sample(),
-                generateVideoWithYoutubeChannel(youtubeChannels[1]).sample(),
+                generateVideoWithYoutubeContent(youtubeContents[0]).sample(),
+                generateVideoWithYoutubeContent(youtubeContents[1]).sample(),
+                generateVideoWithYoutubeContent(youtubeContents[1]).sample(),
             ),
         )
 
@@ -139,5 +139,5 @@ class CelebrityPersistenceAdapterTest(
     }
 })
 
-private fun generateVideoWithYoutubeChannel(youtubeChannel: YoutubeChannelJpaEntity) =
-    sut.giveMeBuilder<VideoJpaEntity>().set(VideoJpaEntity::youtubeChannel, youtubeChannel)
+private fun generateVideoWithYoutubeContent(youtubeContent: YoutubeContentJpaEntity) =
+    sut.giveMeBuilder<VideoJpaEntity>().set(VideoJpaEntity::youtubeContent, youtubeContent)

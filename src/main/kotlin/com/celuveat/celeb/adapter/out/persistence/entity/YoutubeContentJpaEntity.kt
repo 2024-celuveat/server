@@ -12,13 +12,13 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 
 @Entity
-class YoutubeChannelJpaEntity(
+class YoutubeContentJpaEntity(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
+    val contentsName: String,
     val channelId: String,
     val channelUrl: String,
     val channelName: String,
-    val contentsName: String,
     val contentsIntroduction: String,
     val restaurantCount: Int,
     val subscriberCount: Long,

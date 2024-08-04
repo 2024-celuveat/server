@@ -19,8 +19,8 @@ class VideoJpaEntity(
     val videoUrl: String,
     val uploadDate: LocalDate,
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "youtube_channel_id", foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    val youtubeChannel: YoutubeChannelJpaEntity,
+    @JoinColumn(name = "youtube_content_id", foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    val youtubeContent: YoutubeContentJpaEntity,
 ) : RootEntity<Long>() {
     override fun id(): Long {
         return this.id

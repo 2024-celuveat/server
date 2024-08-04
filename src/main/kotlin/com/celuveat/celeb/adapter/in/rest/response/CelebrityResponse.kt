@@ -1,7 +1,7 @@
 package com.celuveat.celeb.adapter.`in`.rest.response
 
 import com.celuveat.celeb.application.port.`in`.result.CelebrityResult
-import com.celuveat.celeb.application.port.`in`.result.YoutubeChannelResult
+import com.celuveat.celeb.application.port.`in`.result.YoutubeContentResult
 import io.swagger.v3.oas.annotations.media.Schema
 
 data class CelebrityResponse(
@@ -26,9 +26,9 @@ data class CelebrityResponse(
     )
     val introduction: String,
     @Schema(
-        description = "유튜브 채널 목록",
+        description = "유튜브 컨텐츠 목록",
     )
-    val youtubeChannelResults: List<YoutubeChannelResponse>,
+    val youtubeContentResults: List<YoutubeContentResponse>,
 ) {
     companion object {
         fun from(celebrity: CelebrityResult): CelebrityResponse {
@@ -37,38 +37,38 @@ data class CelebrityResponse(
                 name = celebrity.name,
                 profileImageUrl = celebrity.profileImageUrl,
                 introduction = celebrity.introduction,
-                youtubeChannelResults = celebrity.youtubeChannelResults.map { YoutubeChannelResponse.from(it) },
+                youtubeContentResults = celebrity.youtubeContentResults.map { YoutubeContentResponse.from(it) },
             )
         }
     }
 }
 
-data class YoutubeChannelResponse(
+data class YoutubeContentResponse(
     @Schema(
-        description = "유튜브 채널 ID",
+        description = "유튜브 컨텐츠 ID",
         example = "1",
     )
     val id: Long,
-    @Schema(
-        description = "유튜브 채널 ID",
-        example = "@sunghikyung",
-    )
-    val channelId: String,
-    @Schema(
-        description = "유튜브 채널 URL",
-        example = "https://www.youtube.com/@sungsikyung",
-    )
-    val channelUrl: String,
-    @Schema(
-        description = "유튜브 채널 이름",
-        example = "성시경 SUNG SI KYUNG",
-    )
-    val channelName: String,
     @Schema(
         description = "컨텐츠 이름",
         example = "먹을텐데",
     )
     val contentsName: String,
+    @Schema(
+        description = "컨텐츠 채널 ID",
+        example = "@sunghikyung",
+    )
+    val channelId: String,
+    @Schema(
+        description = "컨텐츠 채널 URL",
+        example = "https://www.youtube.com/@sungsikyung",
+    )
+    val channelUrl: String,
+    @Schema(
+        description = "컨텐츠 채널 이름",
+        example = "성시경 SUNG SI KYUNG",
+    )
+    val channelName: String,
     @Schema(
         description = "식당 수",
         example = "10",
@@ -81,15 +81,15 @@ data class YoutubeChannelResponse(
     val subscriberCount: Long,
 ) {
     companion object {
-        fun from(youtubeChannel: YoutubeChannelResult): YoutubeChannelResponse {
-            return YoutubeChannelResponse(
-                id = youtubeChannel.id,
-                channelId = youtubeChannel.channelId,
-                channelUrl = youtubeChannel.channelUrl,
-                channelName = youtubeChannel.channelName,
-                contentsName = youtubeChannel.contentsName,
-                restaurantCount = youtubeChannel.restaurantCount,
-                subscriberCount = youtubeChannel.subscriberCount,
+        fun from(youtubeContent: YoutubeContentResult): YoutubeContentResponse {
+            return YoutubeContentResponse(
+                id = youtubeContent.id,
+                channelId = youtubeContent.channelId,
+                channelUrl = youtubeContent.channelUrl,
+                channelName = youtubeContent.channelName,
+                contentsName = youtubeContent.contentsName,
+                restaurantCount = youtubeContent.restaurantCount,
+                subscriberCount = youtubeContent.subscriberCount,
             )
         }
     }
