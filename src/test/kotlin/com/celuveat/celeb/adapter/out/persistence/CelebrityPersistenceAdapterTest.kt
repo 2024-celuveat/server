@@ -3,6 +3,8 @@ package com.celuveat.celeb.adapter.out.persistence
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityJpaEntity
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityJpaRepository
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityPersistenceMapper
+import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityYoutubeContentJpaEntity
+import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityYoutubeContentJpaRepository
 import com.celuveat.celeb.adapter.out.persistence.entity.InterestedCelebrityJpaEntity
 import com.celuveat.celeb.adapter.out.persistence.entity.InterestedCelebrityJpaRepository
 import com.celuveat.celeb.adapter.out.persistence.entity.RestaurantInVideoJpaEntity
@@ -32,13 +34,14 @@ import org.springframework.context.annotation.Import
 @DataJpaTest
 class CelebrityPersistenceAdapterTest(
     private val celebrityPersistenceAdapter: CelebrityPersistenceAdapter,
-    private val memberJpaRepository: MemberJpaRepository,
-    private val interestedCelebrityJpaRepository: InterestedCelebrityJpaRepository,
     private val celebrityJpaRepository: CelebrityJpaRepository,
+    private val interestedCelebrityJpaRepository: InterestedCelebrityJpaRepository,
     private val youtubeContentJpaRepository: YoutubeContentJpaRepository,
+    private val celebrityYoutubeContentJpaRepository: CelebrityYoutubeContentJpaRepository,
+    private val videoJpaRepository: VideoJpaRepository,
     private val restaurantJpaRepository: RestaurantJpaRepository,
     private val restaurantInVideoJpaRepository: RestaurantInVideoJpaRepository,
-    private val videoJpaRepository: VideoJpaRepository,
+    private val memberJpaRepository: MemberJpaRepository,
 ) : StringSpec({
     "회원이 관심 목록에 추가한 셀럽을 조회 한다." {
         // given
@@ -49,14 +52,28 @@ class CelebrityPersistenceAdapterTest(
         val contentA = sut.giveMeBuilder<YoutubeContentJpaEntity>()
             .set(YoutubeContentJpaEntity::id, 0)
             .set(YoutubeContentJpaEntity::channelId, "@channelId")
-            .set(YoutubeContentJpaEntity::celebrity, celebrityA)
             .sampleList(2)
         val contentB = sut.giveMeBuilder<YoutubeContentJpaEntity>()
             .set(YoutubeContentJpaEntity::id, 0)
             .set(YoutubeContentJpaEntity::channelId, "@channelId")
-            .set(YoutubeContentJpaEntity::celebrity, celebrityB)
             .sample()
-        youtubeContentJpaRepository.saveAll(contentA + contentB)
+        val savedContents = youtubeContentJpaRepository.saveAll(contentA + contentB)
+        celebrityYoutubeContentJpaRepository.saveAll(
+            listOf(
+                sut.giveMeBuilder<CelebrityYoutubeContentJpaEntity>()
+                    .set(CelebrityYoutubeContentJpaEntity::celebrity, celebrityA)
+                    .set(CelebrityYoutubeContentJpaEntity::youtubeContent, savedContents[0])
+                    .sample(),
+                sut.giveMeBuilder<CelebrityYoutubeContentJpaEntity>()
+                    .set(CelebrityYoutubeContentJpaEntity::celebrity, celebrityA)
+                    .set(CelebrityYoutubeContentJpaEntity::youtubeContent, savedContents[1])
+                    .sample(),
+                sut.giveMeBuilder<CelebrityYoutubeContentJpaEntity>()
+                    .set(CelebrityYoutubeContentJpaEntity::celebrity, celebrityB)
+                    .set(CelebrityYoutubeContentJpaEntity::youtubeContent, savedContents[2])
+                    .sample(),
+            )
+        )
         val savedMember = memberJpaRepository.save(sut.giveMeOne<MemberJpaEntity>())
         interestedCelebrityJpaRepository.saveAll(
             listOf(
@@ -89,21 +106,35 @@ class CelebrityPersistenceAdapterTest(
 
         val contentA = sut.giveMeBuilder<YoutubeContentJpaEntity>()
             .set(YoutubeContentJpaEntity::channelId, "@channelAId")
-            .set(YoutubeContentJpaEntity::celebrity, celebrityA)
             .sample()
         val contentB = sut.giveMeBuilder<YoutubeContentJpaEntity>()
             .set(YoutubeContentJpaEntity::channelId, "@channelBId")
-            .set(YoutubeContentJpaEntity::celebrity, celebrityB)
             .sample()
-        val youtubeContents = youtubeContentJpaRepository.saveAll(listOf(contentA, contentB))
+        val savedContents = youtubeContentJpaRepository.saveAll(listOf(contentA, contentB))
+        celebrityYoutubeContentJpaRepository.saveAll(
+            listOf(
+                sut.giveMeBuilder<CelebrityYoutubeContentJpaEntity>()
+                    .set(CelebrityYoutubeContentJpaEntity::celebrity, celebrityA)
+                    .set(CelebrityYoutubeContentJpaEntity::youtubeContent, savedContents[0])
+                    .sample(),
+                sut.giveMeBuilder<CelebrityYoutubeContentJpaEntity>()
+                    .set(CelebrityYoutubeContentJpaEntity::celebrity, celebrityA)
+                    .set(CelebrityYoutubeContentJpaEntity::youtubeContent, savedContents[1])
+                    .sample(),
+                sut.giveMeBuilder<CelebrityYoutubeContentJpaEntity>()
+                    .set(CelebrityYoutubeContentJpaEntity::celebrity, celebrityB)
+                    .set(CelebrityYoutubeContentJpaEntity::youtubeContent, savedContents[0])
+                    .sample(),
+            )
+        ) // [셀럽A] -> [컨텐츠A, 컨텐츠B], [셀럽B] -> [컨텐츠A] 에 출연함
 
         val savedVideos = videoJpaRepository.saveAll(
             listOf(
-                generateVideoWithYoutubeContent(youtubeContents[0]).sample(),
-                generateVideoWithYoutubeContent(youtubeContents[1]).sample(),
-                generateVideoWithYoutubeContent(youtubeContents[1]).sample(),
+                generateVideoWithYoutubeContent(savedContents[0]).sample(),
+                generateVideoWithYoutubeContent(savedContents[1]).sample(),
+                generateVideoWithYoutubeContent(savedContents[1]).sample(),
             ),
-        )
+        ) // [영상1] -> [컨텐츠A], [영상2, 영상3] -> [컨텐츠B] 의 영상
 
         val restaurants = restaurantJpaRepository.saveAll(sut.giveMeBuilder<RestaurantJpaEntity>().sampleList(2))
         restaurantInVideoJpaRepository.saveAll(
@@ -121,10 +152,7 @@ class CelebrityPersistenceAdapterTest(
                     .set(RestaurantInVideoJpaEntity::restaurant, restaurants[1])
                     .sample(),
             ),
-        )
-        // fixture
-        // [셀럽A]-[채널A]-[영상1], [셀럽B]-[채널B]-[영상2]에서 [식당1] 방문
-        // [셀럽B]-[채널B]-[영상3]은 [식당2] 방문
+        ) // [영상1, 영상2] -> [음식점1], [영상3] -> [음식점2] 에 방문함
 
         // when
         val visitedCelebritiesByRestaurants =
