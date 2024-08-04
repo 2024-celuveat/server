@@ -10,14 +10,14 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
-import java.time.LocalDate
 
 @Entity
-class VideoJpaEntity(
+class CelebrityYoutubeContentJpaEntity(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
-    val videoUrl: String,
-    val uploadDate: LocalDate,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "celebrity_id", foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    val celebrity: CelebrityJpaEntity,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "youtube_content_id", foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT))
     val youtubeContent: YoutubeContentJpaEntity,

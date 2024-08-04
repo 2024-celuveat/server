@@ -7,7 +7,7 @@ data class CelebrityResult(
     val name: String,
     val profileImageUrl: String,
     val introduction: String,
-    val youtubeChannelResults: List<YoutubeChannelResult>,
+    val youtubeContentResults: List<YoutubeContentResult>,
 ) {
     companion object {
         fun from(celebrity: Celebrity): CelebrityResult {
@@ -16,7 +16,7 @@ data class CelebrityResult(
                 name = celebrity.name,
                 profileImageUrl = celebrity.profileImageUrl,
                 introduction = celebrity.introduction,
-                youtubeChannelResults = celebrity.youtubeChannels.map { YoutubeChannelResult.from(it) },
+                youtubeContentResults = celebrity.youtubeContents.map { YoutubeContentResult.from(it) },
             )
         }
     }

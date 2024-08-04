@@ -7,6 +7,6 @@ data class Video(
     val id: Long,
     val videoUrl: String,
     val uploadDate: LocalDate,
-    val youtubeChannel: YoutubeChannel,
+    val youtubeContent: YoutubeContent,
     val restaurants: List<Restaurant>,
 )

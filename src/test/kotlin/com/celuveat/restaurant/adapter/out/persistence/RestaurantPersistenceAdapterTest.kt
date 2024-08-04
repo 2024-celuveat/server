@@ -116,7 +116,7 @@ class RestaurantPersistenceAdapterTest(
             InterestedRestaurantJpaEntity(
                 member = savedMember,
                 restaurant = savedRestaurant,
-            )
+            ),
         )
 
         test("존재하는 관심 음식점인 경우 음식점을 반환한다.") {
@@ -152,7 +152,7 @@ class RestaurantPersistenceAdapterTest(
             shouldNotThrowAny {
                 restaurantPersistenceAdapter.saveInterestedRestaurant(
                     savedMember.id,
-                    savedRestaurant.id
+                    savedRestaurant.id,
                 )
             }
         }
@@ -188,7 +188,7 @@ class RestaurantPersistenceAdapterTest(
             InterestedRestaurantJpaEntity(
                 member = savedMember,
                 restaurant = savedRestaurant,
-            )
+            ),
         )
 
         test("관심 음식점을 삭제한다.") {
@@ -196,7 +196,7 @@ class RestaurantPersistenceAdapterTest(
             shouldNotThrowAny {
                 restaurantPersistenceAdapter.deleteInterestedRestaurant(
                     savedMember.id,
-                    savedRestaurant.id
+                    savedRestaurant.id,
                 )
             }
         }

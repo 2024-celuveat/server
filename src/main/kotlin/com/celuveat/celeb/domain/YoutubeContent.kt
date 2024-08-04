@@ -1,6 +1,6 @@
 package com.celuveat.celeb.domain
 
-data class YoutubeChannel(
+data class YoutubeContent(
     val id: Long = 0,
     val channelId: ChannelId,
     val channelUrl: String,
