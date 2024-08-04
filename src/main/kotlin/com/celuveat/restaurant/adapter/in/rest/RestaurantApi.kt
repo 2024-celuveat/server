@@ -31,7 +31,7 @@ interface RestaurantApi {
     ): SliceResponse<RestaurantPreviewResponse>
 
     @SecurityRequirement(name = "JWT")
-    @Operation(summary = "관심 음식점 추가/삭제")
+    @Operation(summary = "관심 음식점 추가")
     @PostMapping("/interested/{restaurantId}")
     fun addInterestedRestaurant(
         @AuthId memberId: Long,
@@ -45,7 +45,7 @@ interface RestaurantApi {
     )
 
     @SecurityRequirement(name = "JWT")
-    @Operation(summary = "관심 음식점 추가/삭제")
+    @Operation(summary = "관심 음식점 삭제")
     @DeleteMapping("/interested/{restaurantId}")
     fun deleteInterestedRestaurant(
         @AuthId memberId: Long,
