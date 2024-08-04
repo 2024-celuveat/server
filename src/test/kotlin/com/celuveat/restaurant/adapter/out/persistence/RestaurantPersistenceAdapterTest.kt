@@ -157,7 +157,7 @@ class RestaurantPersistenceAdapterTest(
             }
         }
 
-        test("이미 등록된 관심 음식점인 경우 예외를 발생한다.") {
+        test("이미 등록된 관심 음식점인 경우 예외가 발생한다.") {
             // when & then
             shouldThrow<AlreadyInterestedRestaurantException> {
                 restaurantPersistenceAdapter.saveInterestedRestaurant(savedMember.id, savedRestaurant.id)
@@ -165,14 +165,14 @@ class RestaurantPersistenceAdapterTest(
             }
         }
 
-        test("존재 하지 않는 회원인 경우 예외를 발생한다.") {
+        test("존재 하지 않는 회원인 경우 예외가 발생한다.") {
             // when & then
             shouldThrow<NotFoundMemberException> {
                 restaurantPersistenceAdapter.saveInterestedRestaurant(NOT_EXIST_ID, savedRestaurant.id)
             }
         }
 
-        test("존재 하지 않는 음식점인 경우 예외를 발생한다.") {
+        test("존재 하지 않는 음식점인 경우 예외가 발생한다.") {
             // when & then
             shouldThrow<NotFoundRestaurantException> {
                 restaurantPersistenceAdapter.saveInterestedRestaurant(savedMember.id, NOT_EXIST_ID)

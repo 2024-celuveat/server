@@ -33,7 +33,7 @@ class RestaurantControllerTest(
     @MockkBean val extractMemberIdUseCase: ExtractMemberIdUseCase,
 ) : FunSpec({
 
-    context("관심 목록의 음식점을 조회 한다") {
+    context("관심 음식점 목록을 조회 한다") {
         val memberId = 1L
         val accessToken = "celuveatAccessToken"
         val page = 0
