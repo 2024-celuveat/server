@@ -4,7 +4,8 @@ import com.celuveat.celeb.application.port.out.FindCelebritiesPort
 import com.celuveat.celeb.domain.Celebrity
 import com.celuveat.celeb.domain.YoutubeChannel
 import com.celuveat.common.application.port.`in`.result.SliceResult
-import com.celuveat.restaurant.application.port.`in`.command.ToggleInterestedRestaurantCommand
+import com.celuveat.restaurant.application.port.`in`.command.AddInterestedRestaurantCommand
+import com.celuveat.restaurant.application.port.`in`.command.DeleteInterestedRestaurantCommand
 import com.celuveat.restaurant.application.port.`in`.query.GetInterestedRestaurantsQuery
 import com.celuveat.restaurant.application.port.out.DeleteRestaurantPort
 import com.celuveat.restaurant.application.port.out.FindRestaurantPort
@@ -34,7 +35,7 @@ class RestaurantsServiceTest : BehaviorSpec({
         deleteRestaurantPort,
     )
 
-    Given("관심 식당을 조회할 때") {
+    Given("관심 음식점을 조회할 때") {
         val memberId = 1L
         val page = 0
         val size = 2
@@ -72,29 +73,31 @@ class RestaurantsServiceTest : BehaviorSpec({
         }
     }
 
-    Given("관심 식당 추가/삭제 토글 시") {
+    Given("회원이 관심 음식점 추가 시") {
         val memberId = 1L
         val restaurantId = 1L
 
-        When("이미 추가된 식당인 경우") {
-            val restaurant = sut.giveMeBuilder<Restaurant>().sample()
-            every { findRestaurantPort.findInterestedRestaurantOrNull(memberId, restaurantId) } returns restaurant
-            every { deleteRestaurantPort.deleteInterestedRestaurant(memberId, restaurantId) } returns Unit
-
-            val command = ToggleInterestedRestaurantCommand(memberId, restaurantId)
-            restaurantsService.toggleInterestedRestaurant(command)
-            Then("관심 식당이 삭제 된다") {
-                verify { deleteRestaurantPort.deleteInterestedRestaurant(memberId, restaurantId) }
-            }
-        }
-
-        When("추가 되지 않은 식당인 경우") {
-            every { findRestaurantPort.findInterestedRestaurantOrNull(memberId, restaurantId) } returns null
+        When("해당 음식점이") {
             every { saveRestaurantPort.saveInterestedRestaurant(memberId, restaurantId) } returns Unit
 
-            val command = ToggleInterestedRestaurantCommand(memberId, restaurantId)
-            restaurantsService.toggleInterestedRestaurant(command)
-            Then("관심 식당이 삭제된다") {
+            val command = AddInterestedRestaurantCommand(memberId, restaurantId)
+            restaurantsService.addInterestedRestaurant(command)
+            Then("관심 음식점으로 추가 된다") {
+                verify { saveRestaurantPort.saveInterestedRestaurant(memberId, restaurantId) }
+            }
+        }
+    }
+
+    Given("회원이 관심 음식점 삭제 시") {
+        val memberId = 1L
+        val restaurantId = 1L
+
+        When("해당 음식점이") {
+            every { deleteRestaurantPort.deleteInterestedRestaurant(memberId, restaurantId) } returns Unit
+
+            val command = DeleteInterestedRestaurantCommand(memberId, restaurantId)
+            restaurantsService.deleteInterestedRestaurant(command)
+            Then("관심 음식점에서 삭제 된다") {
                 verify { deleteRestaurantPort.deleteInterestedRestaurant(memberId, restaurantId) }
             }
         }

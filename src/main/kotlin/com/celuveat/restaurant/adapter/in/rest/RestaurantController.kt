@@ -3,12 +3,15 @@ package com.celuveat.restaurant.adapter.`in`.rest
 import com.celuveat.auth.adaptor.`in`.rest.AuthId
 import com.celuveat.common.adapter.out.rest.response.SliceResponse
 import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantPreviewResponse
+import com.celuveat.restaurant.application.port.`in`.AddInterestedRestaurantsUseCase
+import com.celuveat.restaurant.application.port.`in`.DeleteInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.GetInterestedRestaurantsUseCase
-import com.celuveat.restaurant.application.port.`in`.ToggleInterestedRestaurantsUseCase
-import com.celuveat.restaurant.application.port.`in`.command.ToggleInterestedRestaurantCommand
+import com.celuveat.restaurant.application.port.`in`.command.AddInterestedRestaurantCommand
+import com.celuveat.restaurant.application.port.`in`.command.DeleteInterestedRestaurantCommand
 import com.celuveat.restaurant.application.port.`in`.query.GetInterestedRestaurantsQuery
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -19,7 +22,8 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class RestaurantController(
     private val getInterestedRestaurantsUseCase: GetInterestedRestaurantsUseCase,
-    private val toggleInterestedRestaurantUseCase: ToggleInterestedRestaurantsUseCase,
+    private val addInterestedRestaurantsUseCase: AddInterestedRestaurantsUseCase,
+    private val deleteInterestedRestaurantsUseCase: DeleteInterestedRestaurantsUseCase,
 ) : RestaurantApi {
     @GetMapping("/interested")
     override fun getInterestedRestaurants(
@@ -40,14 +44,26 @@ class RestaurantController(
     }
 
     @PostMapping("/interested/{restaurantId}")
-    override fun toggleInterestedRestaurant(
+    override fun addInterestedRestaurant(
         @AuthId memberId: Long,
-        @PathVariable restaurantId: Long
+        @PathVariable restaurantId: Long,
     ) {
-        val command = ToggleInterestedRestaurantCommand(
+        val command = AddInterestedRestaurantCommand(
             memberId = memberId,
             restaurantId = restaurantId,
         )
-        toggleInterestedRestaurantUseCase.toggleInterestedRestaurant(command)
+        addInterestedRestaurantsUseCase.addInterestedRestaurant(command)
+    }
+
+    @DeleteMapping("/interested/{restaurantId}")
+    override fun deleteInterestedRestaurant(
+        @AuthId memberId: Long,
+        @PathVariable restaurantId: Long,
+    ) {
+        val command = DeleteInterestedRestaurantCommand(
+            memberId = memberId,
+            restaurantId = restaurantId,
+        )
+        deleteInterestedRestaurantsUseCase.deleteInterestedRestaurant(command)
     }
 }
