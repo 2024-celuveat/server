@@ -55,7 +55,10 @@ class CelebrityPersistenceAdapter(
             .groupBy { it.celebrity.id }
             .mapValues { (_, celebrityYoutubeContents) -> celebrityYoutubeContents.map { it.youtubeContent } }
 
-    override fun saveInterestedCelebrity(celebrityId: Long, memberId: Long) {
+    override fun saveInterestedCelebrity(
+        celebrityId: Long,
+        memberId: Long,
+    ) {
         val member = memberJpaRepository.getById(memberId)
         val celebrity = celebrityJpaRepository.getById(celebrityId)
         validateExistence(memberId, celebrityId)
@@ -63,7 +66,7 @@ class CelebrityPersistenceAdapter(
             InterestedCelebrityJpaEntity(
                 celebrity = celebrity,
                 member = member,
-            )
+            ),
         )
     }
 
@@ -74,7 +77,10 @@ class CelebrityPersistenceAdapter(
         interestedCelebrityJpaRepository.existsByMemberIdAndCelebrityId(memberId, celebrityId),
     ) { throw AlreadyInterestedCelebrityException }
 
-    override fun deleteInterestedCelebrity(celebrityId: Long, memberId: Long) {
+    override fun deleteInterestedCelebrity(
+        celebrityId: Long,
+        memberId: Long,
+    ) {
         interestedCelebrityJpaRepository.findByMemberIdAndCelebrityId(memberId, celebrityId)
             ?.let { interestedCelebrityJpaRepository.delete(it) }
             ?: throw NotFoundInterestedCelebrityException

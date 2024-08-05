@@ -14,7 +14,13 @@ interface InterestedCelebrityJpaRepository : JpaRepository<InterestedCelebrityJp
     )
     fun findAllCelebritiesByMemberId(memberId: Long): List<CelebrityJpaEntity>
 
-    fun findByMemberIdAndCelebrityId(memberId: Long, celebrityId: Long): InterestedCelebrityJpaEntity?
+    fun findByMemberIdAndCelebrityId(
+        memberId: Long,
+        celebrityId: Long,
+    ): InterestedCelebrityJpaEntity?
 
-    fun existsByMemberIdAndCelebrityId(memberId: Long, celebrityId: Long): Boolean
+    fun existsByMemberIdAndCelebrityId(
+        memberId: Long,
+        celebrityId: Long,
+    ): Boolean
 }
