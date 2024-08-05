@@ -63,4 +63,4 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.AWS_SSH_KEY }}
           script: |
-            sudo ./bin/bash/deploy.sh
+            sudo sh ./bin/bash/deploy.sh
