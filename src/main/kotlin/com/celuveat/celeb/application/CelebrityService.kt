@@ -25,11 +25,11 @@ class CelebrityService(
 
     @Transactional
     override fun addInterestedCelebrity(command: AddInterestedCelebrityCommand) {
-        TODO("Not yet implemented")
+        saveCelebrityPort.saveInterestedCelebrity(command.celebrityId, command.memberId)
     }
 
     @Transactional
     override fun deleteInterestedCelebrity(command: DeleteInterestedCelebrityCommand) {
-        TODO("Not yet implemented")
+        deleteCelebrityPort.deleteInterestedCelebrity(command.celebrityId, command.memberId)
     }
 }
