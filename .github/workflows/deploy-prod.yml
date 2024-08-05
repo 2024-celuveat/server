@@ -55,8 +55,6 @@ jobs:
           push: true
           tags:
             ${{ secrets.DOCKERHUB_REPOSITORY }}:${{ env.VERSION }}
-          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_REPOSITORY }}:cache
-          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_REPOSITORY }}:cache,mode=max
 
       - name: Deploy
         uses: appleboy/ssh-action@master
