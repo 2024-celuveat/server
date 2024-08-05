@@ -5,8 +5,8 @@ env:
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ * ]
+  #push:
+    #branches: [ main, develop ]
 
 jobs:
   ci-cd:
