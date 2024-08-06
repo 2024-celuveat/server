@@ -44,4 +44,17 @@ class RestaurantPersistenceMapper {
             images = emptyList(),
         )
     }
+
+    fun toEntity(restaurant: Restaurant): RestaurantJpaEntity {
+        return RestaurantJpaEntity(
+            id = restaurant.id,
+            name = restaurant.name,
+            category = restaurant.category,
+            roadAddress = restaurant.roadAddress,
+            phoneNumber = restaurant.phoneNumber,
+            naverMapUrl = restaurant.naverMapUrl,
+            latitude = restaurant.latitude,
+            longitude = restaurant.longitude,
+        )
+    }
 }
