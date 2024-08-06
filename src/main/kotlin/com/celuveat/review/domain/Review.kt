@@ -31,4 +31,13 @@ class Review(
     fun increaseView() {
         views += 1
     }
+
+    fun clickHelpful(clicker: Member): HelpfulReview {
+        helps += 1
+        return HelpfulReview(review = this, clicker = clicker)
+    }
+
+    fun unClickHelpful() {
+        helps -= 1
+    }
 }
