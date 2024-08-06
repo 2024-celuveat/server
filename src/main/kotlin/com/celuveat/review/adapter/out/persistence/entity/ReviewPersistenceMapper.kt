@@ -11,9 +11,7 @@ class ReviewPersistenceMapper(
     private val memberPersistenceMapper: MemberPersistenceMapper,
     private val restaurantPersistenceMapper: RestaurantPersistenceMapper,
 ) {
-    fun toDomain(
-        entity: ReviewJpaEntity,
-    ): Review {
+    fun toDomain(entity: ReviewJpaEntity): Review {
         return Review(
             id = entity.id,
             restaurant = restaurantPersistenceMapper.toDomainWithoutImage(entity.restaurant),
@@ -37,7 +35,7 @@ class ReviewPersistenceMapper(
             views = review.views,
             helps = review.helps,
             createdAt = review.createdAt,
-            updatedAt = review.updatedAt
+            updatedAt = review.updatedAt,
         )
     }
 }

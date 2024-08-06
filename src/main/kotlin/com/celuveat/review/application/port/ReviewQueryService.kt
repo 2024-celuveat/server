@@ -14,8 +14,11 @@ class ReviewQueryService(
     private val findReviewPort: FindReviewPort,
     private val saveReviewPort: SaveReviewPort,
 ) : GetReviewListUseCase, GetSingleReviewUseCase {
-
-    override fun getAll(restaurantsId: Long, page: Int, size: Int): SliceResult<ReviewPreviewResult> {
+    override fun getAll(
+        restaurantsId: Long,
+        page: Int,
+        size: Int,
+    ): SliceResult<ReviewPreviewResult> {
         return findReviewPort.findAllByRestaurantId(restaurantsId, page, size)
             .convertContent { ReviewPreviewResult.from(it) }
     }

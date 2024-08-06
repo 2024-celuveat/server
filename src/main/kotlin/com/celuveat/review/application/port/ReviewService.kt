@@ -28,10 +28,12 @@ class ReviewService(
     private val saveHelpfulReviewPort: SaveHelpfulReviewPort,
     private val saveReviewPort: SaveReviewPort,
     private val deleteReviewPort: DeleteReviewPort,
-    private val deleteHelpfulReviewPort: DeleteHelpfulReviewPort
-) : WriteReviewUseCase, UpdateReviewUseCase, DeleteReviewUseCase,
-    ClickHelpfulReviewUseCase, DeleteHelpfulReviewUseCase {
-
+    private val deleteHelpfulReviewPort: DeleteHelpfulReviewPort,
+) : WriteReviewUseCase,
+    UpdateReviewUseCase,
+    DeleteReviewUseCase,
+    ClickHelpfulReviewUseCase,
+    DeleteHelpfulReviewUseCase {
     override fun write(command: WriteReviewCommand): Long {
         val member = findMemberPort.getById(command.memberId)
         val restaurant = findRestaurantPort.getById(command.restaurantId)
@@ -47,19 +49,25 @@ class ReviewService(
         saveReviewPort.save(review)
     }
 
-    override fun delete(memberId: Long, reviewId: Long) {
+    override fun delete(
+        memberId: Long,
+        reviewId: Long,
+    ) {
         val member = findMemberPort.getById(memberId)
         val review = findReviewPort.getById(reviewId)
         review.validateWriter(member)
         deleteReviewPort.delete(review)
     }
 
-    override fun clickHelpfulReview(memberId: Long, reviewId: Long) {
+    override fun clickHelpfulReview(
+        memberId: Long,
+        reviewId: Long,
+    ) {
         throwWhen(
             findHelpfulReviewPort.existsByReviewAndMember(
                 reviewId = reviewId,
-                memberId = memberId
-            )
+                memberId = memberId,
+            ),
         ) { throw AlreadyInterestedRestaurantException }
         val member = findMemberPort.getById(memberId)
         val review = findReviewPort.getById(reviewId)
@@ -67,7 +75,10 @@ class ReviewService(
         saveHelpfulReviewPort.save(helpfulReview)
     }
 
-    override fun deleteHelpfulReview(memberId: Long, reviewId: Long) {
+    override fun deleteHelpfulReview(
+        memberId: Long,
+        reviewId: Long,
+    ) {
         val helpfulReview = findHelpfulReviewPort.getByReviewAndMember(reviewId, memberId)
         helpfulReview.unClick()
         deleteHelpfulReviewPort.deleteHelpfulReview(helpfulReview)

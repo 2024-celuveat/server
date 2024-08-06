@@ -18,26 +18,19 @@ import java.time.LocalDateTime
 class ReviewJpaEntity(
     @Id @GeneratedValue(strategy = IDENTITY)
     val id: Long = 0,
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", foreignKey = ForeignKey(NO_CONSTRAINT))
     val restaurant: RestaurantJpaEntity,
-    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "writer_id", foreignKey = ForeignKey(NO_CONSTRAINT))
     val writer: MemberJpaEntity,
-
     var content: String,
-    var star: Int,  // 별점
-
-    var views: Long = 0,  // 조회수
-    var helps: Long = 0,  // '도움돼요' 수.
-
+    var star: Int, // 별점
+    var views: Long = 0, // 조회수
+    var helps: Long = 0, // '도움돼요' 수.
     createdAt: LocalDateTime,
-    updatedAt: LocalDateTime
-
+    updatedAt: LocalDateTime,
 ) : RootEntity<Long>() {
-
     init {
         this.createdAt = createdAt
         this.updatedAt = updatedAt

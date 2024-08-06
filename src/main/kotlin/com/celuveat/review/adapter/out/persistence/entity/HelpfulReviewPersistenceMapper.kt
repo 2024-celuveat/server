@@ -20,7 +20,7 @@ class HelpfulReviewPersistenceMapper(
         return HelpfulReview(
             id = entity.id,
             review = reviewPersistenceMapper.toDomain(entity.review),
-            clicker = memberPersistenceMapper.toDomain(entity.clicker)
+            clicker = memberPersistenceMapper.toDomain(entity.clicker),
         )
     }
 }

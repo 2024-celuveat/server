@@ -17,11 +17,9 @@ class HelpfulReviewJpaEntity(
     @Id
     @GeneratedValue(strategy = IDENTITY)
     val id: Long = 0,
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_id", foreignKey = ForeignKey(NO_CONSTRAINT))
     val review: ReviewJpaEntity,
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "clicker_id", foreignKey = ForeignKey(NO_CONSTRAINT))
     val clicker: MemberJpaEntity,
