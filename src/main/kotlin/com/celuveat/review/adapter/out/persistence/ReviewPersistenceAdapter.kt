@@ -14,9 +14,8 @@ import org.springframework.data.domain.PageRequest
 @Adapter
 class ReviewPersistenceAdapter(
     private val reviewJpaEntityRepository: ReviewJpaEntityRepository,
-    private val reviewPersistenceMapper: ReviewPersistenceMapper
+    private val reviewPersistenceMapper: ReviewPersistenceMapper,
 ) : SaveReviewPort, DeleteReviewPort, FindReviewPort {
-
     override fun save(review: Review): Review {
         val entity = reviewPersistenceMapper.toEntity(review)
         val saved = reviewJpaEntityRepository.save(entity)
@@ -33,7 +32,11 @@ class ReviewPersistenceAdapter(
         return reviewPersistenceMapper.toDomain(review)
     }
 
-    override fun findAllByRestaurantId(restaurantsId: Long, page: Int, size: Int): SliceResult<Review> {
+    override fun findAllByRestaurantId(
+        restaurantsId: Long,
+        page: Int,
+        size: Int,
+    ): SliceResult<Review> {
         val pageRequest = PageRequest.of(page, size, LATEST_ID_SORTER)
         val reviews = reviewJpaEntityRepository.findAllByRestaurantId(restaurantsId, pageRequest)
         return SliceResult.of(

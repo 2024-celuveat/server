@@ -7,10 +7,12 @@ import org.springframework.data.domain.Slice
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface ReviewJpaEntityRepository : JpaRepository<ReviewJpaEntity, Long> {
-
     override fun getById(id: Long): ReviewJpaEntity {
         return findByIdOrThrow(id) { NotFoundReviewException }
     }
 
-    fun findAllByRestaurantId(restaurantsId: Long, page: Pageable): Slice<ReviewJpaEntity>
+    fun findAllByRestaurantId(
+        restaurantsId: Long,
+        page: Pageable,
+    ): Slice<ReviewJpaEntity>
 }

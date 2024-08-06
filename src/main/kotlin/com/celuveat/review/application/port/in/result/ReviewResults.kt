@@ -14,9 +14,8 @@ data class ReviewPreviewResult(
     var views: Long,
     var helps: Long,
     val createdAt: LocalDateTime = LocalDateTime.now(),
-    var updatedAt: LocalDateTime = createdAt
+    var updatedAt: LocalDateTime = createdAt,
 ) {
-
     companion object {
         fun from(review: Review): ReviewPreviewResult {
             return ReviewPreviewResult(
@@ -28,7 +27,7 @@ data class ReviewPreviewResult(
                 views = review.views,
                 helps = review.helps,
                 createdAt = review.createdAt,
-                updatedAt = review.updatedAt
+                updatedAt = review.updatedAt,
             )
         }
     }
@@ -43,7 +42,7 @@ data class SingleReviewResult(
     var views: Long,
     var helps: Long,
     val createdAt: LocalDateTime = LocalDateTime.now(),
-    var updatedAt: LocalDateTime = createdAt
+    var updatedAt: LocalDateTime = createdAt,
 ) {
     companion object {
         fun from(review: Review): SingleReviewResult {
@@ -56,7 +55,7 @@ data class SingleReviewResult(
                 views = review.views,
                 helps = review.helps,
                 createdAt = review.createdAt,
-                updatedAt = review.updatedAt
+                updatedAt = review.updatedAt,
             )
         }
     }
@@ -72,7 +71,7 @@ data class ReviewWriterInfo(
             return ReviewWriterInfo(
                 writer.id,
                 writer.nickname,
-                writer.profileImageUrl
+                writer.profileImageUrl,
             )
         }
     }

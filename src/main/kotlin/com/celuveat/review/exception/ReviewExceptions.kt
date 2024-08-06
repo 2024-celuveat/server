@@ -3,7 +3,6 @@ package com.celuveat.review.exception
 import com.celuveat.common.exception.CeluveatException
 import org.springframework.http.HttpStatus
 
-
 sealed class ReviewExceptions(
     status: HttpStatus,
     errorMessage: String,

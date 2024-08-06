@@ -11,7 +11,10 @@ data class WriteReviewCommand(
     var content: String,
     var star: Star,
 ) {
-    fun toReview(member: Member, restaurant: Restaurant): Review {
+    fun toReview(
+        member: Member,
+        restaurant: Restaurant,
+    ): Review {
         return Review(
             restaurant = restaurant,
             writer = member,

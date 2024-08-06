@@ -13,19 +13,24 @@ class HelpfulReviewPersistenceAdapter(
     private val helpfulReviewJpaEntityRepository: HelpfulReviewJpaEntityRepository,
     private val helpfulReviewPersistenceMapper: HelpfulReviewPersistenceMapper,
 ) : SaveHelpfulReviewPort, FindHelpfulReviewPort, DeleteHelpfulReviewPort {
-
     override fun save(helpfulReview: HelpfulReview): HelpfulReview {
         val entity = helpfulReviewPersistenceMapper.toEntity(helpfulReview)
         val saved = helpfulReviewJpaEntityRepository.save(entity)
         return helpfulReviewPersistenceMapper.toDomain(saved)
     }
 
-    override fun getByReviewAndMember(reviewId: Long, memberId: Long): HelpfulReview {
+    override fun getByReviewAndMember(
+        reviewId: Long,
+        memberId: Long,
+    ): HelpfulReview {
         val entity = helpfulReviewJpaEntityRepository.getByClickerIdAndReviewId(reviewId, memberId)
         return helpfulReviewPersistenceMapper.toDomain(entity)
     }
 
-    override fun existsByReviewAndMember(reviewId: Long, memberId: Long): Boolean {
+    override fun existsByReviewAndMember(
+        reviewId: Long,
+        memberId: Long,
+    ): Boolean {
         return helpfulReviewJpaEntityRepository.existsByReviewIdAndClickerId(reviewId, memberId)
     }
 
