@@ -60,6 +60,11 @@ class RestaurantPersistenceAdapter(
         }
     }
 
+    override fun getById(id: Long): Restaurant {
+        val entity = restaurantJpaRepository.getById(id)
+        return restaurantPersistenceMapper.toDomainWithoutImage(entity)
+    }
+
     override fun saveInterestedRestaurant(
         memberId: Long,
         restaurantId: Long,

@@ -21,6 +21,11 @@ class MemberPersistenceAdapter(
         )?.let { memberPersistenceMapper.toDomain(it) }
     }
 
+    override fun getById(id: Long): Member {
+        val entity = memberJpaRepository.getById(id)
+        return memberPersistenceMapper.toDomain(entity)
+    }
+
     override fun save(member: Member): Member {
         val memberEntity = memberPersistenceMapper.toEntity(member)
         val saveMember = memberJpaRepository.save(memberEntity)
