@@ -16,3 +16,7 @@ data object NotFoundReviewException : ReviewExceptions(HttpStatus.NOT_FOUND, "�
 data object NoAuthorityReviewException : ReviewExceptions(HttpStatus.FORBIDDEN, "해당 리뷰에 대한 권한이 없습니다.") {
     private fun readResolve(): Any = NoAuthorityReviewException
 }
+
+data object NotFoundHelpfulReviewException : ReviewExceptions(HttpStatus.NOT_FOUND, "해당 리뷰에 '도움돼요'를 누르지 않았습니다.") {
+    private fun readResolve(): Any = NotFoundHelpfulReviewException
+}
