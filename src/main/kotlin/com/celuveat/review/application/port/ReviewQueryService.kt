@@ -7,7 +7,6 @@ import com.celuveat.review.application.port.`in`.result.ReviewPreviewResult
 import com.celuveat.review.application.port.`in`.result.SingleReviewResult
 import com.celuveat.review.application.port.out.FindReviewPort
 import com.celuveat.review.application.port.out.SaveReviewPort
-import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
@@ -16,8 +15,8 @@ class ReviewQueryService(
     private val saveReviewPort: SaveReviewPort,
 ) : GetReviewListUseCase, GetSingleReviewUseCase {
 
-    override fun getAll(restaurantsId: Long, page: Pageable): SliceResult<ReviewPreviewResult> {
-        return findReviewPort.findAllByRestaurantId(restaurantsId, page)
+    override fun getAll(restaurantsId: Long, page: Int, size: Int): SliceResult<ReviewPreviewResult> {
+        return findReviewPort.findAllByRestaurantId(restaurantsId, page, size)
             .convertContent { ReviewPreviewResult.from(it) }
     }
 

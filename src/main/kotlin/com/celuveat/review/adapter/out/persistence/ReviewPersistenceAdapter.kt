@@ -2,13 +2,14 @@ package com.celuveat.review.adapter.out.persistence
 
 import com.celuveat.common.annotation.Adapter
 import com.celuveat.common.application.port.`in`.result.SliceResult
+import com.celuveat.restaurant.adapter.out.persistence.RestaurantPersistenceAdapter.Companion.LATEST_ID_SORTER
 import com.celuveat.review.adapter.out.persistence.entity.ReviewJpaEntityRepository
 import com.celuveat.review.adapter.out.persistence.entity.ReviewPersistenceMapper
 import com.celuveat.review.application.port.out.DeleteReviewPort
 import com.celuveat.review.application.port.out.FindReviewPort
 import com.celuveat.review.application.port.out.SaveReviewPort
 import com.celuveat.review.domain.Review
-import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.PageRequest
 
 @Adapter
 class ReviewPersistenceAdapter(
@@ -32,9 +33,13 @@ class ReviewPersistenceAdapter(
         return reviewPersistenceMapper.toDomain(review)
     }
 
-    override fun findAllByRestaurantId(restaurantsId: Long, page: Pageable): SliceResult<Review> {
-        val reviews = reviewJpaEntityRepository.findAllByRestaurantId(restaurantsId, page)
-            .map { reviewPersistenceMapper.toDomain(it) }
-        return SliceResult.from(reviews)
+    override fun findAllByRestaurantId(restaurantsId: Long, page: Int, size: Int): SliceResult<Review> {
+        val pageRequest = PageRequest.of(page, size, LATEST_ID_SORTER)
+        val reviews = reviewJpaEntityRepository.findAllByRestaurantId(restaurantsId, pageRequest)
+        return SliceResult.of(
+            contents = reviews.content.map { reviewPersistenceMapper.toDomain(it) },
+            currentPage = page,
+            hasNext = reviews.hasNext(),
+        )
     }
 }
