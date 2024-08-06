@@ -1,7 +1,5 @@
 package com.celuveat.common.application.port.`in`.result
 
-import org.springframework.data.domain.Slice
-
 data class SliceResult<T>(
     val contents: List<T>,
     val currentPage: Int,
@@ -24,12 +22,6 @@ data class SliceResult<T>(
             hasNext: Boolean,
         ): SliceResult<T> {
             return SliceResult(contents, currentPage, hasNext, contents.size)
-        }
-
-        fun <T> from(
-            contents: Slice<T>
-        ): SliceResult<T> {
-            return SliceResult(contents.content, contents.number, contents.hasNext(), contents.size)
         }
     }
 }
