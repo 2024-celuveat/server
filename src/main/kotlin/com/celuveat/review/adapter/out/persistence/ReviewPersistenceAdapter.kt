@@ -2,7 +2,6 @@ package com.celuveat.review.adapter.out.persistence
 
 import com.celuveat.common.annotation.Adapter
 import com.celuveat.common.application.port.`in`.result.SliceResult
-import com.celuveat.restaurant.adapter.out.persistence.RestaurantPersistenceAdapter.Companion.LATEST_ID_SORTER
 import com.celuveat.review.adapter.out.persistence.entity.ReviewJpaEntityRepository
 import com.celuveat.review.adapter.out.persistence.entity.ReviewPersistenceMapper
 import com.celuveat.review.application.port.out.DeleteReviewPort
@@ -10,6 +9,7 @@ import com.celuveat.review.application.port.out.FindReviewPort
 import com.celuveat.review.application.port.out.SaveReviewPort
 import com.celuveat.review.domain.Review
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 
 @Adapter
 class ReviewPersistenceAdapter(
@@ -44,5 +44,10 @@ class ReviewPersistenceAdapter(
             currentPage = page,
             hasNext = reviews.hasNext(),
         )
+    }
+
+    companion object {
+        // TODO updatedAt instead of id ??
+        val LATEST_ID_SORTER = Sort.by("id").descending()
     }
 }
