@@ -27,4 +27,8 @@ class Review(
         this.star = star;
         this.updatedAt = LocalDateTime.now()
     }
+
+    fun increaseView() {
+        views += 1
+    }
 }
