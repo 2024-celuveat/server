@@ -1,5 +1,6 @@
 package com.celuveat.restaurant.adapter.out.persistence
 
+import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityRestaurantJpaRepository
 import com.celuveat.common.annotation.Adapter
 import com.celuveat.common.application.port.`in`.result.SliceResult
 import com.celuveat.common.utils.throwWhen
@@ -24,6 +25,7 @@ class RestaurantPersistenceAdapter(
     private val restaurantImageJpaRepository: RestaurantImageJpaRepository,
     private val interestedRestaurantJpaRepository: InterestedRestaurantJpaRepository,
     private val restaurantPersistenceMapper: RestaurantPersistenceMapper,
+    private val celebrityRestaurantJpaRepository: CelebrityRestaurantJpaRepository,
     private val memberJpaRepository: MemberJpaRepository,
 ) : FindRestaurantPort, SaveRestaurantPort, DeleteRestaurantPort {
     override fun findInterestedRestaurants(
@@ -31,7 +33,7 @@ class RestaurantPersistenceAdapter(
         page: Int,
         size: Int,
     ): SliceResult<Restaurant> {
-        val pageRequest = PageRequest.of(page, size, LATEST_ID_SORTER)
+        val pageRequest = PageRequest.of(page, size, LATEST_SORTER)
         val restaurantSlice = interestedRestaurantJpaRepository.findRestaurantByMemberId(memberId, pageRequest)
         val imagesByRestaurants = restaurantImageJpaRepository.findByRestaurantIn(restaurantSlice.content)
             .groupBy { it.restaurant.id }
@@ -91,7 +93,29 @@ class RestaurantPersistenceAdapter(
             ?: throw NotFoundInterestedRestaurantException
     }
 
+    override fun findVisitedRestaurantByCelebrity(
+        celebrityId: Long,
+        page: Int,
+        size: Int
+    ): SliceResult<Restaurant> {
+        val pageRequest = PageRequest.of(page, size, LATEST_SORTER)
+        val restaurantSlice = celebrityRestaurantJpaRepository.findRestaurantsByCelebrityId(celebrityId, pageRequest)
+        val imagesByRestaurants = restaurantImageJpaRepository.findByRestaurantIn(restaurantSlice.content)
+            .groupBy { it.restaurant.id }
+        return SliceResult.of(
+            contents = restaurantSlice.content.map {
+                restaurantPersistenceMapper.toDomain(
+                    it,
+                    imagesByRestaurants[it.id]!!,
+                )
+            },
+            currentPage = page,
+            hasNext = restaurantSlice.hasNext(),
+        )
+    }
+
+
     companion object {
-        val LATEST_ID_SORTER = Sort.by("id").descending()
+        val LATEST_SORTER = Sort.by("createdAt").descending()
     }
 }

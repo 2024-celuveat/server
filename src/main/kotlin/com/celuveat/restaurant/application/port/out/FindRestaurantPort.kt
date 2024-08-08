@@ -14,4 +14,10 @@ interface FindRestaurantPort {
         memberId: Long,
         restaurantId: Long,
     ): Restaurant?
+
+    fun findVisitedRestaurantByCelebrity(
+        celebrityId: Long,
+        page: Int,
+        size: Int,
+    ): SliceResult<Restaurant>
 }

@@ -33,7 +33,11 @@ class RestaurantQueryService(
         }
     }
 
-    override fun readVisitedRestaurant(command: ReadVisitedRestaurantQuery) {
-
+    override fun readVisitedRestaurant(query: ReadVisitedRestaurantQuery) {
+        val visitedRestaurants = findRestaurantPort.findVisitedRestaurantByCelebrity(
+            query.celebrityId,
+            query.page,
+            query.size,
+        )
     }
 }
