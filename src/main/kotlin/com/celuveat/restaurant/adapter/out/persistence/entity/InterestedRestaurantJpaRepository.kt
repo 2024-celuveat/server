@@ -4,21 +4,13 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Slice
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.data.jpa.repository.Query
 
 interface InterestedRestaurantJpaRepository : JpaRepository<InterestedRestaurantJpaEntity, Long> {
-    @Query(
-        """
-        SELECT ir.restaurant
-        FROM InterestedRestaurantJpaEntity ir
-        WHERE ir.member.id = :memberId
-        """,
-    )
     @EntityGraph(attributePaths = ["restaurant"])
-    fun findRestaurantByMemberId(
+    fun findAllByMemberId(
         memberId: Long,
         pageable: Pageable,
-    ): Slice<RestaurantJpaEntity>
+    ): Slice<InterestedRestaurantJpaEntity>
 
     @EntityGraph(attributePaths = ["restaurant"])
     fun findByMemberIdAndRestaurantId(

@@ -7,6 +7,7 @@ import com.celuveat.restaurant.application.port.`in`.ReadVisitedRestaurantUseCas
 import com.celuveat.restaurant.application.port.`in`.query.GetInterestedRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadVisitedRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.result.RestaurantPreviewResult
+import com.celuveat.restaurant.application.port.out.FindInterestedRestaurantPort
 import com.celuveat.restaurant.application.port.out.FindRestaurantPort
 import org.springframework.stereotype.Service
 
@@ -14,21 +15,22 @@ import org.springframework.stereotype.Service
 class RestaurantQueryService(
     private val findRestaurantPort: FindRestaurantPort,
     private val findCelebritiesPort: FindCelebritiesPort,
+    private val findInterestedRestaurantPort: FindInterestedRestaurantPort,
 ) : GetInterestedRestaurantsUseCase, ReadVisitedRestaurantUseCase {
     override fun getInterestedRestaurant(query: GetInterestedRestaurantsQuery): SliceResult<RestaurantPreviewResult> {
-        val interestedRestaurants = findRestaurantPort.findInterestedRestaurants(
+        val interestedRestaurants = findInterestedRestaurantPort.findInterestedRestaurants(
             query.memberId,
             query.page,
             query.size,
         )
         val celebritiesByRestaurants = findCelebritiesPort.findVisitedCelebritiesByRestaurants(
-            interestedRestaurants.contents.map { it.id },
+            interestedRestaurants.contents.map { it.restaurant.id },
         )
         return interestedRestaurants.convertContent {
             RestaurantPreviewResult.of(
-                restaurant = it,
+                restaurant = it.restaurant,
                 liked = true,
-                visitedCelebrities = celebritiesByRestaurants[it.id]!!,
+                visitedCelebrities = celebritiesByRestaurants[it.restaurant.id]!!,
             )
         }
     }

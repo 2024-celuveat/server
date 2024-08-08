@@ -2,20 +2,20 @@ package com.celuveat.restaurant.application
 
 import com.celuveat.restaurant.application.port.`in`.command.AddInterestedRestaurantCommand
 import com.celuveat.restaurant.application.port.`in`.command.DeleteInterestedRestaurantCommand
-import com.celuveat.restaurant.application.port.out.DeleteRestaurantPort
-import com.celuveat.restaurant.application.port.out.SaveRestaurantPort
+import com.celuveat.restaurant.application.port.out.DeleteInterestedRestaurantPort
+import com.celuveat.restaurant.application.port.out.SaveInterestedRestaurantPort
 import io.kotest.core.spec.style.BehaviorSpec
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 
 class RestaurantServiceTest : BehaviorSpec({
-    val saveRestaurantPort: SaveRestaurantPort = mockk()
-    val deleteRestaurantPort: DeleteRestaurantPort = mockk()
+    val saveInterestedRestaurantPort: SaveInterestedRestaurantPort = mockk()
+    val deleteInterestedRestaurantPort: DeleteInterestedRestaurantPort = mockk()
 
     val restaurantService = RestaurantService(
-        saveRestaurantPort,
-        deleteRestaurantPort,
+        saveInterestedRestaurantPort,
+        deleteInterestedRestaurantPort,
     )
 
     Given("회원이 관심 음식점 추가 시") {
@@ -23,12 +23,12 @@ class RestaurantServiceTest : BehaviorSpec({
         val restaurantId = 1L
 
         When("해당 음식점이") {
-            every { saveRestaurantPort.saveInterestedRestaurant(memberId, restaurantId) } returns Unit
+            every { saveInterestedRestaurantPort.saveInterestedRestaurant(memberId, restaurantId) } returns Unit
 
             val command = AddInterestedRestaurantCommand(memberId, restaurantId)
             restaurantService.addInterestedRestaurant(command)
             Then("관심 음식점으로 추가 된다") {
-                verify { saveRestaurantPort.saveInterestedRestaurant(memberId, restaurantId) }
+                verify { saveInterestedRestaurantPort.saveInterestedRestaurant(memberId, restaurantId) }
             }
         }
     }
@@ -38,12 +38,12 @@ class RestaurantServiceTest : BehaviorSpec({
         val restaurantId = 1L
 
         When("해당 음식점이") {
-            every { deleteRestaurantPort.deleteInterestedRestaurant(memberId, restaurantId) } returns Unit
+            every { deleteInterestedRestaurantPort.deleteInterestedRestaurant(memberId, restaurantId) } returns Unit
 
             val command = DeleteInterestedRestaurantCommand(memberId, restaurantId)
             restaurantService.deleteInterestedRestaurant(command)
             Then("관심 음식점에서 삭제 된다") {
-                verify { deleteRestaurantPort.deleteInterestedRestaurant(memberId, restaurantId) }
+                verify { deleteInterestedRestaurantPort.deleteInterestedRestaurant(memberId, restaurantId) }
             }
         }
     }
