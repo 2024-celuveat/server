@@ -6,6 +6,7 @@ import com.celuveat.member.domain.SocialLoginType
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.enums.ParameterIn
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpHeaders
@@ -61,6 +62,7 @@ interface SocialLoginApi {
         response: HttpServletResponse,
     )
 
+    @SecurityRequirement(name = "JWT")
     @Operation(summary = "소셜 회원 탈퇴")
     @DeleteMapping("/withdraw/{socialLoginType}")
     fun withdraw(
