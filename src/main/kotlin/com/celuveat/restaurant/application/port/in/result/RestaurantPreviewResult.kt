@@ -34,7 +34,7 @@ data class RestaurantPreviewResult(
                 latitude = restaurant.latitude,
                 longitude = restaurant.longitude,
                 liked = liked,
-                visitedCelebrities = visitedCelebrities.map { SimpleCelebrityResult(it.name, it.profileImageUrl) },
+                visitedCelebrities = visitedCelebrities.map { SimpleCelebrityResult.from(it) },
                 images = restaurant.images.map { RestaurantImageResult.from(it) },
             )
         }

@@ -3,6 +3,7 @@ package com.celuveat.celeb.application
 import com.celuveat.celeb.application.port.`in`.GetInterestedCelebritiesUseCase
 import com.celuveat.celeb.application.port.`in`.ReadBestCelebritiesUseCase
 import com.celuveat.celeb.application.port.`in`.result.CelebrityResult
+import com.celuveat.celeb.application.port.`in`.result.SimpleCelebrityResult
 import com.celuveat.celeb.application.port.out.FindCelebritiesPort
 import com.celuveat.celeb.application.port.`in`.AddInterestedCelebrityUseCase
 import com.celuveat.celeb.application.port.`in`.DeleteInterestedCelebrityUseCase
@@ -40,7 +41,8 @@ class CelebrityService(
         deleteInterestedCelebrityPort.deleteInterestedCelebrity(command.celebrityId, command.memberId)
     }
 
-    override fun readBestCelebrities(memberId: Long?) {
-        TODO()
+    override fun readBestCelebrities(): List<SimpleCelebrityResult> {
+        val bestCelebrities = findCelebritiesPort.findBestCelebrities()
+        return bestCelebrities.map { SimpleCelebrityResult.from(it) }
     }
 }
