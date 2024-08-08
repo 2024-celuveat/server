@@ -52,7 +52,7 @@ class CelebrityPersistenceAdapterTest(
             listOf(
                 generateCelebrityYoutubeContent(celebrityA, savedContents[0]),
                 generateCelebrityYoutubeContent(celebrityA, savedContents[1]),
-                generateCelebrityYoutubeContent(celebrityB, savedContents[2]),
+                generateCelebrityYoutubeContent(celebrityB, savedContents[0]),
             ),
         ) // [셀럽A] -> [컨텐츠A, 컨텐츠B], [셀럽B] -> [컨텐츠A] 에 출연함
 
