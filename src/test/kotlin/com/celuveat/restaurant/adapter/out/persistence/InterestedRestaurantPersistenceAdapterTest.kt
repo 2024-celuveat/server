@@ -23,7 +23,9 @@ import com.navercorp.fixturemonkey.kotlin.set
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.collections.shouldContainInOrder
+import io.kotest.matchers.collections.shouldNotContain
 import io.kotest.matchers.shouldBe
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.context.annotation.Import
@@ -213,6 +215,42 @@ class InterestedRestaurantPersistenceAdapterTest(
             shouldThrow<NotFoundInterestedRestaurantException> {
                 restaurantPersistenceAdapter.deleteInterestedRestaurant(savedMember.id, NOT_EXIST_ID)
             }
+        }
+    }
+
+    context("음식점 id로 관심 음식점 조회 시") {
+        // given
+        val savedRestaurants = restaurantJpaRepository.saveAll(sut.giveMeBuilder<RestaurantJpaEntity>().sampleList(3))
+        val restaurantA = savedRestaurants[0]
+        val restaurantB = savedRestaurants[1]
+        val restaurantC = savedRestaurants[1]
+
+        val savedMember = memberJpaRepository.save(sut.giveMeOne<MemberJpaEntity>())
+        interestedRestaurantJpaRepository.saveAll(
+            listOf(
+                sut.giveMeBuilder<InterestedRestaurantJpaEntity>()
+                    .set(InterestedRestaurantJpaEntity::member, savedMember)
+                    .set(InterestedRestaurantJpaEntity::restaurant, savedRestaurants[0])
+                    .sample(),
+                sut.giveMeBuilder<InterestedRestaurantJpaEntity>()
+                    .set(InterestedRestaurantJpaEntity::member, savedMember)
+                    .set(InterestedRestaurantJpaEntity::restaurant, savedRestaurants[1])
+                    .sample(),
+            ),
+        )
+
+        test("음식점 id로 관심 음식점을 조회한다.") {
+            // when
+            val restaurantIds = savedRestaurants.map { it.id }
+            val interestedRestaurants = restaurantPersistenceAdapter.findInterestedRestaurantsByIds(
+                savedMember.id,
+                restaurantIds,
+            )
+
+            // then
+            interestedRestaurants.size shouldBe 2
+            interestedRestaurants.map { it.restaurant.id } shouldContainAll listOf(restaurantA.id, restaurantB.id)
+            interestedRestaurants.map { it.restaurant.id } shouldNotContain listOf(restaurantC.id)
         }
     }
 })

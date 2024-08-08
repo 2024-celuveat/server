@@ -37,11 +37,6 @@ class RestaurantPersistenceAdapter(
         )
     }
 
-    override fun findInterestedRestaurantsByIds(restaurantIds: List<Long>): List<Restaurant> {
-        TODO("Not yet implemented")
-    }
-
-
     companion object {
         val LATEST_SORTER = Sort.by("createdAt").descending()
     }

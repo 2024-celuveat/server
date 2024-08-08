@@ -22,4 +22,9 @@ interface InterestedRestaurantJpaRepository : JpaRepository<InterestedRestaurant
         memberId: Long,
         restaurantId: Long,
     ): Boolean
+
+    fun findAllByMemberIdAndIdIn(
+        memberId: Long,
+        ids: List<Long>,
+    ): List<InterestedRestaurantJpaEntity>
 }

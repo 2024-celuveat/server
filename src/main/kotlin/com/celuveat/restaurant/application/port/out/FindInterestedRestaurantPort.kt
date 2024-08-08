@@ -14,4 +14,9 @@ interface FindInterestedRestaurantPort {
         memberId: Long,
         restaurantId: Long,
     ): InterestedRestaurant?
+
+    fun findInterestedRestaurantsByIds(
+        memberId: Long,
+        restaurantIds: List<Long>
+    ): List<InterestedRestaurant>
 }

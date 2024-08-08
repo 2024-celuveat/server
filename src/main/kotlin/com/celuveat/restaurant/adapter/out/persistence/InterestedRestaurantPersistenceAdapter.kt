@@ -91,6 +91,14 @@ class InterestedRestaurantPersistenceAdapter(
             ?: throw NotFoundInterestedRestaurantException
     }
 
+    override fun findInterestedRestaurantsByIds(
+        memberId: Long,
+        restaurantIds: List<Long>,
+    ): List<InterestedRestaurant> {
+        return interestedRestaurantJpaRepository.findAllByMemberIdAndIdIn(memberId, restaurantIds)
+            .map { interestedRestaurantPersistenceMapper.toDomain(it) }
+    }
+
     companion object {
         val LATEST_SORTER = Sort.by("createdAt").descending()
     }

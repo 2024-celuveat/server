@@ -9,6 +9,4 @@ interface FindRestaurantPort {
         page: Int,
         size: Int,
     ): SliceResult<Restaurant>
-
-    fun findInterestedRestaurantsByIds(restaurantIds: List<Long>): List<Restaurant>
 }
