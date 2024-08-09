@@ -63,7 +63,7 @@ class InterestedCelebrityPersistenceAdapter(
             ?: throw NotFoundInterestedCelebrityException
     }
 
-    override fun existedInterestedCelebrity(
+    override fun existsInterestedCelebrity(
         celebrityId: Long,
         memberId: Long,
     ): Boolean {

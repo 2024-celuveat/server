@@ -3,19 +3,28 @@ package com.celuveat.restaurant.application
 import com.celuveat.restaurant.application.port.`in`.command.AddInterestedRestaurantCommand
 import com.celuveat.restaurant.application.port.`in`.command.DeleteInterestedRestaurantCommand
 import com.celuveat.restaurant.application.port.out.DeleteInterestedRestaurantPort
+import com.celuveat.restaurant.application.port.out.FindInterestedRestaurantPort
 import com.celuveat.restaurant.application.port.out.SaveInterestedRestaurantPort
+import com.celuveat.restaurant.exception.AlreadyInterestedRestaurantException
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
+import io.kotest.core.test.TestCase
+import io.kotest.core.test.TestResult
+import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.unmockkAll
 import io.mockk.verify
 
 class RestaurantServiceTest : BehaviorSpec({
     val saveInterestedRestaurantPort: SaveInterestedRestaurantPort = mockk()
     val deleteInterestedRestaurantPort: DeleteInterestedRestaurantPort = mockk()
+    val findInterestedRestaurantPort: FindInterestedRestaurantPort = mockk()
 
     val restaurantService = RestaurantService(
         saveInterestedRestaurantPort,
         deleteInterestedRestaurantPort,
+        findInterestedRestaurantPort,
     )
 
     Given("회원이 관심 음식점 추가 시") {
@@ -24,11 +33,23 @@ class RestaurantServiceTest : BehaviorSpec({
 
         When("해당 음식점이") {
             every { saveInterestedRestaurantPort.saveInterestedRestaurant(memberId, restaurantId) } returns Unit
+            every { findInterestedRestaurantPort.existsInterestedRestaurant(memberId, restaurantId) } returns false
 
             val command = AddInterestedRestaurantCommand(memberId, restaurantId)
             restaurantService.addInterestedRestaurant(command)
             Then("관심 음식점으로 추가 된다") {
                 verify { saveInterestedRestaurantPort.saveInterestedRestaurant(memberId, restaurantId) }
+            }
+        }
+
+        When("이미 추가된 음식점이면") {
+            every { findInterestedRestaurantPort.existsInterestedRestaurant(memberId, restaurantId) } returns true
+            val command = AddInterestedRestaurantCommand(memberId, restaurantId)
+
+            Then("예외를 발생시킨다") {
+                shouldThrow<AlreadyInterestedRestaurantException> {
+                    restaurantService.addInterestedRestaurant(command)
+                }
             }
         }
     }
@@ -47,4 +68,12 @@ class RestaurantServiceTest : BehaviorSpec({
             }
         }
     }
-})
+}) {
+    override suspend fun afterEach(
+        testCase: TestCase,
+        result: TestResult,
+    ) {
+        clearAllMocks()
+        unmockkAll()
+    }
+}

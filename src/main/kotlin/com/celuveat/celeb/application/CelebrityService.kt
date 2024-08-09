@@ -23,7 +23,7 @@ class CelebrityService(
 ) : ReadBestCelebritiesUseCase, AddInterestedCelebrityUseCase, DeleteInterestedCelebrityUseCase {
     override fun addInterestedCelebrity(command: AddInterestedCelebrityCommand) {
         throwWhen(
-            findInterestedCelebritiesPort.existedInterestedCelebrity(command.celebrityId, command.memberId),
+            findInterestedCelebritiesPort.existsInterestedCelebrity(command.celebrityId, command.memberId),
         ) { AlreadyInterestedCelebrityException }
         saveInterestedCelebrityPort.saveInterestedCelebrity(command.celebrityId, command.memberId)
     }

@@ -10,10 +10,10 @@ interface FindInterestedRestaurantPort {
         size: Int,
     ): SliceResult<InterestedRestaurant>
 
-    fun findInterestedRestaurantOrNull(
+    fun existsInterestedRestaurant(
         memberId: Long,
         restaurantId: Long,
-    ): InterestedRestaurant?
+    ): Boolean
 
     fun findInterestedRestaurantsByIds(
         memberId: Long,
