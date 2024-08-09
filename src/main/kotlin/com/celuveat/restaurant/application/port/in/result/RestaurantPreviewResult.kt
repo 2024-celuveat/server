@@ -22,7 +22,7 @@ data class RestaurantPreviewResult(
         fun of(
             restaurant: Restaurant,
             liked: Boolean,
-            visitedCelebrities: List<Celebrity>,
+            visitedCelebrities: List<Celebrity> = emptyList(),
         ): RestaurantPreviewResult {
             return RestaurantPreviewResult(
                 id = restaurant.id,

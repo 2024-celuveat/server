@@ -35,11 +35,21 @@ class RestaurantQueryService(
         }
     }
 
-    override fun readVisitedRestaurant(query: ReadVisitedRestaurantQuery) {
+    override fun readVisitedRestaurant(query: ReadVisitedRestaurantQuery): SliceResult<RestaurantPreviewResult> {
         val visitedRestaurants = findRestaurantPort.findVisitedRestaurantByCelebrity(
             query.celebrityId,
             query.page,
             query.size,
         )
+        val visitedRestaurantIds = visitedRestaurants.contents.map { it.id }
+        val interestedRestaurants = query.memberId?.let {
+            findInterestedRestaurantPort.findInterestedRestaurantsByIds(it, visitedRestaurantIds)
+        } ?: emptyList()
+        return visitedRestaurants.convertContent {
+            RestaurantPreviewResult.of(
+                restaurant = it,
+                liked = interestedRestaurants.any { interested -> interested.restaurant.id == it.id },
+            )
+        }
     }
 }
