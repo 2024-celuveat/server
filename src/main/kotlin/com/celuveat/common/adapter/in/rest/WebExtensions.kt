@@ -1,4 +1,4 @@
-package com.celuveat.common.adapter.out.rest
+package com.celuveat.common.adapter.`in`.rest
 
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.web.context.request.NativeWebRequest

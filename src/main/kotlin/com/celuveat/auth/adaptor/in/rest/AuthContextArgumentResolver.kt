@@ -1,8 +1,8 @@
 package com.celuveat.auth.adaptor.`in`.rest
 
 import com.celuveat.auth.application.port.`in`.ExtractMemberIdUseCase
-import com.celuveat.common.adapter.out.rest.getTokenAuthorizationOrNull
-import com.celuveat.common.adapter.out.rest.toHttpServletRequest
+import com.celuveat.common.adapter.`in`.rest.getTokenAuthorizationOrNull
+import com.celuveat.common.adapter.`in`.rest.toHttpServletRequest
 import org.springframework.core.MethodParameter
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.support.WebDataBinderFactory
