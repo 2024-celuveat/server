@@ -5,8 +5,6 @@ import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityJpaRepository
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityPersistenceMapper
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityYoutubeContentJpaEntity
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityYoutubeContentJpaRepository
-import com.celuveat.celeb.adapter.out.persistence.entity.InterestedCelebrityJpaEntity
-import com.celuveat.celeb.adapter.out.persistence.entity.InterestedCelebrityJpaRepository
 import com.celuveat.celeb.adapter.out.persistence.entity.RestaurantInVideoJpaEntity
 import com.celuveat.celeb.adapter.out.persistence.entity.RestaurantInVideoJpaRepository
 import com.celuveat.celeb.adapter.out.persistence.entity.VideoJpaEntity
@@ -14,19 +12,14 @@ import com.celuveat.celeb.adapter.out.persistence.entity.VideoJpaRepository
 import com.celuveat.celeb.adapter.out.persistence.entity.YoutubeContentJpaEntity
 import com.celuveat.celeb.adapter.out.persistence.entity.YoutubeContentJpaRepository
 import com.celuveat.common.adapter.out.persistence.JpaConfig
-import com.celuveat.member.adapter.out.persistence.entity.MemberJpaEntity
-import com.celuveat.member.adapter.out.persistence.entity.MemberJpaRepository
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantJpaEntity
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantJpaRepository
 import com.celuveat.support.sut
 import com.navercorp.fixturemonkey.kotlin.giveMeBuilder
-import com.navercorp.fixturemonkey.kotlin.giveMeOne
 import com.navercorp.fixturemonkey.kotlin.set
 import io.kotest.assertions.assertSoftly
-import io.kotest.core.spec.style.StringSpec
-import io.kotest.inspectors.forAll
+import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.context.annotation.Import
 
@@ -35,70 +28,13 @@ import org.springframework.context.annotation.Import
 class CelebrityPersistenceAdapterTest(
     private val celebrityPersistenceAdapter: CelebrityPersistenceAdapter,
     private val celebrityJpaRepository: CelebrityJpaRepository,
-    private val interestedCelebrityJpaRepository: InterestedCelebrityJpaRepository,
     private val youtubeContentJpaRepository: YoutubeContentJpaRepository,
     private val celebrityYoutubeContentJpaRepository: CelebrityYoutubeContentJpaRepository,
     private val videoJpaRepository: VideoJpaRepository,
     private val restaurantJpaRepository: RestaurantJpaRepository,
     private val restaurantInVideoJpaRepository: RestaurantInVideoJpaRepository,
-    private val memberJpaRepository: MemberJpaRepository,
-) : StringSpec({
-    "회원이 관심 목록에 추가한 셀럽을 조회 한다." {
-        // given
-        val savedCelebrities = celebrityJpaRepository.saveAll(sut.giveMeBuilder<CelebrityJpaEntity>().sampleList(2))
-        val celebrityA = savedCelebrities[0]
-        val celebrityB = savedCelebrities[1]
-
-        val contentA = sut.giveMeBuilder<YoutubeContentJpaEntity>()
-            .set(YoutubeContentJpaEntity::id, 0)
-            .set(YoutubeContentJpaEntity::channelId, "@channelId")
-            .sampleList(2)
-        val contentB = sut.giveMeBuilder<YoutubeContentJpaEntity>()
-            .set(YoutubeContentJpaEntity::id, 0)
-            .set(YoutubeContentJpaEntity::channelId, "@channelId")
-            .sample()
-        val savedContents = youtubeContentJpaRepository.saveAll(contentA + contentB)
-        celebrityYoutubeContentJpaRepository.saveAll(
-            listOf(
-                sut.giveMeBuilder<CelebrityYoutubeContentJpaEntity>()
-                    .set(CelebrityYoutubeContentJpaEntity::celebrity, celebrityA)
-                    .set(CelebrityYoutubeContentJpaEntity::youtubeContent, savedContents[0])
-                    .sample(),
-                sut.giveMeBuilder<CelebrityYoutubeContentJpaEntity>()
-                    .set(CelebrityYoutubeContentJpaEntity::celebrity, celebrityA)
-                    .set(CelebrityYoutubeContentJpaEntity::youtubeContent, savedContents[1])
-                    .sample(),
-                sut.giveMeBuilder<CelebrityYoutubeContentJpaEntity>()
-                    .set(CelebrityYoutubeContentJpaEntity::celebrity, celebrityB)
-                    .set(CelebrityYoutubeContentJpaEntity::youtubeContent, savedContents[2])
-                    .sample(),
-            ),
-        )
-        val savedMember = memberJpaRepository.save(sut.giveMeOne<MemberJpaEntity>())
-        interestedCelebrityJpaRepository.saveAll(
-            listOf(
-                sut.giveMeBuilder<InterestedCelebrityJpaEntity>()
-                    .set(InterestedCelebrityJpaEntity::member, savedMember)
-                    .set(InterestedCelebrityJpaEntity::celebrity, celebrityA)
-                    .sample(),
-                sut.giveMeBuilder<InterestedCelebrityJpaEntity>()
-                    .set(InterestedCelebrityJpaEntity::member, savedMember)
-                    .set(InterestedCelebrityJpaEntity::celebrity, celebrityB)
-                    .sample(),
-            ),
-        )
-
-        // when
-        val celebrities = celebrityPersistenceAdapter.findInterestedCelebrities(savedMember.id)
-
-        // then
-        assertSoftly {
-            celebrities.size shouldBe 2
-            celebrities.forAll { it.youtubeContents shouldNotBe null }
-        }
-    }
-
-    "식당을 방문한 셀럽을 조회 한다." {
+) : FunSpec({
+    test("식당을 방문한 셀럽을 조회 한다.") {
         // given
         val savedCelebrities = celebrityJpaRepository.saveAll(sut.giveMeBuilder<CelebrityJpaEntity>().sampleList(2))
         val celebrityA = savedCelebrities[0]

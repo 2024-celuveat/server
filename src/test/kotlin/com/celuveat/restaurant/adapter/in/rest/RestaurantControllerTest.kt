@@ -71,7 +71,7 @@ class RestaurantControllerTest(
             every { extractMemberIdUseCase.extract(accessToken) } returns memberId
             every { addInterestedRestaurantsUseCase.addInterestedRestaurant(command) } returns Unit
 
-            mockMvc.post("/restaurants/interested/$restaurantId") {
+            mockMvc.post("/restaurants/interested/{restaurantId}", restaurantId) {
                 header("Authorization", "Bearer $accessToken")
             }.andExpect {
                 status { isOk() }
@@ -91,7 +91,7 @@ class RestaurantControllerTest(
             every { extractMemberIdUseCase.extract(accessToken) } returns memberId
             every { deleteInterestedRestaurantsUseCase.deleteInterestedRestaurant(command) } returns Unit
 
-            mockMvc.delete("/restaurants/interested/$restaurantId") {
+            mockMvc.delete("/restaurants/interested/{restaurantId}", restaurantId) {
                 header("Authorization", "Bearer $accessToken")
             }.andExpect {
                 status { isOk() }
