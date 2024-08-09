@@ -5,7 +5,7 @@ import com.celuveat.auth.exception.UnAuthorizationException
 data class AuthContext(
     private val memberId: Long?,
 ) {
-    fun asGuest(): Long? {
+    fun optionalMemberId(): Long? {
         return this.memberId
     }
 
