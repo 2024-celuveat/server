@@ -52,11 +52,11 @@ class GoogleSocialLoginClient(
         return googleApiClient.fetchMemberInfo("Bearer $accessToken")
     }
 
-    override fun getSocialLoginUrl(redirectUrl: String): String {
+    override fun getSocialLoginUrl(requestOrigin: String): String {
         return UriComponentsBuilder
             .fromHttpUrl(googleSocialLoginProperty.authorizationUrl)
             .queryParam("client_id", googleSocialLoginProperty.clientId)
-            .queryParam("redirect_uri", redirectUrl)
+            .queryParam("redirect_uri", "$requestOrigin/oauth/google")
             .queryParam("response_type", "code")
             .queryParam("scope", googleSocialLoginProperty.scope.joinToString(","))
             .build()

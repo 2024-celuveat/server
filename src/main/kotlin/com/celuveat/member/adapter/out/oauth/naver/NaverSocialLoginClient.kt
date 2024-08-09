@@ -49,11 +49,11 @@ class NaverSocialLoginClient(
         return naverApiClient.fetchMemberInfo("Bearer $accessToken")
     }
 
-    override fun getSocialLoginUrl(redirectUrl: String): String {
+    override fun getSocialLoginUrl(requestOrigin: String): String {
         return UriComponentsBuilder
             .fromHttpUrl(naverSocialLoginProperty.authorizationUrl)
             .queryParam("client_id", naverSocialLoginProperty.clientId)
-            .queryParam("redirect_uri", redirectUrl)
+            .queryParam("redirect_uri", "$requestOrigin/oauth/naver")
             .queryParam("response_type", "code")
             .queryParam("state", naverSocialLoginProperty.state)
             .build()

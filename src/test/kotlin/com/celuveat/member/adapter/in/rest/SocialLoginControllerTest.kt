@@ -70,7 +70,7 @@ class SocialLoginControllerTest(
     context("소셜 로그인 URL을 요청한다") {
         val socialLoginType = SocialLoginType.KAKAO
         val requestOrigin = "http://localhost:3000"
-        val socialLoginUrl = "https://social.com/authorize?redirect_uri=$requestOrigin&client_id=clientId"
+        val socialLoginUrl = "https://social.com/authorize?redirect_uri=$requestOrigin/oauth/kakao&client_id=clientId"
 
         test("소셜 로그인 URL을 성공적으로 반환한다") {
             every { getSocialLoginUrlUseCase.getSocialLoginUrl(socialLoginType, requestOrigin) } returns socialLoginUrl
@@ -78,8 +78,8 @@ class SocialLoginControllerTest(
             mockMvc.get("/social-login/url/{socialLoginType}", socialLoginType) {
                 header("Origin", requestOrigin)
             }.andExpect {
-                status { isFound() }
-                header { string("Location", socialLoginUrl) }
+                status { isOk() }
+                jsonPath("$") { value(socialLoginUrl) }
             }
         }
 

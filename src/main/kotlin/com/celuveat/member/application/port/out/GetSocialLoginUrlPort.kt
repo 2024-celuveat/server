@@ -5,6 +5,6 @@ import com.celuveat.member.domain.SocialLoginType
 interface GetSocialLoginUrlPort {
     fun getSocialLoginUrl(
         socialLoginType: SocialLoginType,
-        redirectUrl: String,
+        requestOrigin: String,
     ): String
 }

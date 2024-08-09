@@ -52,11 +52,11 @@ class KakaoSocialLoginClient(
         return kakaoApiClient.fetchMemberInfo("Bearer $accessToken")
     }
 
-    override fun getSocialLoginUrl(redirectUrl: String): String {
+    override fun getSocialLoginUrl(requestOrigin: String): String {
         return UriComponentsBuilder
             .fromHttpUrl(kakaoSocialLoginProperty.authorizationUrl)
             .queryParam("client_id", kakaoSocialLoginProperty.clientId)
-            .queryParam("redirect_uri", redirectUrl)
+            .queryParam("redirect_uri", "$requestOrigin/oauth/kakao")
             .queryParam("response_type", "code")
             .queryParam("scope", kakaoSocialLoginProperty.scope.joinToString(","))
             .build()

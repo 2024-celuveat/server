@@ -38,9 +38,9 @@ class SocialLoginService(
 
     override fun getSocialLoginUrl(
         socialLoginType: SocialLoginType,
-        redirectUrl: String,
+        requestOrigin: String,
     ): String {
-        return getSocialLoginUrlPort.getSocialLoginUrl(socialLoginType, redirectUrl)
+        return getSocialLoginUrlPort.getSocialLoginUrl(socialLoginType, requestOrigin)
     }
 
     @Transactional

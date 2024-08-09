@@ -28,10 +28,10 @@ class FetchSocialMemberAdapter(
 
     override fun getSocialLoginUrl(
         socialLoginType: SocialLoginType,
-        redirectUrl: String,
+        requestOrigin: String,
     ): String {
         val socialLoginClient = getSocialLoginClient(socialLoginType)
-        return socialLoginClient.getSocialLoginUrl(redirectUrl)
+        return socialLoginClient.getSocialLoginUrl(requestOrigin)
     }
 
     override fun withdraw(
