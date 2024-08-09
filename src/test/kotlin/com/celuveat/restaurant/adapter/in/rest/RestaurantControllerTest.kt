@@ -4,12 +4,12 @@ import com.celuveat.auth.application.port.`in`.ExtractMemberIdUseCase
 import com.celuveat.common.application.port.`in`.result.SliceResult
 import com.celuveat.restaurant.application.port.`in`.AddInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.DeleteInterestedRestaurantsUseCase
+import com.celuveat.restaurant.application.port.`in`.ReadCelebrityVisitedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadInterestedRestaurantsUseCase
-import com.celuveat.restaurant.application.port.`in`.ReadVisitedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.command.AddInterestedRestaurantCommand
 import com.celuveat.restaurant.application.port.`in`.command.DeleteInterestedRestaurantCommand
 import com.celuveat.restaurant.application.port.`in`.query.GetInterestedRestaurantsQuery
-import com.celuveat.restaurant.application.port.`in`.query.ReadVisitedRestaurantQuery
+import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.result.RestaurantPreviewResult
 import com.celuveat.support.sut
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -36,7 +36,7 @@ class RestaurantControllerTest(
     @MockkBean val readInterestedRestaurantsUseCase: ReadInterestedRestaurantsUseCase,
     @MockkBean val addInterestedRestaurantsUseCase: AddInterestedRestaurantsUseCase,
     @MockkBean val deleteInterestedRestaurantsUseCase: DeleteInterestedRestaurantsUseCase,
-    @MockkBean val readVisitedRestaurantUseCase: ReadVisitedRestaurantUseCase,
+    @MockkBean val readCelebrityVisitedRestaurantUseCase: ReadCelebrityVisitedRestaurantUseCase,
     // for AuthMemberArgumentResolver
     @MockkBean val extractMemberIdUseCase: ExtractMemberIdUseCase,
 ) : FunSpec({
@@ -122,9 +122,9 @@ class RestaurantControllerTest(
                 currentPage = page,
                 hasNext = false,
             )
-            val query = ReadVisitedRestaurantQuery(memberId, celebrityId, page, size = 3)
+            val query = ReadCelebrityVisitedRestaurantQuery(memberId, celebrityId, page, size = 3)
             every { extractMemberIdUseCase.extract(accessToken) } returns memberId
-            every { readVisitedRestaurantUseCase.readVisitedRestaurant(query) } returns results
+            every { readCelebrityVisitedRestaurantUseCase.readCelebrityVisitedRestaurant(query) } returns results
 
             mockMvc.get("/restaurants/celebrity/$celebrityId") {
                 header("Authorization", "Bearer $accessToken")
@@ -146,8 +146,8 @@ class RestaurantControllerTest(
                 currentPage = page,
                 hasNext = false,
             )
-            val query = ReadVisitedRestaurantQuery(null, celebrityId, page, size = 3)
-            every { readVisitedRestaurantUseCase.readVisitedRestaurant(query) } returns results
+            val query = ReadCelebrityVisitedRestaurantQuery(null, celebrityId, page, size = 3)
+            every { readCelebrityVisitedRestaurantUseCase.readCelebrityVisitedRestaurant(query) } returns results
 
             mockMvc.get("/restaurants/celebrity/$celebrityId") {
                 param("page", page.toString())

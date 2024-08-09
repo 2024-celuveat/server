@@ -2,21 +2,21 @@ package com.celuveat.restaurant.application
 
 import com.celuveat.celeb.application.port.out.FindCelebritiesPort
 import com.celuveat.common.application.port.`in`.result.SliceResult
+import com.celuveat.restaurant.application.port.`in`.ReadCelebrityVisitedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadInterestedRestaurantsUseCase
-import com.celuveat.restaurant.application.port.`in`.ReadVisitedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.query.GetInterestedRestaurantsQuery
-import com.celuveat.restaurant.application.port.`in`.query.ReadVisitedRestaurantQuery
+import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.result.RestaurantPreviewResult
 import com.celuveat.restaurant.application.port.out.FindInterestedRestaurantPort
 import com.celuveat.restaurant.application.port.out.FindRestaurantPort
 import org.springframework.stereotype.Service
 
 @Service
-class RestaurantQueryService(
+class RestaurantQueryServiceCelebrity(
     private val findRestaurantPort: FindRestaurantPort,
     private val findCelebritiesPort: FindCelebritiesPort,
     private val findInterestedRestaurantPort: FindInterestedRestaurantPort,
-) : ReadInterestedRestaurantsUseCase, ReadVisitedRestaurantUseCase {
+) : ReadInterestedRestaurantsUseCase, ReadCelebrityVisitedRestaurantUseCase {
     override fun getInterestedRestaurant(query: GetInterestedRestaurantsQuery): SliceResult<RestaurantPreviewResult> {
         val interestedRestaurants = findInterestedRestaurantPort.findInterestedRestaurants(
             query.memberId,
@@ -35,7 +35,7 @@ class RestaurantQueryService(
         }
     }
 
-    override fun readVisitedRestaurant(query: ReadVisitedRestaurantQuery): SliceResult<RestaurantPreviewResult> {
+    override fun readCelebrityVisitedRestaurant(query: ReadCelebrityVisitedRestaurantQuery): SliceResult<RestaurantPreviewResult> {
         val visitedRestaurants = findRestaurantPort.findVisitedRestaurantByCelebrity(
             query.celebrityId,
             query.page,

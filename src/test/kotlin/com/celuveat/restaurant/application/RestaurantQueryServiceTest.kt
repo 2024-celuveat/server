@@ -5,7 +5,7 @@ import com.celuveat.celeb.domain.Celebrity
 import com.celuveat.celeb.domain.YoutubeContent
 import com.celuveat.common.application.port.`in`.result.SliceResult
 import com.celuveat.restaurant.application.port.`in`.query.GetInterestedRestaurantsQuery
-import com.celuveat.restaurant.application.port.`in`.query.ReadVisitedRestaurantQuery
+import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
 import com.celuveat.restaurant.application.port.out.FindInterestedRestaurantPort
 import com.celuveat.restaurant.application.port.out.FindRestaurantPort
 import com.celuveat.restaurant.domain.InterestedRestaurant
@@ -30,7 +30,7 @@ class RestaurantQueryServiceTest : BehaviorSpec({
     val findCelebritiesPort: FindCelebritiesPort = mockk()
     val findInterestedRestaurantPort: FindInterestedRestaurantPort = mockk()
 
-    val restaurantQueryService = RestaurantQueryService(
+    val restaurantQueryService = RestaurantQueryServiceCelebrity(
         findRestaurantPort,
         findCelebritiesPort,
         findInterestedRestaurantPort,
@@ -110,13 +110,14 @@ class RestaurantQueryServiceTest : BehaviorSpec({
                     restaurantIds,
                 )
             } returns interestedRestaurants
-            val readVisitedRestaurantQuery = ReadVisitedRestaurantQuery(
+            val readCelebrityVisitedRestaurantQuery = ReadCelebrityVisitedRestaurantQuery(
                 memberId = memberId,
                 celebrityId = celebrityId,
                 page = page,
                 size = size,
             )
-            val visitedRestaurants = restaurantQueryService.readVisitedRestaurant(readVisitedRestaurantQuery)
+            val visitedRestaurants =
+                restaurantQueryService.readCelebrityVisitedRestaurant(readCelebrityVisitedRestaurantQuery)
 
             Then("관심 등록 여부가 포함되어 응답한다") {
                 visitedRestaurants.contents.size shouldBe 2
@@ -132,13 +133,14 @@ class RestaurantQueryServiceTest : BehaviorSpec({
                     size,
                 )
             } returns visitedRestaurantResult
-            val readVisitedRestaurantQuery = ReadVisitedRestaurantQuery(
+            val readCelebrityVisitedRestaurantQuery = ReadCelebrityVisitedRestaurantQuery(
                 memberId = null,
                 celebrityId = celebrityId,
                 page = page,
                 size = size,
             )
-            val visitedRestaurants = restaurantQueryService.readVisitedRestaurant(readVisitedRestaurantQuery)
+            val visitedRestaurants =
+                restaurantQueryService.readCelebrityVisitedRestaurant(readCelebrityVisitedRestaurantQuery)
 
             Then("관심 등록 여부는 false로 응답한다") {
                 visitedRestaurants.contents.size shouldBe 2
