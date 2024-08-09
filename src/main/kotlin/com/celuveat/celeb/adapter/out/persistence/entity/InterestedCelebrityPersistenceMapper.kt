@@ -2,6 +2,7 @@ package com.celuveat.celeb.adapter.out.persistence.entity
 
 import com.celuveat.celeb.domain.InterestedCelebrity
 import com.celuveat.common.annotation.Mapper
+import com.celuveat.member.adapter.out.persistence.entity.MemberJpaEntity
 import com.celuveat.member.adapter.out.persistence.entity.MemberPersistenceMapper
 
 @Mapper
@@ -16,6 +17,16 @@ class InterestedCelebrityPersistenceMapper(
         return InterestedCelebrity(
             member = memberPersistenceMapper.toDomain(interestedCelebrity.member),
             celebrity = celebrityPersistenceMapper.toDomain(interestedCelebrity.celebrity, youtubeContents),
+        )
+    }
+
+    fun toEntity(
+        celebrity: CelebrityJpaEntity,
+        member: MemberJpaEntity,
+    ): InterestedCelebrityJpaEntity {
+        return InterestedCelebrityJpaEntity(
+            celebrity = celebrity,
+            member = member,
         )
     }
 }

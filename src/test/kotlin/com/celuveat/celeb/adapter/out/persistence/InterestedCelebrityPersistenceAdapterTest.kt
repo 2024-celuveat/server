@@ -10,7 +10,6 @@ import com.celuveat.celeb.adapter.out.persistence.entity.InterestedCelebrityJpaR
 import com.celuveat.celeb.adapter.out.persistence.entity.InterestedCelebrityPersistenceMapper
 import com.celuveat.celeb.adapter.out.persistence.entity.YoutubeContentJpaEntity
 import com.celuveat.celeb.adapter.out.persistence.entity.YoutubeContentJpaRepository
-import com.celuveat.celeb.exceptions.AlreadyInterestedCelebrityException
 import com.celuveat.celeb.exceptions.NotFoundCelebrityException
 import com.celuveat.celeb.exceptions.NotFoundInterestedCelebrityException
 import com.celuveat.common.adapter.out.persistence.JpaConfig
@@ -30,6 +29,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.context.annotation.Import
+import org.springframework.dao.DataIntegrityViolationException
 
 @Import(
     InterestedCelebrityPersistenceAdapter::class,
@@ -113,7 +113,7 @@ class InterestedCelebrityPersistenceAdapterTest(
 
         test("이미 관심 셀럽으로 등록한 경우 예외를 발생시킨다.") {
             // when & then
-            shouldThrow<AlreadyInterestedCelebrityException> {
+            shouldThrow<DataIntegrityViolationException> {
                 celebrityPersistenceAdapter.saveInterestedCelebrity(savedCelebrity.id, savedMember.id)
                 celebrityPersistenceAdapter.saveInterestedCelebrity(savedCelebrity.id, savedMember.id)
             }

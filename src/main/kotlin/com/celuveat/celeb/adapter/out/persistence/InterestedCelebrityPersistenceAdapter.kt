@@ -2,7 +2,6 @@ package com.celuveat.celeb.adapter.out.persistence
 
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityJpaRepository
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityYoutubeContentJpaRepository
-import com.celuveat.celeb.adapter.out.persistence.entity.InterestedCelebrityJpaEntity
 import com.celuveat.celeb.adapter.out.persistence.entity.InterestedCelebrityJpaRepository
 import com.celuveat.celeb.adapter.out.persistence.entity.InterestedCelebrityPersistenceMapper
 import com.celuveat.celeb.adapter.out.persistence.entity.YoutubeContentJpaEntity
@@ -10,10 +9,8 @@ import com.celuveat.celeb.application.port.out.DeleteInterestedCelebrityPort
 import com.celuveat.celeb.application.port.out.FindInterestedCelebritiesPort
 import com.celuveat.celeb.application.port.out.SaveInterestedCelebrityPort
 import com.celuveat.celeb.domain.InterestedCelebrity
-import com.celuveat.celeb.exceptions.AlreadyInterestedCelebrityException
 import com.celuveat.celeb.exceptions.NotFoundInterestedCelebrityException
 import com.celuveat.common.annotation.Adapter
-import com.celuveat.common.utils.throwWhen
 import com.celuveat.member.adapter.out.persistence.entity.MemberJpaRepository
 
 @Adapter
@@ -47,21 +44,12 @@ class InterestedCelebrityPersistenceAdapter(
     ) {
         val member = memberJpaRepository.getById(memberId)
         val celebrity = celebrityJpaRepository.getById(celebrityId)
-        validateExistence(memberId, celebrityId)
-        interestedCelebrityJpaRepository.save(
-            InterestedCelebrityJpaEntity(
-                celebrity = celebrity,
-                member = member,
-            ),
+        val entity = interestedCelebrityPersistenceMapper.toEntity(
+            celebrity = celebrity,
+            member = member,
         )
+        interestedCelebrityJpaRepository.save(entity)
     }
-
-    private fun validateExistence(
-        memberId: Long,
-        celebrityId: Long,
-    ) = throwWhen(
-        interestedCelebrityJpaRepository.existsByMemberIdAndCelebrityId(memberId, celebrityId),
-    ) { throw AlreadyInterestedCelebrityException }
 
     override fun deleteInterestedCelebrity(
         celebrityId: Long,
