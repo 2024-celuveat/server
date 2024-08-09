@@ -73,12 +73,7 @@ data class RestaurantPreviewResponse(
                 latitude = restaurantPreviewResult.latitude,
                 longitude = restaurantPreviewResult.longitude,
                 liked = restaurantPreviewResult.liked,
-                visitedCelebrities = restaurantPreviewResult.visitedCelebrities.map {
-                    SimpleCelebrityResponse(
-                        it.name,
-                        it.profileImageUrl,
-                    )
-                },
+                visitedCelebrities = restaurantPreviewResult.visitedCelebrities.map { SimpleCelebrityResponse.from(it) },
                 images = restaurantPreviewResult.images.map { RestaurantImageResponse.from(it) },
             )
         }

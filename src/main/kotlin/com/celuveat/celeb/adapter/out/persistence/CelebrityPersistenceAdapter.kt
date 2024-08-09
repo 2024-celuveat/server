@@ -1,5 +1,6 @@
 package com.celuveat.celeb.adapter.out.persistence
 
+import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityJpaRepository
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityPersistenceMapper
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityYoutubeContentJpaRepository
 import com.celuveat.celeb.adapter.out.persistence.entity.RestaurantInVideoJpaRepository
@@ -10,6 +11,7 @@ import com.celuveat.common.annotation.Adapter
 
 @Adapter
 class CelebrityPersistenceAdapter(
+    private val celebrityJpaRepository: CelebrityJpaRepository,
     private val celebrityYoutubeContentJpaRepository: CelebrityYoutubeContentJpaRepository,
     private val restaurantInVideoJpaRepository: RestaurantInVideoJpaRepository,
     private val celebrityPersistenceMapper: CelebrityPersistenceMapper,
@@ -33,4 +35,10 @@ class CelebrityPersistenceAdapter(
         celebrityYoutubeContentJpaRepository.findByCelebrityIdIn(celebrityIds)
             .groupBy { it.celebrity.id }
             .mapValues { (_, celebrityYoutubeContents) -> celebrityYoutubeContents.map { it.youtubeContent } }
+
+    override fun findBestCelebrities(): List<Celebrity> {
+        return celebrityJpaRepository.findAllBySubscriberCountDescTop15().map {
+            celebrityPersistenceMapper.toDomainWithoutYoutubeContent(it)
+        }
+    }
 }

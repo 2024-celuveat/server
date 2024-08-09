@@ -3,7 +3,7 @@ package com.celuveat.member.adapter.`in`.rest
 import com.celuveat.auth.application.port.`in`.CreateAccessTokenUseCase
 import com.celuveat.auth.application.port.`in`.ExtractMemberIdUseCase
 import com.celuveat.auth.domain.Token
-import com.celuveat.member.application.port.`in`.GetSocialLoginUrlUseCase
+import com.celuveat.member.application.port.`in`.ReadSocialLoginUrlUseCase
 import com.celuveat.member.application.port.`in`.SocialLoginUseCase
 import com.celuveat.member.application.port.`in`.WithdrawSocialLoginUseCase
 import com.celuveat.member.application.port.`in`.command.SocialLoginCommand
@@ -27,7 +27,7 @@ class SocialLoginControllerTest(
     @Autowired val mockMvc: MockMvc,
     @MockkBean val socialLoginUseCase: SocialLoginUseCase,
     @MockkBean val createAccessTokenUseCase: CreateAccessTokenUseCase,
-    @MockkBean val getSocialLoginUrlUseCase: GetSocialLoginUrlUseCase,
+    @MockkBean val readSocialLoginUrlUseCase: ReadSocialLoginUrlUseCase,
     @MockkBean val withdrawSocialLoginUseCase: WithdrawSocialLoginUseCase,
     // for AuthMemberArgumentResolver
     @MockkBean val extractMemberIdUseCase: ExtractMemberIdUseCase,
@@ -73,7 +73,7 @@ class SocialLoginControllerTest(
         val socialLoginUrl = "https://social.com/authorize?redirect_uri=$requestOrigin/oauth/kakao&client_id=clientId"
 
         test("소셜 로그인 URL을 성공적으로 반환한다") {
-            every { getSocialLoginUrlUseCase.getSocialLoginUrl(socialLoginType, requestOrigin) } returns socialLoginUrl
+            every { readSocialLoginUrlUseCase.getSocialLoginUrl(socialLoginType, requestOrigin) } returns socialLoginUrl
 
             mockMvc.get("/social-login/url/{socialLoginType}", socialLoginType) {
                 header("Origin", requestOrigin)

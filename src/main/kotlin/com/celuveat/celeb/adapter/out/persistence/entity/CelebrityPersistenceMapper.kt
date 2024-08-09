@@ -29,4 +29,14 @@ class CelebrityPersistenceMapper {
             },
         )
     }
+
+    fun toDomainWithoutYoutubeContent(celebrityJpaEntity: CelebrityJpaEntity): Celebrity {
+        return Celebrity(
+            id = celebrityJpaEntity.id,
+            name = celebrityJpaEntity.name,
+            profileImageUrl = celebrityJpaEntity.profileImageUrl,
+            introduction = celebrityJpaEntity.introduction,
+            youtubeContents = emptyList(),
+        )
+    }
 }

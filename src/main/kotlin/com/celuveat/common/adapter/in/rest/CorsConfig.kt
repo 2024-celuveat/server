@@ -1,4 +1,4 @@
-package com.celuveat.common.adapter.out.rest
+package com.celuveat.common.adapter.`in`.rest
 
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpHeaders.AUTHORIZATION

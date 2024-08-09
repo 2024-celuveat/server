@@ -1,7 +1,8 @@
 package com.celuveat.restaurant.adapter.`in`.rest
 
-import com.celuveat.auth.adaptor.`in`.rest.AuthId
-import com.celuveat.common.adapter.out.rest.response.SliceResponse
+import com.celuveat.auth.adaptor.`in`.rest.Auth
+import com.celuveat.auth.adaptor.`in`.rest.AuthContext
+import com.celuveat.common.adapter.`in`.rest.response.SliceResponse
 import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantPreviewResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -26,7 +27,7 @@ interface RestaurantApi {
     )
     @GetMapping("/interested")
     fun getInterestedRestaurants(
-        @AuthId memberId: Long,
+        @Auth auth: AuthContext,
         @PageableDefault(size = 10, page = 0) pageable: Pageable,
     ): SliceResponse<RestaurantPreviewResponse>
 
@@ -34,7 +35,7 @@ interface RestaurantApi {
     @Operation(summary = "관심 음식점 추가")
     @PostMapping("/interested/{restaurantId}")
     fun addInterestedRestaurant(
-        @AuthId memberId: Long,
+        @Auth auth: AuthContext,
         @Parameter(
             `in` = ParameterIn.PATH,
             description = "음식점 ID",
@@ -48,7 +49,7 @@ interface RestaurantApi {
     @Operation(summary = "관심 음식점 삭제")
     @DeleteMapping("/interested/{restaurantId}")
     fun deleteInterestedRestaurant(
-        @AuthId memberId: Long,
+        @Auth auth: AuthContext,
         @Parameter(
             `in` = ParameterIn.PATH,
             description = "음식점 ID",
@@ -57,4 +58,22 @@ interface RestaurantApi {
         )
         @PathVariable restaurantId: Long,
     )
+
+    @Operation(summary = "셀럽이 다녀간 음식점 조회")
+    @Parameters(
+        Parameter(name = "page", description = "페이지 번호", example = "0", required = true),
+        Parameter(name = "size", description = "페이지 크기", example = "10", required = true),
+    )
+    @GetMapping("/celebrity/{celebrityId}")
+    fun readCelebrityVisitedRestaurant(
+        @Auth auth: AuthContext,
+        @Parameter(
+            `in` = ParameterIn.PATH,
+            description = "셀럽 ID",
+            example = "1",
+            required = true,
+        )
+        @PathVariable celebrityId: Long,
+        @PageableDefault(size = 10, page = 0) pageable: Pageable,
+    ): SliceResponse<RestaurantPreviewResponse>
 }

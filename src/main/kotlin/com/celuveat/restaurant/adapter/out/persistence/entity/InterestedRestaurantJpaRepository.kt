@@ -7,18 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 
 interface InterestedRestaurantJpaRepository : JpaRepository<InterestedRestaurantJpaEntity, Long> {
-    @Query(
-        """
-        SELECT ir.restaurant
-        FROM InterestedRestaurantJpaEntity ir
-        WHERE ir.member.id = :memberId
-        """,
-    )
     @EntityGraph(attributePaths = ["restaurant"])
-    fun findRestaurantByMemberId(
+    fun findAllByMemberId(
         memberId: Long,
         pageable: Pageable,
-    ): Slice<RestaurantJpaEntity>
+    ): Slice<InterestedRestaurantJpaEntity>
 
     @EntityGraph(attributePaths = ["restaurant"])
     fun findByMemberIdAndRestaurantId(
@@ -30,4 +23,17 @@ interface InterestedRestaurantJpaRepository : JpaRepository<InterestedRestaurant
         memberId: Long,
         restaurantId: Long,
     ): Boolean
+
+    @Query(
+        """
+        SELECT ir
+        FROM InterestedRestaurantJpaEntity ir
+        WHERE ir.member.id = :memberId
+        AND ir.restaurant.id IN :ids
+    """
+    )
+    fun findAllByMemberIdAndIdIn(
+        memberId: Long,
+        ids: List<Long>,
+    ): List<InterestedRestaurantJpaEntity>
 }

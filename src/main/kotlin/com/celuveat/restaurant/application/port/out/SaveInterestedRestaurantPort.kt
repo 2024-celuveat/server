@@ -1,6 +1,6 @@
 package com.celuveat.restaurant.application.port.out
 
-interface SaveRestaurantPort {
+interface SaveInterestedRestaurantPort {
     fun saveInterestedRestaurant(
         memberId: Long,
         restaurantId: Long,

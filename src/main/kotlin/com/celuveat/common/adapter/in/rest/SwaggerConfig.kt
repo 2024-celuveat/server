@@ -1,4 +1,4 @@
-package com.celuveat.common.adapter.out.rest
+package com.celuveat.common.adapter.`in`.rest
 
 import io.swagger.v3.oas.models.Components
 import io.swagger.v3.oas.models.OpenAPI

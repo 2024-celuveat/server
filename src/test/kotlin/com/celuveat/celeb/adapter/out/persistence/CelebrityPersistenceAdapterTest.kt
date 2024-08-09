@@ -19,6 +19,7 @@ import com.navercorp.fixturemonkey.kotlin.giveMeBuilder
 import com.navercorp.fixturemonkey.kotlin.set
 import io.kotest.assertions.assertSoftly
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.context.annotation.Import
@@ -49,18 +50,9 @@ class CelebrityPersistenceAdapterTest(
         val savedContents = youtubeContentJpaRepository.saveAll(listOf(contentA, contentB))
         celebrityYoutubeContentJpaRepository.saveAll(
             listOf(
-                sut.giveMeBuilder<CelebrityYoutubeContentJpaEntity>()
-                    .set(CelebrityYoutubeContentJpaEntity::celebrity, celebrityA)
-                    .set(CelebrityYoutubeContentJpaEntity::youtubeContent, savedContents[0])
-                    .sample(),
-                sut.giveMeBuilder<CelebrityYoutubeContentJpaEntity>()
-                    .set(CelebrityYoutubeContentJpaEntity::celebrity, celebrityA)
-                    .set(CelebrityYoutubeContentJpaEntity::youtubeContent, savedContents[1])
-                    .sample(),
-                sut.giveMeBuilder<CelebrityYoutubeContentJpaEntity>()
-                    .set(CelebrityYoutubeContentJpaEntity::celebrity, celebrityB)
-                    .set(CelebrityYoutubeContentJpaEntity::youtubeContent, savedContents[0])
-                    .sample(),
+                generateCelebrityYoutubeContent(celebrityA, savedContents[0]),
+                generateCelebrityYoutubeContent(celebrityA, savedContents[1]),
+                generateCelebrityYoutubeContent(celebrityB, savedContents[0]),
             ),
         ) // [셀럽A] -> [컨텐츠A, 컨텐츠B], [셀럽B] -> [컨텐츠A] 에 출연함
 
@@ -101,7 +93,61 @@ class CelebrityPersistenceAdapterTest(
             visitedCelebritiesByRestaurants[restaurants[1].id]!!.size shouldBe 1
         }
     }
+
+    test("구독자가 많은 컨텐츠의 셀럽순으로 조회 한다.") {
+        // given
+        val savedCelebrities = celebrityJpaRepository.saveAll(sut.giveMeBuilder<CelebrityJpaEntity>().sampleList(3))
+        val celebrityA = savedCelebrities[0]
+        val celebrityB = savedCelebrities[1]
+        val celebrityC = savedCelebrities[2]
+
+        val contentA = sut.giveMeBuilder<YoutubeContentJpaEntity>()
+            .set(YoutubeContentJpaEntity::id, 0)
+            .set(YoutubeContentJpaEntity::channelId, "@channelId")
+            .set(YoutubeContentJpaEntity::subscriberCount, 300)
+            .sample()
+        val contentB = sut.giveMeBuilder<YoutubeContentJpaEntity>()
+            .set(YoutubeContentJpaEntity::id, 0)
+            .set(YoutubeContentJpaEntity::channelId, "@channelId")
+            .set(YoutubeContentJpaEntity::subscriberCount, 200)
+            .sample()
+        val contentC = sut.giveMeBuilder<YoutubeContentJpaEntity>()
+            .set(YoutubeContentJpaEntity::id, 0)
+            .set(YoutubeContentJpaEntity::channelId, "@channelId")
+            .set(YoutubeContentJpaEntity::subscriberCount, 500)
+            .sample()
+        val contentD = sut.giveMeBuilder<YoutubeContentJpaEntity>()
+            .set(YoutubeContentJpaEntity::id, 0)
+            .set(YoutubeContentJpaEntity::channelId, "@channelId")
+            .set(YoutubeContentJpaEntity::subscriberCount, 400)
+            .sample()
+        val savedContents = youtubeContentJpaRepository.saveAll(listOf(contentA, contentB, contentC, contentD))
+        celebrityYoutubeContentJpaRepository.saveAll(
+            listOf(
+                generateCelebrityYoutubeContent(celebrityA, savedContents[0]),
+                generateCelebrityYoutubeContent(celebrityB, savedContents[1]),
+                generateCelebrityYoutubeContent(celebrityC, savedContents[2]),
+                generateCelebrityYoutubeContent(celebrityA, savedContents[3]),
+            ),
+        )
+
+        // when
+        val celebrities = celebrityPersistenceAdapter.findBestCelebrities()
+
+        // then
+        celebrities.size shouldBe 3
+        celebrities.map { it.id } shouldContainExactly listOf(celebrityC.id, celebrityA.id, celebrityB.id)
+    }
 })
+
+private fun generateCelebrityYoutubeContent(
+    celebrity: CelebrityJpaEntity?,
+    savedContent: YoutubeContentJpaEntity,
+): CelebrityYoutubeContentJpaEntity =
+    sut.giveMeBuilder<CelebrityYoutubeContentJpaEntity>()
+        .set(CelebrityYoutubeContentJpaEntity::celebrity, celebrity)
+        .set(CelebrityYoutubeContentJpaEntity::youtubeContent, savedContent)
+        .sample()
 
 private fun generateVideoWithYoutubeContent(youtubeContent: YoutubeContentJpaEntity) =
     sut.giveMeBuilder<VideoJpaEntity>().set(VideoJpaEntity::youtubeContent, youtubeContent)

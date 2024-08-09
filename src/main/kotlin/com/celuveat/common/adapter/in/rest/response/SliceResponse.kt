@@ -1,4 +1,4 @@
-package com.celuveat.common.adapter.out.rest.response
+package com.celuveat.common.adapter.`in`.rest.response
 
 import com.celuveat.common.application.port.`in`.result.SliceResult
 import io.swagger.v3.oas.annotations.media.Schema
