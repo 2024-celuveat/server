@@ -59,4 +59,8 @@ class InterestedCelebrityPersistenceAdapter(
             ?.let { interestedCelebrityJpaRepository.delete(it) }
             ?: throw NotFoundInterestedCelebrityException
     }
+
+    override fun existedInterestedCelebrity(celebrityId: Long, memberId: Long): Boolean {
+        return interestedCelebrityJpaRepository.existsByMemberIdAndCelebrityId(memberId, celebrityId)
+    }
 }
