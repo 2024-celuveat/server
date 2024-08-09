@@ -13,7 +13,6 @@ import com.celuveat.celeb.application.port.out.SaveInterestedCelebrityPort
 import com.celuveat.celeb.exceptions.AlreadyInterestedCelebrityException
 import com.celuveat.common.utils.throwWhen
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 
 @Service
 class CelebrityService(
@@ -22,7 +21,6 @@ class CelebrityService(
     private val saveInterestedCelebrityPort: SaveInterestedCelebrityPort,
     private val deleteInterestedCelebrityPort: DeleteInterestedCelebrityPort,
 ) : ReadBestCelebritiesUseCase, AddInterestedCelebrityUseCase, DeleteInterestedCelebrityUseCase {
-    @Transactional
     override fun addInterestedCelebrity(command: AddInterestedCelebrityCommand) {
         throwWhen(
             findInterestedCelebritiesPort.existedInterestedCelebrity(command.celebrityId, command.memberId),
@@ -30,7 +28,6 @@ class CelebrityService(
         saveInterestedCelebrityPort.saveInterestedCelebrity(command.celebrityId, command.memberId)
     }
 
-    @Transactional
     override fun deleteInterestedCelebrity(command: DeleteInterestedCelebrityCommand) {
         deleteInterestedCelebrityPort.deleteInterestedCelebrity(command.celebrityId, command.memberId)
     }
