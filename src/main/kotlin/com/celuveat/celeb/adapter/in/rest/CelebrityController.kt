@@ -36,18 +36,20 @@ class CelebrityController(
 
     @PostMapping("/interested/{celebrityId}")
     override fun addInterestedCelebrity(
-        @AuthId memberId: Long,
+        @Auth auth: AuthContext,
         @PathVariable celebrityId: Long,
     ) {
+        val memberId = auth.memberId()
         val command = AddInterestedCelebrityCommand(memberId, celebrityId)
         addInterestedCelebrityUseCase.addInterestedCelebrity(command)
     }
 
     @DeleteMapping("/interested/{celebrityId}")
     override fun deleteInterestedCelebrity(
-        @AuthId memberId: Long,
+        @Auth auth: AuthContext,
         @PathVariable celebrityId: Long,
     ) {
+        val memberId = auth.memberId()
         val command = DeleteInterestedCelebrityCommand(memberId, celebrityId)
         deleteInterestedCelebrityUseCase.deleteInterestedCelebrity(command)
     }

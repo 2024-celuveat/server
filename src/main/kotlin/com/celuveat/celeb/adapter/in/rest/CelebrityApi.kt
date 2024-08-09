@@ -27,7 +27,7 @@ interface CelebrityApi {
     @Operation(summary = "관심 셀럽 추가")
     @PostMapping("/interested/{celebrityId}")
     fun addInterestedCelebrity(
-        @AuthId memberId: Long,
+        @Auth auth: AuthContext,
         @Parameter(
             `in` = ParameterIn.PATH,
             description = "셀럽 ID",
@@ -41,7 +41,7 @@ interface CelebrityApi {
     @Operation(summary = "관심 셀럽 삭제")
     @DeleteMapping("/interested/{celebrityId}")
     fun deleteInterestedCelebrity(
-        @AuthId memberId: Long,
+        @Auth auth: AuthContext,
         @Parameter(
             `in` = ParameterIn.PATH,
             description = "셀럽 ID",

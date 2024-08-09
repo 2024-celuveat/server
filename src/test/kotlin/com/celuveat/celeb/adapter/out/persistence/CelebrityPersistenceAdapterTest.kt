@@ -94,7 +94,7 @@ class CelebrityPersistenceAdapterTest(
         }
     }
 
-    "구독자가 많은 컨텐츠의 셀럽순으로 조회 한다." {
+    test("구독자가 많은 컨텐츠의 셀럽순으로 조회 한다.") {
         // given
         val savedCelebrities = celebrityJpaRepository.saveAll(sut.giveMeBuilder<CelebrityJpaEntity>().sampleList(3))
         val celebrityA = savedCelebrities[0]
