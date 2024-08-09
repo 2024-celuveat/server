@@ -37,7 +37,7 @@ class CelebrityPersistenceAdapter(
             .mapValues { (_, celebrityYoutubeContents) -> celebrityYoutubeContents.map { it.youtubeContent } }
 
     override fun findBestCelebrities(): List<Celebrity> {
-        return celebrityJpaRepository.findAllBySubscriberCountDesc().map {
+        return celebrityJpaRepository.findAllBySubscriberCountDescTop15().map {
             celebrityPersistenceMapper.toDomainWithoutYoutubeContent(it)
         }
     }

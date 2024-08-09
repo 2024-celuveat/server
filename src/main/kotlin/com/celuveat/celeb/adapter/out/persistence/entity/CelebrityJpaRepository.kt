@@ -19,5 +19,5 @@ interface CelebrityJpaRepository : JpaRepository<CelebrityJpaEntity, Long> {
             ORDER BY yc.subscriberCount DESC LIMIT 15
         """,
     )
-    fun findAllBySubscriberCountDesc(): Set<CelebrityJpaEntity>
+    fun findAllBySubscriberCountDescTop15(): Set<CelebrityJpaEntity>
 }
