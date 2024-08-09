@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.enums.ParameterIn
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
-import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -59,8 +58,7 @@ interface SocialLoginApi {
             example = "http://localhost:3000",
         )
         @RequestHeader(HttpHeaders.ORIGIN) requestOrigin: String,
-        response: HttpServletResponse,
-    )
+    ): String
 
     @SecurityRequirement(name = "JWT")
     @Operation(summary = "소셜 회원 탈퇴")

@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus.NOT_FOUND
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.MissingRequestValueException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
@@ -62,6 +63,23 @@ class ExceptionControllerAdvice {
         )
         return ResponseEntity.status(NOT_FOUND).body(
             ExceptionResponse("요청한 리소스를 찾을 수 없습니다."),
+        )
+    }
+
+    @ExceptionHandler(MissingRequestValueException::class)
+    fun handleMissingRequestValueException(
+        request: HttpServletRequest,
+        e: MissingRequestValueException,
+    ): ResponseEntity<ExceptionResponse> {
+        log.warn(
+            """
+            요청에 필요한 값이 누락되었습니다.
+            URI: ${request.requestURI}
+            내용: ${e.message}
+            """,
+        )
+        return ResponseEntity.badRequest().body(
+            ExceptionResponse("요청에 필요한 값이 누락되었습니다."),
         )
     }
 

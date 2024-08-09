@@ -9,7 +9,6 @@ import com.celuveat.member.application.port.`in`.WithdrawSocialLoginUseCase
 import com.celuveat.member.application.port.`in`.command.SocialLoginCommand
 import com.celuveat.member.application.port.`in`.command.WithdrawSocialLoginCommand
 import com.celuveat.member.domain.SocialLoginType
-import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -44,10 +43,9 @@ class SocialLoginController(
     override fun redirectLoginUrl(
         @PathVariable socialLoginType: SocialLoginType,
         @RequestHeader(HttpHeaders.ORIGIN) requestOrigin: String,
-        response: HttpServletResponse,
-    ) {
+    ): String {
         val socialLoginUrl = getSocialLoginUrlUseCase.getSocialLoginUrl(socialLoginType, requestOrigin)
-        response.sendRedirect(socialLoginUrl)
+        return socialLoginUrl
     }
 
     @DeleteMapping("/withdraw/{socialLoginType}")
