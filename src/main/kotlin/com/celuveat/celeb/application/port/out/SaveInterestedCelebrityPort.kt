@@ -1,7 +1,7 @@
 package com.celuveat.celeb.application.port.out
 
-interface DeleteCelebrityPort {
-    fun deleteInterestedCelebrity(
+interface SaveInterestedCelebrityPort {
+    fun saveInterestedCelebrity(
         celebrityId: Long,
         memberId: Long,
     )
