@@ -51,7 +51,6 @@ interface CelebrityApi {
         @PathVariable celebrityId: Long,
     )
 
-    @SecurityRequirement(name = "JWT")
     @Operation(summary = "인기 셀럽 조회")
     @GetMapping("/interested")
     fun readBestCelebrities(): List<SimpleCelebrityResponse>
