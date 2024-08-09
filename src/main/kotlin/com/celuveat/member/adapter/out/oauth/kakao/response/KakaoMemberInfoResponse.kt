@@ -14,7 +14,7 @@ data class KakaoMemberInfoResponse(
     fun toMember(): Member {
         return Member(
             nickname = kakaoAccount.profile.nickname,
-            profileImageUrl = kakaoAccount.profile.profileImage,
+            profileImageUrl = kakaoAccount.profile.profileImageUrl,
             socialIdentifier = SocialIdentifier(
                 serverType = SocialLoginType.KAKAO,
                 socialId = id,
@@ -30,5 +30,5 @@ data class KakaoAccount(
 @JsonNaming(value = SnakeCaseStrategy::class)
 data class Profile(
     val nickname: String,
-    val profileImage: String,
+    val profileImageUrl: String,
 )
