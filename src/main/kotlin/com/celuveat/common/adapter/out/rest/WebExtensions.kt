@@ -11,9 +11,6 @@ inline fun NativeWebRequest.toHttpServletRequest(
     return this.getNativeRequest(HttpServletRequest::class.java) ?: throw exceptionSupplier()
 }
 
-inline fun HttpServletRequest.getTokenAuthorizationOrThrow(
-    exceptionSupplier: () -> Exception = { IllegalArgumentException("Authorization header not found") },
-): String {
-    val valueWithScheme = this.getHeader("Authorization") ?: throw exceptionSupplier()
-    return valueWithScheme.removePrefix(TOKEN_AUTHORIZATION_SCHEME)
+fun HttpServletRequest.getTokenAuthorizationOrNull(): String? {
+    return this.getHeader("Authorization")?.removePrefix(TOKEN_AUTHORIZATION_SCHEME) ?: return null
 }

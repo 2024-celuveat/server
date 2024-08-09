@@ -1,6 +1,7 @@
 package com.celuveat.member.adapter.`in`.rest
 
-import com.celuveat.auth.adaptor.`in`.rest.AuthId
+import com.celuveat.auth.adaptor.`in`.rest.Auth
+import com.celuveat.auth.adaptor.`in`.rest.AuthContext
 import com.celuveat.auth.application.port.`in`.CreateAccessTokenUseCase
 import com.celuveat.member.adapter.`in`.rest.response.LoginResponse
 import com.celuveat.member.application.port.`in`.GetSocialLoginUrlUseCase
@@ -50,11 +51,12 @@ class SocialLoginController(
 
     @DeleteMapping("/withdraw/{socialLoginType}")
     override fun withdraw(
-        @AuthId memberId: Long,
+        @Auth auth: AuthContext,
         @RequestParam authCode: String,
         @PathVariable socialLoginType: SocialLoginType,
         @RequestHeader(HttpHeaders.ORIGIN) requestOrigin: String,
     ): ResponseEntity<Unit> {
+        val memberId = auth.memberId()
         val command = WithdrawSocialLoginCommand(memberId, authCode, socialLoginType, requestOrigin)
         withdrawSocialLoginUseCase.withdraw(command)
         return ResponseEntity.noContent().build()

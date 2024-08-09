@@ -1,6 +1,7 @@
 package com.celuveat.celeb.adapter.`in`.rest
 
-import com.celuveat.auth.adaptor.`in`.rest.AuthId
+import com.celuveat.auth.adaptor.`in`.rest.Auth
+import com.celuveat.auth.adaptor.`in`.rest.AuthContext
 import com.celuveat.celeb.adapter.`in`.rest.response.CelebrityResponse
 import com.celuveat.celeb.adapter.`in`.rest.response.SimpleCelebrityResponse
 import io.swagger.v3.oas.annotations.Operation
@@ -19,7 +20,7 @@ interface CelebrityApi {
     @Operation(summary = "관심 셀럽 목록 조회")
     @GetMapping("/interested")
     fun readInterestedCelebrities(
-        @AuthId memberId: Long,
+        @Auth auth: AuthContext,
     ): List<CelebrityResponse>
 
     @SecurityRequirement(name = "JWT")

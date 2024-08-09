@@ -1,6 +1,7 @@
 package com.celuveat.celeb.adapter.`in`.rest
 
-import com.celuveat.auth.adaptor.`in`.rest.AuthId
+import com.celuveat.auth.adaptor.`in`.rest.Auth
+import com.celuveat.auth.adaptor.`in`.rest.AuthContext
 import com.celuveat.celeb.adapter.`in`.rest.response.CelebrityResponse
 import com.celuveat.celeb.adapter.`in`.rest.response.SimpleCelebrityResponse
 import com.celuveat.celeb.application.port.`in`.AddInterestedCelebrityUseCase
@@ -26,8 +27,9 @@ class CelebrityController(
 ) : CelebrityApi {
     @GetMapping("/interested")
     override fun readInterestedCelebrities(
-        @AuthId memberId: Long,
+        @Auth auth: AuthContext,
     ): List<CelebrityResponse> {
+        val memberId = auth.memberId()
         val celebritiesResults = getInterestedCelebritiesUseCase.getInterestedCelebrities(memberId)
         return celebritiesResults.map { CelebrityResponse.from(it) }
     }
