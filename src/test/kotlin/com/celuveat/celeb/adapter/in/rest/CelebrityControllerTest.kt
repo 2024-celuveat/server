@@ -4,8 +4,8 @@ import com.celuveat.auth.application.port.`in`.ExtractMemberIdUseCase
 import com.celuveat.celeb.adapter.`in`.rest.response.SimpleCelebrityResponse
 import com.celuveat.celeb.application.port.`in`.AddInterestedCelebrityUseCase
 import com.celuveat.celeb.application.port.`in`.DeleteInterestedCelebrityUseCase
-import com.celuveat.celeb.application.port.`in`.GetInterestedCelebritiesUseCase
 import com.celuveat.celeb.application.port.`in`.ReadBestCelebritiesUseCase
+import com.celuveat.celeb.application.port.`in`.ReadInterestedCelebritiesUseCase
 import com.celuveat.celeb.application.port.`in`.command.AddInterestedCelebrityCommand
 import com.celuveat.celeb.application.port.`in`.command.DeleteInterestedCelebrityCommand
 import com.celuveat.celeb.application.port.`in`.result.CelebrityResult
@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.post
 class CelebrityControllerTest(
     @Autowired val mockMvc: MockMvc,
     @Autowired val mapper: ObjectMapper,
-    @MockkBean val getInterestedCelebritiesUseCase: GetInterestedCelebritiesUseCase,
+    @MockkBean val readInterestedCelebritiesUseCase: ReadInterestedCelebritiesUseCase,
     @MockkBean val addInterestedCelebrityUseCase: AddInterestedCelebrityUseCase,
     @MockkBean val deleteInterestedCelebrityUseCase: DeleteInterestedCelebrityUseCase,
     @MockkBean val readBestCelebritiesUseCase: ReadBestCelebritiesUseCase,
@@ -42,7 +42,7 @@ class CelebrityControllerTest(
             .sampleList(3)
         test("조회 성공") {
             every { extractMemberIdUseCase.extract(accessToken) } returns memberId
-            every { getInterestedCelebritiesUseCase.getInterestedCelebrities(memberId) } returns results
+            every { readInterestedCelebritiesUseCase.getInterestedCelebrities(memberId) } returns results
 
             mockMvc.get("/celebrities/interested") {
                 header("Authorization", "Bearer $accessToken")

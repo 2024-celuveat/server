@@ -1,6 +1,6 @@
 package com.celuveat.member.application
 
-import com.celuveat.member.application.port.`in`.GetSocialLoginUrlUseCase
+import com.celuveat.member.application.port.`in`.ReadSocialLoginUrlUseCase
 import com.celuveat.member.application.port.`in`.SocialLoginUseCase
 import com.celuveat.member.application.port.`in`.WithdrawSocialLoginUseCase
 import com.celuveat.member.application.port.`in`.command.SocialLoginCommand
@@ -23,7 +23,7 @@ class SocialLoginService(
     private val findMemberPort: FindMemberPort,
     private val deleteMemberPort: DeleteMemberPort,
     private val withdrawSocialMemberPort: WithdrawSocialMemberPort,
-) : SocialLoginUseCase, GetSocialLoginUrlUseCase, WithdrawSocialLoginUseCase {
+) : SocialLoginUseCase, ReadSocialLoginUrlUseCase, WithdrawSocialLoginUseCase {
     @Transactional
     override fun login(command: SocialLoginCommand): Long {
         val member = fetchSocialMemberPort.fetchMember(

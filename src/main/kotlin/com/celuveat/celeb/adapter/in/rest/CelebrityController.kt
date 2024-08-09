@@ -6,8 +6,8 @@ import com.celuveat.celeb.adapter.`in`.rest.response.CelebrityResponse
 import com.celuveat.celeb.adapter.`in`.rest.response.SimpleCelebrityResponse
 import com.celuveat.celeb.application.port.`in`.AddInterestedCelebrityUseCase
 import com.celuveat.celeb.application.port.`in`.DeleteInterestedCelebrityUseCase
-import com.celuveat.celeb.application.port.`in`.GetInterestedCelebritiesUseCase
 import com.celuveat.celeb.application.port.`in`.ReadBestCelebritiesUseCase
+import com.celuveat.celeb.application.port.`in`.ReadInterestedCelebritiesUseCase
 import com.celuveat.celeb.application.port.`in`.command.AddInterestedCelebrityCommand
 import com.celuveat.celeb.application.port.`in`.command.DeleteInterestedCelebrityCommand
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/celebrities")
 @RestController
 class CelebrityController(
-    private val getInterestedCelebritiesUseCase: GetInterestedCelebritiesUseCase,
+    private val readInterestedCelebritiesUseCase: ReadInterestedCelebritiesUseCase,
     private val readBestCelebritiesUseCase: ReadBestCelebritiesUseCase,
     private val addInterestedCelebrityUseCase: AddInterestedCelebrityUseCase,
     private val deleteInterestedCelebrityUseCase: DeleteInterestedCelebrityUseCase,
@@ -30,7 +30,7 @@ class CelebrityController(
         @Auth auth: AuthContext,
     ): List<CelebrityResponse> {
         val memberId = auth.memberId()
-        val celebritiesResults = getInterestedCelebritiesUseCase.getInterestedCelebrities(memberId)
+        val celebritiesResults = readInterestedCelebritiesUseCase.getInterestedCelebrities(memberId)
         return celebritiesResults.map { CelebrityResponse.from(it) }
     }
 

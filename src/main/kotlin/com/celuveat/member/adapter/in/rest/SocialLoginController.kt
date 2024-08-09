@@ -4,7 +4,7 @@ import com.celuveat.auth.adaptor.`in`.rest.Auth
 import com.celuveat.auth.adaptor.`in`.rest.AuthContext
 import com.celuveat.auth.application.port.`in`.CreateAccessTokenUseCase
 import com.celuveat.member.adapter.`in`.rest.response.LoginResponse
-import com.celuveat.member.application.port.`in`.GetSocialLoginUrlUseCase
+import com.celuveat.member.application.port.`in`.ReadSocialLoginUrlUseCase
 import com.celuveat.member.application.port.`in`.SocialLoginUseCase
 import com.celuveat.member.application.port.`in`.WithdrawSocialLoginUseCase
 import com.celuveat.member.application.port.`in`.command.SocialLoginCommand
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController
 class SocialLoginController(
     private val socialLoginUseCase: SocialLoginUseCase,
     private val createAccessTokenUseCase: CreateAccessTokenUseCase,
-    private val getSocialLoginUrlUseCase: GetSocialLoginUrlUseCase,
+    private val readSocialLoginUrlUseCase: ReadSocialLoginUrlUseCase,
     private val withdrawSocialLoginUseCase: WithdrawSocialLoginUseCase,
 ) : SocialLoginApi {
     @GetMapping("/{socialLoginType}")
@@ -45,7 +45,7 @@ class SocialLoginController(
         @PathVariable socialLoginType: SocialLoginType,
         @RequestHeader(HttpHeaders.ORIGIN) requestOrigin: String,
     ): String {
-        val socialLoginUrl = getSocialLoginUrlUseCase.getSocialLoginUrl(socialLoginType, requestOrigin)
+        val socialLoginUrl = readSocialLoginUrlUseCase.getSocialLoginUrl(socialLoginType, requestOrigin)
         return socialLoginUrl
     }
 

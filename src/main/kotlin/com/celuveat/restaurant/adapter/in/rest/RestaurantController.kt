@@ -6,7 +6,7 @@ import com.celuveat.common.adapter.`in`.rest.response.SliceResponse
 import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantPreviewResponse
 import com.celuveat.restaurant.application.port.`in`.AddInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.DeleteInterestedRestaurantsUseCase
-import com.celuveat.restaurant.application.port.`in`.GetInterestedRestaurantsUseCase
+import com.celuveat.restaurant.application.port.`in`.ReadInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadVisitedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.command.AddInterestedRestaurantCommand
 import com.celuveat.restaurant.application.port.`in`.command.DeleteInterestedRestaurantCommand
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/restaurants")
 @RestController
 class RestaurantController(
-    private val getInterestedRestaurantsUseCase: GetInterestedRestaurantsUseCase,
+    private val readInterestedRestaurantsUseCase: ReadInterestedRestaurantsUseCase,
     private val addInterestedRestaurantsUseCase: AddInterestedRestaurantsUseCase,
     private val deleteInterestedRestaurantsUseCase: DeleteInterestedRestaurantsUseCase,
     private val readVisitedRestaurantUseCase: ReadVisitedRestaurantUseCase,
@@ -40,7 +40,7 @@ class RestaurantController(
             page = pageable.pageNumber,
             size = pageable.pageSize,
         )
-        val interestedRestaurant = getInterestedRestaurantsUseCase.getInterestedRestaurant(query)
+        val interestedRestaurant = readInterestedRestaurantsUseCase.getInterestedRestaurant(query)
         return SliceResponse.from(
             sliceResult = interestedRestaurant,
             converter = RestaurantPreviewResponse::from,

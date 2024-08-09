@@ -4,7 +4,7 @@ import com.celuveat.auth.application.port.`in`.ExtractMemberIdUseCase
 import com.celuveat.common.application.port.`in`.result.SliceResult
 import com.celuveat.restaurant.application.port.`in`.AddInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.DeleteInterestedRestaurantsUseCase
-import com.celuveat.restaurant.application.port.`in`.GetInterestedRestaurantsUseCase
+import com.celuveat.restaurant.application.port.`in`.ReadInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadVisitedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.command.AddInterestedRestaurantCommand
 import com.celuveat.restaurant.application.port.`in`.command.DeleteInterestedRestaurantCommand
@@ -33,7 +33,7 @@ import org.springframework.test.web.servlet.post
 class RestaurantControllerTest(
     @Autowired val mockMvc: MockMvc,
     @Autowired val mapper: ObjectMapper,
-    @MockkBean val getInterestedRestaurantsUseCase: GetInterestedRestaurantsUseCase,
+    @MockkBean val readInterestedRestaurantsUseCase: ReadInterestedRestaurantsUseCase,
     @MockkBean val addInterestedRestaurantsUseCase: AddInterestedRestaurantsUseCase,
     @MockkBean val deleteInterestedRestaurantsUseCase: DeleteInterestedRestaurantsUseCase,
     @MockkBean val readVisitedRestaurantUseCase: ReadVisitedRestaurantUseCase,
@@ -54,7 +54,7 @@ class RestaurantControllerTest(
         test("조회 성공") {
             val query = GetInterestedRestaurantsQuery(memberId, page, size = 3)
             every { extractMemberIdUseCase.extract(accessToken) } returns memberId
-            every { getInterestedRestaurantsUseCase.getInterestedRestaurant(query) } returns results
+            every { readInterestedRestaurantsUseCase.getInterestedRestaurant(query) } returns results
 
             mockMvc.get("/restaurants/interested") {
                 header("Authorization", "Bearer $accessToken")
