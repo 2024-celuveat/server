@@ -8,13 +8,13 @@ interface SocialLoginClient {
 
     fun fetchMember(
         authCode: String,
-        redirectUrl: String,
+        requestOrigin: String,
     ): Member
 
     fun getSocialLoginUrl(requestOrigin: String): String
 
     fun withdraw(
         authCode: String,
-        redirectUrl: String,
+        requestOrigin: String,
     )
 }

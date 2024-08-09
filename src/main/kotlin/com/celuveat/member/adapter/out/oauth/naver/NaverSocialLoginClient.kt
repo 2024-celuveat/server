@@ -22,9 +22,9 @@ class NaverSocialLoginClient(
 
     override fun fetchMember(
         authCode: String,
-        redirectUrl: String,
+        requestOrigin: String,
     ): Member {
-        validateAllowedRedirectUrl(redirectUrl)
+        validateAllowedRedirectUrl(requestOrigin)
         val socialLoginToken = fetchAccessToken(authCode)
         return fetchMemberInfo(socialLoginToken.accessToken).toMember()
     }
@@ -62,7 +62,7 @@ class NaverSocialLoginClient(
 
     override fun withdraw(
         authCode: String,
-        redirectUrl: String,
+        requestOrigin: String,
     ) {
         val accessToken = fetchAccessToken(authCode)
         val tokenRequestBody = mapOf(

@@ -22,10 +22,10 @@ class GoogleSocialLoginClient(
 
     override fun fetchMember(
         authCode: String,
-        redirectUrl: String,
+        requestOrigin: String,
     ): Member {
-        validateAllowedRedirectUrl(redirectUrl)
-        val socialLoginToken = fetchAccessToken(authCode, redirectUrl)
+        validateAllowedRedirectUrl(requestOrigin)
+        val socialLoginToken = fetchAccessToken(authCode, "$requestOrigin/oauth/google")
         return fetchMemberInfo(socialLoginToken.accessToken).toMember()
     }
 
@@ -65,9 +65,9 @@ class GoogleSocialLoginClient(
 
     override fun withdraw(
         authCode: String,
-        redirectUrl: String,
+        requestOrigin: String,
     ) {
-        val socialLoginToken = fetchAccessToken(authCode, redirectUrl)
+        val socialLoginToken = fetchAccessToken(authCode, "$requestOrigin/oauth/google")
         googleApiClient.withdraw(socialLoginToken.accessToken)
     }
 }

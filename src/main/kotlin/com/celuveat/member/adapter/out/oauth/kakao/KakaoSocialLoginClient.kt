@@ -22,10 +22,10 @@ class KakaoSocialLoginClient(
 
     override fun fetchMember(
         authCode: String,
-        redirectUrl: String,
+        requestOrigin: String,
     ): Member {
-        validateAllowedRedirectUrl(redirectUrl)
-        val socialLoginToken = fetchAccessToken(authCode, redirectUrl)
+        validateAllowedRedirectUrl(requestOrigin)
+        val socialLoginToken = fetchAccessToken(authCode, requestOrigin)
         return fetchMemberInfo(socialLoginToken.accessToken).toMember()
     }
 
@@ -36,12 +36,12 @@ class KakaoSocialLoginClient(
 
     private fun fetchAccessToken(
         authCode: String,
-        redirectUrl: String,
+        requestOrigin: String,
     ): KakaoSocialLoginToken {
         val tokenRequestBody = mapOf(
             "grant_type" to "authorization_code",
             "client_id" to kakaoSocialLoginProperty.clientId,
-            "redirect_uri" to redirectUrl,
+            "redirect_uri" to "$requestOrigin/oauth/kakao",
             "code" to authCode,
             "client_secret" to kakaoSocialLoginProperty.clientSecret,
         )
@@ -65,9 +65,9 @@ class KakaoSocialLoginClient(
 
     override fun withdraw(
         authCode: String,
-        redirectUrl: String,
+        requestOrigin: String,
     ) {
-        val socialLoginToken = fetchAccessToken(authCode, redirectUrl)
+        val socialLoginToken = fetchAccessToken(authCode, "$requestOrigin/oauth/kakao")
         kakaoApiClient.withdraw("Bearer ${socialLoginToken.accessToken}")
     }
 }
