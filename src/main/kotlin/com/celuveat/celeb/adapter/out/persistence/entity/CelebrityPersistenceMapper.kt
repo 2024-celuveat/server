@@ -30,9 +30,7 @@ class CelebrityPersistenceMapper {
         )
     }
 
-    fun toDomainWithoutYoutubeContent(
-        celebrityJpaEntity: CelebrityJpaEntity,
-    ): Celebrity {
+    fun toDomainWithoutYoutubeContent(celebrityJpaEntity: CelebrityJpaEntity): Celebrity {
         return Celebrity(
             id = celebrityJpaEntity.id,
             name = celebrityJpaEntity.name,

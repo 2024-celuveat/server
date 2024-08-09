@@ -12,7 +12,10 @@ interface CelebrityRestaurantJpaRepository : JpaRepository<CelebrityRestaurantJp
         SELECT cr.restaurant
         FROM CelebrityRestaurantJpaEntity cr
         WHERE cr.celebrity.id = :celebrityId
-        """
+        """,
     )
-    fun findRestaurantsByCelebrityId(celebrityId: Long, pageable: Pageable): Slice<RestaurantJpaEntity>
+    fun findRestaurantsByCelebrityId(
+        celebrityId: Long,
+        pageable: Pageable,
+    ): Slice<RestaurantJpaEntity>
 }

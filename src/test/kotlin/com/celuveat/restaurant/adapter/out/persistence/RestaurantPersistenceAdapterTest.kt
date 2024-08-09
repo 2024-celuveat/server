@@ -43,13 +43,15 @@ class RestaurantPersistenceAdapterTest(
             },
         )
 
-        restaurantImageJpaRepository.saveAll(savedRestaurants.map {
-            sut.giveMeBuilder<RestaurantImageJpaEntity>()
-                .set(RestaurantImageJpaEntity::id, 0)
-                .set(RestaurantImageJpaEntity::restaurant, it)
-                .set(RestaurantImageJpaEntity::isThumbnail, true, 1)
-                .sampleList(3)
-        }.flatten())
+        restaurantImageJpaRepository.saveAll(
+            savedRestaurants.map {
+                sut.giveMeBuilder<RestaurantImageJpaEntity>()
+                    .set(RestaurantImageJpaEntity::id, 0)
+                    .set(RestaurantImageJpaEntity::restaurant, it)
+                    .set(RestaurantImageJpaEntity::isThumbnail, true, 1)
+                    .sampleList(3)
+            }.flatten(),
+        )
 
         test("셀럽이 방문한 음식점을 조회한다.") {
             // when

@@ -28,7 +28,7 @@ class InterestedCelebrityPersistenceAdapter(
         return interestedCelebrities.map {
             interestedCelebrityPersistenceMapper.toDomain(
                 it,
-                youtubeContentsByCelebrity[it.id]!!
+                youtubeContentsByCelebrity[it.id]!!,
             )
         }
     }
@@ -60,7 +60,10 @@ class InterestedCelebrityPersistenceAdapter(
             ?: throw NotFoundInterestedCelebrityException
     }
 
-    override fun existedInterestedCelebrity(celebrityId: Long, memberId: Long): Boolean {
+    override fun existedInterestedCelebrity(
+        celebrityId: Long,
+        memberId: Long,
+    ): Boolean {
         return interestedCelebrityJpaRepository.existsByMemberIdAndCelebrityId(memberId, celebrityId)
     }
 }

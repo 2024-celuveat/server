@@ -21,7 +21,7 @@ class CelebrityRestaurantJpaEntity(
     val celebrity: CelebrityJpaEntity,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    val restaurant: RestaurantJpaEntity
+    val restaurant: RestaurantJpaEntity,
 ) : RootEntity<Long>() {
     override fun id(): Long {
         return this.id

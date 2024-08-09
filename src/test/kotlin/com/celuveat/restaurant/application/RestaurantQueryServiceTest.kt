@@ -33,7 +33,7 @@ class RestaurantQueryServiceTest : BehaviorSpec({
     val restaurantQueryService = RestaurantQueryService(
         findRestaurantPort,
         findCelebritiesPort,
-        findInterestedRestaurantPort
+        findInterestedRestaurantPort,
     )
 
     Given("관심 음식점을 조회할 때") {
@@ -50,7 +50,7 @@ class RestaurantQueryServiceTest : BehaviorSpec({
             findInterestedRestaurantPort.findInterestedRestaurants(
                 memberId,
                 page,
-                size
+                size,
             )
         } returns interestedRestaurantResult
         every { findCelebritiesPort.findVisitedCelebritiesByRestaurants(interestedRestaurantResultIds) } returns mapOf(
@@ -102,12 +102,12 @@ class RestaurantQueryServiceTest : BehaviorSpec({
             val interestedRestaurants = listOf(
                 sut.giveMeBuilder<InterestedRestaurant>()
                     .setExp(InterestedRestaurant::restaurant, visitedRestaurantResult.contents[0])
-                    .sample()
+                    .sample(),
             )
             every {
                 findInterestedRestaurantPort.findInterestedRestaurantsByIds(
                     memberId,
-                    restaurantIds
+                    restaurantIds,
                 )
             } returns interestedRestaurants
             val readVisitedRestaurantQuery = ReadVisitedRestaurantQuery(

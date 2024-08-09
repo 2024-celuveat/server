@@ -37,7 +37,7 @@ private const val NOT_EXIST_ID = -1L
     InterestedRestaurantPersistenceMapper::class,
     RestaurantPersistenceMapper::class,
     MemberPersistenceMapper::class,
-    JpaConfig::class
+    JpaConfig::class,
 )
 @DataJpaTest
 class InterestedRestaurantPersistenceAdapterTest(

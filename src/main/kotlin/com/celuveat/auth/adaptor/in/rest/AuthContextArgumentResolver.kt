@@ -16,7 +16,7 @@ class AuthContextArgumentResolver(
 ) : HandlerMethodArgumentResolver {
     override fun supportsParameter(parameter: MethodParameter): Boolean {
         return parameter.hasParameterAnnotation(Auth::class.java) &&
-                parameter.parameterType == AuthContext::class.java
+            parameter.parameterType == AuthContext::class.java
     }
 
     override fun resolveArgument(

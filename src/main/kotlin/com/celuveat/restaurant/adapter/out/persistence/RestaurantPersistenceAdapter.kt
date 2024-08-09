@@ -19,7 +19,7 @@ class RestaurantPersistenceAdapter(
     override fun findVisitedRestaurantByCelebrity(
         celebrityId: Long,
         page: Int,
-        size: Int
+        size: Int,
     ): SliceResult<Restaurant> {
         val pageRequest = PageRequest.of(page, size, LATEST_SORTER)
         val restaurantSlice = celebrityRestaurantJpaRepository.findRestaurantsByCelebrityId(celebrityId, pageRequest)

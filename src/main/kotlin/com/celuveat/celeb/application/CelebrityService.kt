@@ -25,7 +25,7 @@ class CelebrityService(
     @Transactional
     override fun addInterestedCelebrity(command: AddInterestedCelebrityCommand) {
         throwWhen(
-            findInterestedCelebritiesPort.existedInterestedCelebrity(command.celebrityId, command.memberId)
+            findInterestedCelebritiesPort.existedInterestedCelebrity(command.celebrityId, command.memberId),
         ) { AlreadyInterestedCelebrityException }
         saveInterestedCelebrityPort.saveInterestedCelebrity(command.celebrityId, command.memberId)
     }
