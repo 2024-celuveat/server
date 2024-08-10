@@ -9,4 +9,5 @@ data class UpdateReviewCommand(
     val writer: Member,
     var content: String,
     var star: Star,
+    var images: List<String>,
 )

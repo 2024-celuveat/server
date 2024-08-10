@@ -37,7 +37,7 @@ class ReviewPersistenceAdapter(
         page: Int,
         size: Int,
     ): SliceResult<Review> {
-        val pageRequest = PageRequest.of(page, size, LATEST_ID_SORTER)
+        val pageRequest = PageRequest.of(page, size, LATEST_SORTER)
         val reviews = reviewJpaEntityRepository.findAllByRestaurantId(restaurantsId, pageRequest)
         return SliceResult.of(
             contents = reviews.content.map { reviewPersistenceMapper.toDomain(it) },
@@ -47,7 +47,6 @@ class ReviewPersistenceAdapter(
     }
 
     companion object {
-        // TODO updatedAt instead of id ??
-        val LATEST_ID_SORTER = Sort.by("id").descending()
+        val LATEST_SORTER = Sort.by("createdAt").descending()
     }
 }

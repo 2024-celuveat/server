@@ -4,6 +4,7 @@ import com.celuveat.common.annotation.Mapper
 import com.celuveat.member.adapter.out.persistence.entity.MemberPersistenceMapper
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantPersistenceMapper
 import com.celuveat.review.domain.Review
+import com.celuveat.review.domain.ReviewImage
 import com.celuveat.review.domain.Star
 
 @Mapper
@@ -20,6 +21,7 @@ class ReviewPersistenceMapper(
             star = Star.from(entity.star),
             views = entity.views,
             helps = entity.helps,
+            images = entity.images.map { ReviewImage(it.imageUrl) },
             createdAt = entity.createdAt,
             updatedAt = entity.updatedAt,
         )
@@ -34,6 +36,7 @@ class ReviewPersistenceMapper(
             star = review.star.score,
             views = review.views,
             helps = review.helps,
+            images = review.images.map { it.imageUrl },
             createdAt = review.createdAt,
             updatedAt = review.updatedAt,
         )

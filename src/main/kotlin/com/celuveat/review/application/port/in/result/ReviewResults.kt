@@ -13,6 +13,7 @@ data class ReviewPreviewResult(
     var star: Star,
     var views: Long,
     var helps: Long,
+    var images: List<String>,
     val createdAt: LocalDateTime = LocalDateTime.now(),
     var updatedAt: LocalDateTime = createdAt,
 ) {
@@ -26,6 +27,7 @@ data class ReviewPreviewResult(
                 star = review.star,
                 views = review.views,
                 helps = review.helps,
+                images = review.images.map { it.imageUrl },
                 createdAt = review.createdAt,
                 updatedAt = review.updatedAt,
             )
@@ -41,6 +43,7 @@ data class SingleReviewResult(
     var star: Star,
     var views: Long,
     var helps: Long,
+    var images: List<String>,
     val createdAt: LocalDateTime = LocalDateTime.now(),
     var updatedAt: LocalDateTime = createdAt,
 ) {
@@ -54,6 +57,7 @@ data class SingleReviewResult(
                 star = review.star,
                 views = review.views,
                 helps = review.helps,
+                images = review.images.map { it.imageUrl },
                 createdAt = review.createdAt,
                 updatedAt = review.updatedAt,
             )

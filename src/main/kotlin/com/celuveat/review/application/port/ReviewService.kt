@@ -17,6 +17,7 @@ import com.celuveat.review.application.port.out.FindHelpfulReviewPort
 import com.celuveat.review.application.port.out.FindReviewPort
 import com.celuveat.review.application.port.out.SaveHelpfulReviewPort
 import com.celuveat.review.application.port.out.SaveReviewPort
+import com.celuveat.review.domain.ReviewImage
 import org.springframework.stereotype.Service
 
 @Service
@@ -45,7 +46,7 @@ class ReviewService(
         val member = findMemberPort.getById(command.memberId)
         val review = findReviewPort.getById(command.reviewId)
         review.validateWriter(member)
-        review.update(command.content, command.star)
+        review.update(command.content, command.star, command.images.map { ReviewImage(imageUrl = it) })
         saveReviewPort.save(review)
     }
 
