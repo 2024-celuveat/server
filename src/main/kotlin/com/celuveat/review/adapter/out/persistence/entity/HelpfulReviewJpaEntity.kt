@@ -21,8 +21,8 @@ class HelpfulReviewJpaEntity(
     @JoinColumn(name = "review_id", foreignKey = ForeignKey(NO_CONSTRAINT))
     val review: ReviewJpaEntity,
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "clicker_id", foreignKey = ForeignKey(NO_CONSTRAINT))
-    val clicker: MemberJpaEntity,
+    @JoinColumn(name = "member_id", foreignKey = ForeignKey(NO_CONSTRAINT))
+    val member: MemberJpaEntity,
 ) : RootEntity<Long>() {
     override fun id(): Long {
         return this.id

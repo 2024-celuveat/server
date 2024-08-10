@@ -4,20 +4,20 @@ import com.celuveat.review.exception.NotFoundHelpfulReviewException
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface HelpfulReviewJpaEntityRepository : JpaRepository<HelpfulReviewJpaEntity, Long> {
-    fun existsByReviewIdAndClickerId(
+    fun existsByReviewIdAndMemberId(
         reviewId: Long,
         clickerId: Long,
     ): Boolean
 
-    fun findByClickerIdAndReviewId(
+    fun findByMemberIdAndReviewId(
         memberId: Long,
         reviewId: Long,
     ): HelpfulReviewJpaEntity?
 
-    fun getByClickerIdAndReviewId(
+    fun getByMemberIdAndReviewId(
         memberId: Long,
         reviewId: Long,
     ): HelpfulReviewJpaEntity {
-        return findByClickerIdAndReviewId(memberId, reviewId) ?: throw NotFoundHelpfulReviewException
+        return findByMemberIdAndReviewId(memberId, reviewId) ?: throw NotFoundHelpfulReviewException
     }
 }

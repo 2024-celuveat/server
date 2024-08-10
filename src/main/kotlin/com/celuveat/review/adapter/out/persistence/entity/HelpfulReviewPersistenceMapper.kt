@@ -12,7 +12,7 @@ class HelpfulReviewPersistenceMapper(
     fun toEntity(helpfulReview: HelpfulReview): HelpfulReviewJpaEntity {
         return HelpfulReviewJpaEntity(
             review = reviewPersistenceMapper.toEntity(helpfulReview.review),
-            clicker = memberPersistenceMapper.toEntity(helpfulReview.clicker),
+            member = memberPersistenceMapper.toEntity(helpfulReview.clicker),
         )
     }
 
@@ -20,7 +20,7 @@ class HelpfulReviewPersistenceMapper(
         return HelpfulReview(
             id = entity.id,
             review = reviewPersistenceMapper.toDomain(entity.review),
-            clicker = memberPersistenceMapper.toDomain(entity.clicker),
+            clicker = memberPersistenceMapper.toDomain(entity.member),
         )
     }
 }

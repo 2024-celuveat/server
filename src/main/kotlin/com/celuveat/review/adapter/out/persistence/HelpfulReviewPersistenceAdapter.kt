@@ -23,7 +23,7 @@ class HelpfulReviewPersistenceAdapter(
         reviewId: Long,
         memberId: Long,
     ): HelpfulReview {
-        val entity = helpfulReviewJpaEntityRepository.getByClickerIdAndReviewId(reviewId, memberId)
+        val entity = helpfulReviewJpaEntityRepository.getByMemberIdAndReviewId(reviewId, memberId)
         return helpfulReviewPersistenceMapper.toDomain(entity)
     }
 
@@ -31,7 +31,7 @@ class HelpfulReviewPersistenceAdapter(
         reviewId: Long,
         memberId: Long,
     ): Boolean {
-        return helpfulReviewJpaEntityRepository.existsByReviewIdAndClickerId(reviewId, memberId)
+        return helpfulReviewJpaEntityRepository.existsByReviewIdAndMemberId(reviewId, memberId)
     }
 
     override fun deleteHelpfulReview(helpfulReview: HelpfulReview) {
