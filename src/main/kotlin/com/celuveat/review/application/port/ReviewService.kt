@@ -73,6 +73,7 @@ class ReviewService(
         val member = findMemberPort.getById(memberId)
         val review = findReviewPort.getById(reviewId)
         val helpfulReview = review.clickHelpful(member)
+        saveReviewPort.save(review)
         saveHelpfulReviewPort.save(helpfulReview)
     }
 
@@ -82,6 +83,7 @@ class ReviewService(
     ) {
         val helpfulReview = findHelpfulReviewPort.getByReviewAndMember(reviewId, memberId)
         helpfulReview.unClick()
+        saveReviewPort.save(helpfulReview.review)
         deleteHelpfulReviewPort.deleteHelpfulReview(helpfulReview)
     }
 }
