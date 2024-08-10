@@ -188,7 +188,7 @@ class InterestedRestaurantPersistenceAdapterTest(
         val restaurantC = savedRestaurants[2]
 
         val savedMember = memberJpaRepository.save(sut.giveMeOne<MemberJpaEntity>())
-        val saveAll = interestedRestaurantJpaRepository.saveAll(
+        interestedRestaurantJpaRepository.saveAll(
             listOf(
                 sut.giveMeBuilder<InterestedRestaurantJpaEntity>()
                     .set(InterestedRestaurantJpaEntity::member, savedMember)
@@ -200,7 +200,6 @@ class InterestedRestaurantPersistenceAdapterTest(
                     .sample(),
             ),
         )
-        println(saveAll)
 
         test("음식점 id로 관심 음식점을 조회한다.") {
             // when

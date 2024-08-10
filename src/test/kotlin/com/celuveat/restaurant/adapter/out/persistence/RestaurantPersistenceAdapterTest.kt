@@ -29,9 +29,10 @@ class RestaurantPersistenceAdapterTest(
     private val celebrityJpaRepository: CelebrityJpaRepository,
     private val celebrityRestaurantJpaRepository: CelebrityRestaurantJpaRepository,
 ) : FunSpec({
-    context("셀럽 기준으로 음식점 조회 시") {
+    test("셀럽이 방문한 음식점을 조회한다.") {
         // given
-        val savedRestaurants = restaurantJpaRepository.saveAll(sut.giveMeBuilder<RestaurantJpaEntity>().sampleList(3))
+        val savedRestaurants =
+            restaurantJpaRepository.saveAll(sut.giveMeBuilder<RestaurantJpaEntity>().sampleList(3))
         val savedCelebrity = celebrityJpaRepository.save(sut.giveMeOne())
         celebrityRestaurantJpaRepository.saveAll(
             savedRestaurants.map {
@@ -52,25 +53,23 @@ class RestaurantPersistenceAdapterTest(
             }.flatten(),
         )
 
-        test("셀럽이 방문한 음식점을 조회한다.") {
-            // when
-            val visitedRestaurants = restaurantPersistenceAdapter.findVisitedRestaurantByCelebrity(
-                celebrityId = savedCelebrity.id,
-                page = 0,
-                size = 2,
-            )
+        // when
+        val visitedRestaurants = restaurantPersistenceAdapter.findVisitedRestaurantByCelebrity(
+            celebrityId = savedCelebrity.id,
+            page = 0,
+            size = 2,
+        )
 
-            // then
-            visitedRestaurants.size shouldBe 2
-            visitedRestaurants.contents.map { it.id } shouldContainInOrder listOf(
-                savedRestaurants[2].id,
-                savedRestaurants[1].id,
-            )
-            visitedRestaurants.hasNext shouldBe true
-        }
+        // then
+        visitedRestaurants.size shouldBe 2
+        visitedRestaurants.contents.map { it.id } shouldContainInOrder listOf(
+            savedRestaurants[2].id,
+            savedRestaurants[1].id,
+        )
+        visitedRestaurants.hasNext shouldBe true
     }
 
-    context("셀럽이 많이 다녀간 음식점 조회 시") {
+    test("셀럽이 많이 다녀간 순서로 음식점을 조회한다.") {
         // given
         val savedRestaurants = restaurantJpaRepository.saveAll(sut.giveMeBuilder<RestaurantJpaEntity>().sampleList(2))
         val savedCelebrities = celebrityJpaRepository.saveAll(sut.giveMeBuilder<CelebrityJpaEntity>().sampleList(3))
@@ -111,16 +110,14 @@ class RestaurantPersistenceAdapterTest(
             }.flatten(),
         )
 
-        test("많이 다녀간 순서로 음식점을 조회한다.") {
-            // when
-            val mostVisitedRestaurants = restaurantPersistenceAdapter.findCelebrityRecommendRestaurant()
+        // when
+        val mostVisitedRestaurants = restaurantPersistenceAdapter.findCelebrityRecommendRestaurant()
 
-            // then
-            mostVisitedRestaurants.size shouldBe 2
-            mostVisitedRestaurants.map { it.id } shouldContainInOrder listOf(
-                restaurantA.id,
-                restaurantB.id,
-            )
-        }
+        // then
+        mostVisitedRestaurants.size shouldBe 2
+        mostVisitedRestaurants.map { it.id } shouldContainInOrder listOf(
+            restaurantA.id,
+            restaurantB.id,
+        )
     }
 })

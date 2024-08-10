@@ -14,7 +14,7 @@ import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
 import org.springframework.stereotype.Service
 
 @Service
-class RestaurantQueryServiceCelebrity(
+class RestaurantQueryService(
     private val readRestaurantPort: ReadRestaurantPort,
     private val readCelebritiesPort: ReadCelebritiesPort,
     private val readInterestedRestaurantPort: ReadInterestedRestaurantPort,
@@ -44,9 +44,7 @@ class RestaurantQueryServiceCelebrity(
             query.size,
         )
         val visitedRestaurantIds = visitedRestaurants.contents.map { it.id }
-        val interestedRestaurants = query.memberId?.let {
-            readInterestedRestaurantPort.findInterestedRestaurantsByIds(it, visitedRestaurantIds)
-        } ?: emptyList()
+        val interestedRestaurants = readInterestedRestaurants(query.memberId, visitedRestaurantIds)
         return visitedRestaurants.convertContent {
             RestaurantPreviewResult.of(
                 restaurant = it,
@@ -56,6 +54,21 @@ class RestaurantQueryServiceCelebrity(
     }
 
     override fun readCelebrityRecommendRestaurants(query: ReadRecommendRestaurantsQuery): List<RestaurantPreviewResult> {
-        TODO()
+        val restaurants = readRestaurantPort.findCelebrityRecommendRestaurant()
+        val restaurantIds = restaurants.map { it.id }
+        val celebritiesByRestaurants = readCelebritiesPort.findVisitedCelebritiesByRestaurants(restaurantIds)
+        val interestedRestaurants = readInterestedRestaurants(query.memberId, restaurantIds)
+        return restaurants.map {
+            RestaurantPreviewResult.of(
+                restaurant = it,
+                liked = interestedRestaurants.any { interested -> interested.restaurant.id == it.id },
+                visitedCelebrities = celebritiesByRestaurants[it.id]!!,
+            )
+        }
     }
+
+    private fun readInterestedRestaurants(
+        memberId: Long?,
+        restaurantIds: List<Long>
+    ) = memberId?.let { readInterestedRestaurantPort.findInterestedRestaurantsByIds(it, restaurantIds) } ?: emptyList()
 }
