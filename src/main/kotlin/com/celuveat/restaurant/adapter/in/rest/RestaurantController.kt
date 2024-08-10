@@ -11,9 +11,9 @@ import com.celuveat.restaurant.application.port.`in`.ReadCelebrityVisitedRestaur
 import com.celuveat.restaurant.application.port.`in`.ReadInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.command.AddInterestedRestaurantCommand
 import com.celuveat.restaurant.application.port.`in`.command.DeleteInterestedRestaurantCommand
-import com.celuveat.restaurant.application.port.`in`.query.GetInterestedRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityRecommendRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
+import com.celuveat.restaurant.application.port.`in`.query.ReadInterestedRestaurantsQuery
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -38,12 +38,12 @@ class RestaurantController(
         @PageableDefault(size = 10, page = 0) pageable: Pageable,
     ): SliceResponse<RestaurantPreviewResponse> {
         val memberId = auth.memberId()
-        val query = GetInterestedRestaurantsQuery(
+        val query = ReadInterestedRestaurantsQuery(
             memberId = memberId,
             page = pageable.pageNumber,
             size = pageable.pageSize,
         )
-        val interestedRestaurant = readInterestedRestaurantsUseCase.getInterestedRestaurant(query)
+        val interestedRestaurant = readInterestedRestaurantsUseCase.readInterestedRestaurant(query)
         return SliceResponse.from(
             sliceResult = interestedRestaurant,
             converter = RestaurantPreviewResponse::from,

@@ -5,9 +5,9 @@ import com.celuveat.common.application.port.`in`.result.SliceResult
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityRecommendRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityVisitedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadInterestedRestaurantsUseCase
-import com.celuveat.restaurant.application.port.`in`.query.GetInterestedRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityRecommendRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
+import com.celuveat.restaurant.application.port.`in`.query.ReadInterestedRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.result.RestaurantPreviewResult
 import com.celuveat.restaurant.application.port.out.ReadInterestedRestaurantPort
 import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
@@ -19,7 +19,7 @@ class RestaurantQueryService(
     private val readCelebritiesPort: ReadCelebritiesPort,
     private val readInterestedRestaurantPort: ReadInterestedRestaurantPort,
 ) : ReadInterestedRestaurantsUseCase, ReadCelebrityVisitedRestaurantUseCase, ReadCelebrityRecommendRestaurantsUseCase {
-    override fun getInterestedRestaurant(query: GetInterestedRestaurantsQuery): SliceResult<RestaurantPreviewResult> {
+    override fun readInterestedRestaurant(query: ReadInterestedRestaurantsQuery): SliceResult<RestaurantPreviewResult> {
         val interestedRestaurants = readInterestedRestaurantPort.findInterestedRestaurants(
             query.memberId,
             query.page,

@@ -4,9 +4,9 @@ import com.celuveat.celeb.application.port.out.ReadCelebritiesPort
 import com.celuveat.celeb.domain.Celebrity
 import com.celuveat.celeb.domain.YoutubeContent
 import com.celuveat.common.application.port.`in`.result.SliceResult
-import com.celuveat.restaurant.application.port.`in`.query.GetInterestedRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityRecommendRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
+import com.celuveat.restaurant.application.port.`in`.query.ReadInterestedRestaurantsQuery
 import com.celuveat.restaurant.application.port.out.ReadInterestedRestaurantPort
 import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
 import com.celuveat.restaurant.domain.InterestedRestaurant
@@ -66,12 +66,12 @@ class RestaurantQueryServiceTest : BehaviorSpec({
                 .sampleList(1),
         )
         When("회원이 관심 식당을 조회하면") {
-            val getInterestedRestaurantsQuery = GetInterestedRestaurantsQuery(
+            val readInterestedRestaurantsQuery = ReadInterestedRestaurantsQuery(
                 memberId = memberId,
                 page = page,
                 size = size,
             )
-            val interestedRestaurants = restaurantQueryService.getInterestedRestaurant(getInterestedRestaurantsQuery)
+            val interestedRestaurants = restaurantQueryService.readInterestedRestaurant(readInterestedRestaurantsQuery)
 
             Then("관심 식당 목록을 반환한다") {
                 interestedRestaurants.contents.size shouldBe 3

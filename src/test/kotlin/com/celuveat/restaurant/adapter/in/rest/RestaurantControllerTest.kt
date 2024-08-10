@@ -11,8 +11,8 @@ import com.celuveat.restaurant.application.port.`in`.ReadCelebrityVisitedRestaur
 import com.celuveat.restaurant.application.port.`in`.ReadInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.command.AddInterestedRestaurantCommand
 import com.celuveat.restaurant.application.port.`in`.command.DeleteInterestedRestaurantCommand
-import com.celuveat.restaurant.application.port.`in`.query.GetInterestedRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
+import com.celuveat.restaurant.application.port.`in`.query.ReadInterestedRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.result.RestaurantPreviewResult
 import com.celuveat.support.sut
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -57,10 +57,10 @@ class RestaurantControllerTest(
                 hasNext = false,
             )
             val response = SliceResponse.from(results, RestaurantPreviewResponse::from)
-            val query = GetInterestedRestaurantsQuery(memberId, page, size = 3)
+            val query = ReadInterestedRestaurantsQuery(memberId, page, size = 3)
 
             every { extractMemberIdUseCase.extract(accessToken) } returns memberId
-            every { readInterestedRestaurantsUseCase.getInterestedRestaurant(query) } returns results
+            every { readInterestedRestaurantsUseCase.readInterestedRestaurant(query) } returns results
 
             mockMvc.get("/restaurants/interested") {
                 header("Authorization", "Bearer $accessToken")
@@ -179,7 +179,7 @@ class RestaurantControllerTest(
         test("회원 조회 성공") {
             val results = sut.giveMeBuilder<RestaurantPreviewResult>().sampleList(3)
             val response = results.map(RestaurantPreviewResponse::from)
-            
+
             every { extractMemberIdUseCase.extract(accessToken) } returns memberId
             every { readCelebrityRecommendRestaurantsUseCase.readCelebrityRecommendRestaurants(any()) } returns results
 
