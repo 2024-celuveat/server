@@ -5,8 +5,8 @@ import com.celuveat.celeb.domain.Celebrity
 import com.celuveat.celeb.domain.YoutubeContent
 import com.celuveat.common.application.port.`in`.result.SliceResult
 import com.celuveat.restaurant.application.port.`in`.query.GetInterestedRestaurantsQuery
+import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityRecommendRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
-import com.celuveat.restaurant.application.port.`in`.query.ReadRecommendRestaurantsQuery
 import com.celuveat.restaurant.application.port.out.ReadInterestedRestaurantPort
 import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
 import com.celuveat.restaurant.domain.InterestedRestaurant
@@ -177,9 +177,9 @@ class RestaurantQueryServiceTest : BehaviorSpec({
                     .sample(),
             ) // 첫 번째 음식점만 관심 등록
 
-            val readRecommendRestaurantsQuery = ReadRecommendRestaurantsQuery(memberId = memberId)
+            val readCelebrityRecommendRestaurantsQuery = ReadCelebrityRecommendRestaurantsQuery(memberId = memberId)
             val recommendRestaurants = restaurantQueryService.readCelebrityRecommendRestaurants(
-                readRecommendRestaurantsQuery
+                readCelebrityRecommendRestaurantsQuery
             )
 
             Then("관심 등록 여부가 포함되어 응답한다") {
@@ -194,9 +194,9 @@ class RestaurantQueryServiceTest : BehaviorSpec({
         When("비회원이 추천 음식점을 조회하면") {
             every { readRestaurantPort.findCelebrityRecommendRestaurant() } returns restaurants
             every { readCelebritiesPort.findVisitedCelebritiesByRestaurants(restaurantIds) } returns celebritiesByRestaurants
-            val readRecommendRestaurantsQuery = ReadRecommendRestaurantsQuery(memberId = null)
+            val readCelebrityRecommendRestaurantsQuery = ReadCelebrityRecommendRestaurantsQuery(memberId = null)
             val recommendRestaurants = restaurantQueryService.readCelebrityRecommendRestaurants(
-                readRecommendRestaurantsQuery
+                readCelebrityRecommendRestaurantsQuery
             )
 
             Then("관심 등록 여부는 false로 응답한다") {

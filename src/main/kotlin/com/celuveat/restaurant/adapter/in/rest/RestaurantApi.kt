@@ -76,4 +76,10 @@ interface RestaurantApi {
         @PathVariable celebrityId: Long,
         @PageableDefault(size = 10, page = 0) pageable: Pageable,
     ): SliceResponse<RestaurantPreviewResponse>
+
+    @Operation(summary = "셀럽 추천 음식점 조회")
+    @GetMapping("/celebrity/recommend")
+    fun readCelebrityRecommendRestaurants(
+        @Auth auth: AuthContext,
+    ): List<RestaurantPreviewResponse>
 }

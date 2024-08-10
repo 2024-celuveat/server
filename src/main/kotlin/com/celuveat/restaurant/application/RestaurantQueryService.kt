@@ -6,8 +6,8 @@ import com.celuveat.restaurant.application.port.`in`.ReadCelebrityRecommendResta
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityVisitedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.query.GetInterestedRestaurantsQuery
+import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityRecommendRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
-import com.celuveat.restaurant.application.port.`in`.query.ReadRecommendRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.result.RestaurantPreviewResult
 import com.celuveat.restaurant.application.port.out.ReadInterestedRestaurantPort
 import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
@@ -53,7 +53,7 @@ class RestaurantQueryService(
         }
     }
 
-    override fun readCelebrityRecommendRestaurants(query: ReadRecommendRestaurantsQuery): List<RestaurantPreviewResult> {
+    override fun readCelebrityRecommendRestaurants(query: ReadCelebrityRecommendRestaurantsQuery): List<RestaurantPreviewResult> {
         val restaurants = readRestaurantPort.findCelebrityRecommendRestaurant()
         val restaurantIds = restaurants.map { it.id }
         val celebritiesByRestaurants = readCelebritiesPort.findVisitedCelebritiesByRestaurants(restaurantIds)
