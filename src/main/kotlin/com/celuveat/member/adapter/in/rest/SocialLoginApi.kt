@@ -1,6 +1,7 @@
 package com.celuveat.member.adapter.`in`.rest
 
-import com.celuveat.auth.adaptor.`in`.rest.AuthId
+import com.celuveat.auth.adaptor.`in`.rest.Auth
+import com.celuveat.auth.adaptor.`in`.rest.AuthContext
 import com.celuveat.member.adapter.`in`.rest.response.LoginResponse
 import com.celuveat.member.domain.SocialLoginType
 import io.swagger.v3.oas.annotations.Operation
@@ -64,7 +65,7 @@ interface SocialLoginApi {
     @Operation(summary = "소셜 회원 탈퇴")
     @DeleteMapping("/withdraw/{socialLoginType}")
     fun withdraw(
-        @AuthId memberId: Long,
+        @Auth auth: AuthContext,
         @Parameter(
             `in` = ParameterIn.QUERY,
             required = true,

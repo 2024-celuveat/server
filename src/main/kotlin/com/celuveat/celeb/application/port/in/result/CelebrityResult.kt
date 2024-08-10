@@ -23,6 +23,17 @@ data class CelebrityResult(
 }
 
 data class SimpleCelebrityResult(
+    val id: Long,
     val name: String,
     val profileImageUrl: String,
-)
+) {
+    companion object {
+        fun from(celebrity: Celebrity): SimpleCelebrityResult {
+            return SimpleCelebrityResult(
+                id = celebrity.id,
+                name = celebrity.name,
+                profileImageUrl = celebrity.profileImageUrl,
+            )
+        }
+    }
+}

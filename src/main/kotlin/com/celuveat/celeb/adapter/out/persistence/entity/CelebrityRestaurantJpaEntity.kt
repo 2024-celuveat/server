@@ -1,7 +1,7 @@
-package com.celuveat.restaurant.adapter.out.persistence.entity
+package com.celuveat.celeb.adapter.out.persistence.entity
 
 import com.celuveat.common.adapter.out.persistence.entity.RootEntity
-import com.celuveat.member.adapter.out.persistence.entity.MemberJpaEntity
+import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantJpaEntity
 import jakarta.persistence.ConstraintMode
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
@@ -11,17 +11,14 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
-import jakarta.persistence.Table
-import jakarta.persistence.UniqueConstraint
 
 @Entity
-@Table(uniqueConstraints = [UniqueConstraint(columnNames = ["member_id", "restaurant_id"])])
-class InterestedRestaurantJpaEntity(
+class CelebrityRestaurantJpaEntity(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    val member: MemberJpaEntity,
+    @JoinColumn(name = "celebrity_id", foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    val celebrity: CelebrityJpaEntity,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT))
     val restaurant: RestaurantJpaEntity,

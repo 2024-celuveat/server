@@ -1,14 +1,14 @@
 package com.celuveat.member.application
 
-import com.celuveat.member.application.port.`in`.GetSocialLoginUrlUseCase
+import com.celuveat.member.application.port.`in`.ReadSocialLoginUrlUseCase
 import com.celuveat.member.application.port.`in`.SocialLoginUseCase
 import com.celuveat.member.application.port.`in`.WithdrawSocialLoginUseCase
 import com.celuveat.member.application.port.`in`.command.SocialLoginCommand
 import com.celuveat.member.application.port.`in`.command.WithdrawSocialLoginCommand
 import com.celuveat.member.application.port.out.DeleteMemberPort
 import com.celuveat.member.application.port.out.FetchSocialMemberPort
-import com.celuveat.member.application.port.out.FindMemberPort
-import com.celuveat.member.application.port.out.GetSocialLoginUrlPort
+import com.celuveat.member.application.port.out.ReadMemberPort
+import com.celuveat.member.application.port.out.ReadSocialLoginUrlPort
 import com.celuveat.member.application.port.out.SaveMemberPort
 import com.celuveat.member.application.port.out.WithdrawSocialMemberPort
 import com.celuveat.member.domain.SocialLoginType
@@ -18,12 +18,12 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class SocialLoginService(
     private val fetchSocialMemberPort: FetchSocialMemberPort,
-    private val getSocialLoginUrlPort: GetSocialLoginUrlPort,
+    private val readSocialLoginUrlPort: ReadSocialLoginUrlPort,
     private val saveMemberPort: SaveMemberPort,
-    private val findMemberPort: FindMemberPort,
+    private val readMemberPort: ReadMemberPort,
     private val deleteMemberPort: DeleteMemberPort,
     private val withdrawSocialMemberPort: WithdrawSocialMemberPort,
-) : SocialLoginUseCase, GetSocialLoginUrlUseCase, WithdrawSocialLoginUseCase {
+) : SocialLoginUseCase, ReadSocialLoginUrlUseCase, WithdrawSocialLoginUseCase {
     @Transactional
     override fun login(command: SocialLoginCommand): Long {
         val member = fetchSocialMemberPort.fetchMember(
@@ -31,7 +31,7 @@ class SocialLoginService(
             command.authCode,
             command.requestOrigin,
         )
-        val signInMember = findMemberPort.findBySocialIdentifier(member.socialIdentifier)
+        val signInMember = readMemberPort.findBySocialIdentifier(member.socialIdentifier)
             ?: saveMemberPort.save(member)
         return signInMember.id
     }
@@ -40,7 +40,7 @@ class SocialLoginService(
         socialLoginType: SocialLoginType,
         requestOrigin: String,
     ): String {
-        return getSocialLoginUrlPort.getSocialLoginUrl(socialLoginType, requestOrigin)
+        return readSocialLoginUrlPort.getSocialLoginUrl(socialLoginType, requestOrigin)
     }
 
     @Transactional

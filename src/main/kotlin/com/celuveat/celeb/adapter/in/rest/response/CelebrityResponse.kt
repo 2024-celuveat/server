@@ -1,6 +1,7 @@
 package com.celuveat.celeb.adapter.`in`.rest.response
 
 import com.celuveat.celeb.application.port.`in`.result.CelebrityResult
+import com.celuveat.celeb.application.port.`in`.result.SimpleCelebrityResult
 import com.celuveat.celeb.application.port.`in`.result.YoutubeContentResult
 import io.swagger.v3.oas.annotations.media.Schema
 
@@ -81,21 +82,26 @@ data class YoutubeContentResponse(
     val subscriberCount: Long,
 ) {
     companion object {
-        fun from(youtubeContent: YoutubeContentResult): YoutubeContentResponse {
+        fun from(result: YoutubeContentResult): YoutubeContentResponse {
             return YoutubeContentResponse(
-                id = youtubeContent.id,
-                channelId = youtubeContent.channelId,
-                channelUrl = youtubeContent.channelUrl,
-                channelName = youtubeContent.channelName,
-                contentsName = youtubeContent.contentsName,
-                restaurantCount = youtubeContent.restaurantCount,
-                subscriberCount = youtubeContent.subscriberCount,
+                id = result.id,
+                channelId = result.channelId,
+                channelUrl = result.channelUrl,
+                channelName = result.channelName,
+                contentsName = result.contentsName,
+                restaurantCount = result.restaurantCount,
+                subscriberCount = result.subscriberCount,
             )
         }
     }
 }
 
 data class SimpleCelebrityResponse(
+    @Schema(
+        description = "연예인 ID",
+        example = "1",
+    )
+    val id: Long,
     @Schema(
         description = "연예인 이름",
         example = "성시경",
@@ -108,10 +114,19 @@ data class SimpleCelebrityResponse(
     val profileImageUrl: String,
 ) {
     companion object {
-        fun from(celebrity: CelebrityResult): SimpleCelebrityResponse {
+        fun from(result: CelebrityResult): SimpleCelebrityResponse {
             return SimpleCelebrityResponse(
-                name = celebrity.name,
-                profileImageUrl = celebrity.profileImageUrl,
+                id = result.id,
+                name = result.name,
+                profileImageUrl = result.profileImageUrl,
+            )
+        }
+
+        fun from(result: SimpleCelebrityResult): SimpleCelebrityResponse {
+            return SimpleCelebrityResponse(
+                id = result.id,
+                name = result.name,
+                profileImageUrl = result.profileImageUrl,
             )
         }
     }

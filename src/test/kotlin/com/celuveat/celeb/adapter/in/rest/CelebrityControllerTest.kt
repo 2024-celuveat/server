@@ -1,12 +1,15 @@
 package com.celuveat.celeb.adapter.`in`.rest
 
 import com.celuveat.auth.application.port.`in`.ExtractMemberIdUseCase
+import com.celuveat.celeb.adapter.`in`.rest.response.SimpleCelebrityResponse
 import com.celuveat.celeb.application.port.`in`.AddInterestedCelebrityUseCase
 import com.celuveat.celeb.application.port.`in`.DeleteInterestedCelebrityUseCase
-import com.celuveat.celeb.application.port.`in`.GetInterestedCelebritiesUseCase
+import com.celuveat.celeb.application.port.`in`.ReadBestCelebritiesUseCase
+import com.celuveat.celeb.application.port.`in`.ReadInterestedCelebritiesUseCase
 import com.celuveat.celeb.application.port.`in`.command.AddInterestedCelebrityCommand
 import com.celuveat.celeb.application.port.`in`.command.DeleteInterestedCelebrityCommand
 import com.celuveat.celeb.application.port.`in`.result.CelebrityResult
+import com.celuveat.celeb.application.port.`in`.result.SimpleCelebrityResult
 import com.celuveat.support.sut
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.navercorp.fixturemonkey.kotlin.giveMeBuilder
@@ -24,9 +27,10 @@ import org.springframework.test.web.servlet.post
 class CelebrityControllerTest(
     @Autowired val mockMvc: MockMvc,
     @Autowired val mapper: ObjectMapper,
-    @MockkBean val getInterestedCelebritiesUseCase: GetInterestedCelebritiesUseCase,
+    @MockkBean val readInterestedCelebritiesUseCase: ReadInterestedCelebritiesUseCase,
     @MockkBean val addInterestedCelebrityUseCase: AddInterestedCelebrityUseCase,
     @MockkBean val deleteInterestedCelebrityUseCase: DeleteInterestedCelebrityUseCase,
+    @MockkBean val readBestCelebritiesUseCase: ReadBestCelebritiesUseCase,
     // for AuthMemberArgumentResolver
     @MockkBean val extractMemberIdUseCase: ExtractMemberIdUseCase,
 ) : FunSpec({
@@ -38,7 +42,7 @@ class CelebrityControllerTest(
             .sampleList(3)
         test("조회 성공") {
             every { extractMemberIdUseCase.extract(accessToken) } returns memberId
-            every { getInterestedCelebritiesUseCase.getInterestedCelebrities(memberId) } returns results
+            every { readInterestedCelebritiesUseCase.getInterestedCelebrities(memberId) } returns results
 
             mockMvc.get("/celebrities/interested") {
                 header("Authorization", "Bearer $accessToken")
@@ -85,6 +89,22 @@ class CelebrityControllerTest(
                 header("Authorization", "Bearer $accessToken")
             }.andExpect {
                 status { isOk() }
+            }.andDo {
+                print()
+            }
+        }
+    }
+
+    context("인기 셀럽을 조회 한다") {
+        val results = sut.giveMeBuilder<SimpleCelebrityResult>()
+            .sampleList(3)
+        val response = results.map { SimpleCelebrityResponse.from(it) }
+        test("조회 성공") {
+            every { readBestCelebritiesUseCase.readBestCelebrities() } returns results
+
+            mockMvc.get("/celebrities/best").andExpect {
+                status { isOk() }
+                content { json(mapper.writeValueAsString(response)) }
             }.andDo {
                 print()
             }
