@@ -1,13 +1,13 @@
 package com.celuveat.restaurant.application
 
-import com.celuveat.celeb.application.port.out.FindCelebritiesPort
+import com.celuveat.celeb.application.port.out.ReadCelebritiesPort
 import com.celuveat.celeb.domain.Celebrity
 import com.celuveat.celeb.domain.YoutubeContent
 import com.celuveat.common.application.port.`in`.result.SliceResult
 import com.celuveat.restaurant.application.port.`in`.query.GetInterestedRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
-import com.celuveat.restaurant.application.port.out.FindInterestedRestaurantPort
-import com.celuveat.restaurant.application.port.out.FindRestaurantPort
+import com.celuveat.restaurant.application.port.out.ReadInterestedRestaurantPort
+import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
 import com.celuveat.restaurant.domain.InterestedRestaurant
 import com.celuveat.restaurant.domain.Restaurant
 import com.celuveat.support.channelIdSpec
@@ -26,14 +26,14 @@ import io.mockk.unmockkAll
 import io.mockk.verify
 
 class RestaurantQueryServiceTest : BehaviorSpec({
-    val findRestaurantPort: FindRestaurantPort = mockk()
-    val findCelebritiesPort: FindCelebritiesPort = mockk()
-    val findInterestedRestaurantPort: FindInterestedRestaurantPort = mockk()
+    val readRestaurantPort: ReadRestaurantPort = mockk()
+    val readCelebritiesPort: ReadCelebritiesPort = mockk()
+    val readInterestedRestaurantPort: ReadInterestedRestaurantPort = mockk()
 
     val restaurantQueryService = RestaurantQueryServiceCelebrity(
-        findRestaurantPort,
-        findCelebritiesPort,
-        findInterestedRestaurantPort,
+        readRestaurantPort,
+        readCelebritiesPort,
+        readInterestedRestaurantPort,
     )
 
     Given("관심 음식점을 조회할 때") {
@@ -47,13 +47,13 @@ class RestaurantQueryServiceTest : BehaviorSpec({
         )
         val interestedRestaurantResultIds = interestedRestaurantResult.contents.map { it.restaurant.id }
         every {
-            findInterestedRestaurantPort.findInterestedRestaurants(
+            readInterestedRestaurantPort.findInterestedRestaurants(
                 memberId,
                 page,
                 size,
             )
         } returns interestedRestaurantResult
-        every { findCelebritiesPort.findVisitedCelebritiesByRestaurants(interestedRestaurantResultIds) } returns mapOf(
+        every { readCelebritiesPort.findVisitedCelebritiesByRestaurants(interestedRestaurantResultIds) } returns mapOf(
             interestedRestaurantResultIds[0] to sut.giveMeBuilder<Celebrity>()
                 .setExp(Celebrity::youtubeContents, generateYoutubeContents(size = 2))
                 .sampleList(2),
@@ -92,7 +92,7 @@ class RestaurantQueryServiceTest : BehaviorSpec({
         val restaurantIds = visitedRestaurantResult.contents.map { it.id }
         When("회원이 음식점을 조회하면") {
             every {
-                findRestaurantPort.findVisitedRestaurantByCelebrity(
+                readRestaurantPort.findVisitedRestaurantByCelebrity(
                     celebrityId,
                     page,
                     size,
@@ -105,7 +105,7 @@ class RestaurantQueryServiceTest : BehaviorSpec({
                     .sample(),
             )
             every {
-                findInterestedRestaurantPort.findInterestedRestaurantsByIds(
+                readInterestedRestaurantPort.findInterestedRestaurantsByIds(
                     memberId,
                     restaurantIds,
                 )
@@ -127,7 +127,7 @@ class RestaurantQueryServiceTest : BehaviorSpec({
 
         When("비회원이 음식점을 조회하면") {
             every {
-                findRestaurantPort.findVisitedRestaurantByCelebrity(
+                readRestaurantPort.findVisitedRestaurantByCelebrity(
                     celebrityId,
                     page,
                     size,
@@ -145,7 +145,7 @@ class RestaurantQueryServiceTest : BehaviorSpec({
             Then("관심 등록 여부는 false로 응답한다") {
                 visitedRestaurants.contents.size shouldBe 2
                 visitedRestaurants.contents.map { it.liked } shouldBe listOf(false, false)
-                verify { findInterestedRestaurantPort wasNot Called }
+                verify { readInterestedRestaurantPort wasNot Called }
             }
         }
     }

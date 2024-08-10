@@ -4,8 +4,8 @@ import com.celuveat.member.application.port.`in`.command.SocialLoginCommand
 import com.celuveat.member.application.port.`in`.command.WithdrawSocialLoginCommand
 import com.celuveat.member.application.port.out.DeleteMemberPort
 import com.celuveat.member.application.port.out.FetchSocialMemberPort
-import com.celuveat.member.application.port.out.FindMemberPort
-import com.celuveat.member.application.port.out.GetSocialLoginUrlPort
+import com.celuveat.member.application.port.out.ReadMemberPort
+import com.celuveat.member.application.port.out.ReadSocialLoginUrlPort
 import com.celuveat.member.application.port.out.SaveMemberPort
 import com.celuveat.member.application.port.out.WithdrawSocialMemberPort
 import com.celuveat.member.domain.Member
@@ -27,17 +27,17 @@ import io.mockk.verify
 class SocialLoginServiceTest : BehaviorSpec({
 
     val saveMemberPort: SaveMemberPort = mockk()
-    val findMemberPort: FindMemberPort = mockk()
+    val readMemberPort: ReadMemberPort = mockk()
     val fetchSocialMemberPort: FetchSocialMemberPort = mockk()
-    val getSocialLoginUrlPort: GetSocialLoginUrlPort = mockk()
+    val readSocialLoginUrlPort: ReadSocialLoginUrlPort = mockk()
     val withdrawSocialMemberPort: WithdrawSocialMemberPort = mockk()
     val deleteMemberPort: DeleteMemberPort = mockk()
 
     val socialLoginService = SocialLoginService(
         fetchSocialMemberPort = fetchSocialMemberPort,
         saveMemberPort = saveMemberPort,
-        findMemberPort = findMemberPort,
-        getSocialLoginUrlPort = getSocialLoginUrlPort,
+        readMemberPort = readMemberPort,
+        readSocialLoginUrlPort = readSocialLoginUrlPort,
         withdrawSocialMemberPort = withdrawSocialMemberPort,
         deleteMemberPort = deleteMemberPort,
     )
@@ -57,7 +57,7 @@ class SocialLoginServiceTest : BehaviorSpec({
 
         When("최초 회원인 경우") {
             every { fetchSocialMemberPort.fetchMember(serverType, authCode, redirectUrl) } returns member
-            every { findMemberPort.findBySocialIdentifier(socialIdentifier) } returns null
+            every { readMemberPort.findBySocialIdentifier(socialIdentifier) } returns null
             every { saveMemberPort.save(member) } returns savedMember
             val command = SocialLoginCommand(serverType, authCode, redirectUrl)
 
@@ -66,14 +66,14 @@ class SocialLoginServiceTest : BehaviorSpec({
                 result shouldBe 1L
 
                 verify { fetchSocialMemberPort.fetchMember(serverType, authCode, redirectUrl) }
-                verify { findMemberPort.findBySocialIdentifier(socialIdentifier) }
+                verify { readMemberPort.findBySocialIdentifier(socialIdentifier) }
                 verify { saveMemberPort.save(member) }
             }
         }
 
         When("이미 가입된 회원인 경우") {
             every { fetchSocialMemberPort.fetchMember(serverType, authCode, redirectUrl) } returns member
-            every { findMemberPort.findBySocialIdentifier(socialIdentifier) } returns savedMember
+            every { readMemberPort.findBySocialIdentifier(socialIdentifier) } returns savedMember
             val command = SocialLoginCommand(serverType, authCode, redirectUrl)
 
             val result = socialLoginService.login(command)
@@ -81,7 +81,7 @@ class SocialLoginServiceTest : BehaviorSpec({
                 result shouldBe savedMember.id
 
                 verify { fetchSocialMemberPort.fetchMember(serverType, authCode, redirectUrl) }
-                verify { findMemberPort.findBySocialIdentifier(socialIdentifier) }
+                verify { readMemberPort.findBySocialIdentifier(socialIdentifier) }
                 verify(exactly = 0) { saveMemberPort.save(member) }
             }
         }
@@ -91,14 +91,14 @@ class SocialLoginServiceTest : BehaviorSpec({
         val serverType = SocialLoginType.KAKAO
         val redirectUrl = "redirectUrl"
         val socialLoginUrl = "https://social.com/authorize?redirect_uri=$redirectUrl&client_id=clientId"
-        every { getSocialLoginUrlPort.getSocialLoginUrl(serverType, redirectUrl) } returns socialLoginUrl
+        every { readSocialLoginUrlPort.getSocialLoginUrl(serverType, redirectUrl) } returns socialLoginUrl
         When("소셜 로그인 타입과 리다이렉트될 URL을 전달하면") {
             val result = socialLoginService.getSocialLoginUrl(serverType, redirectUrl)
 
             Then("소셜 로그인 URL이 반환된다") {
                 result shouldBe socialLoginUrl
 
-                verify { getSocialLoginUrlPort.getSocialLoginUrl(serverType, redirectUrl) }
+                verify { readSocialLoginUrlPort.getSocialLoginUrl(serverType, redirectUrl) }
             }
         }
     }

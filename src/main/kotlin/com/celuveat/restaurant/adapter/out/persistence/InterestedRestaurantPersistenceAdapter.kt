@@ -9,7 +9,7 @@ import com.celuveat.restaurant.adapter.out.persistence.entity.InterestedRestaura
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantImageJpaRepository
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantJpaRepository
 import com.celuveat.restaurant.application.port.out.DeleteInterestedRestaurantPort
-import com.celuveat.restaurant.application.port.out.FindInterestedRestaurantPort
+import com.celuveat.restaurant.application.port.out.ReadInterestedRestaurantPort
 import com.celuveat.restaurant.application.port.out.SaveInterestedRestaurantPort
 import com.celuveat.restaurant.domain.InterestedRestaurant
 import com.celuveat.restaurant.exception.NotFoundInterestedRestaurantException
@@ -24,7 +24,7 @@ class InterestedRestaurantPersistenceAdapter(
     private val interestedRestaurantPersistenceMapper: InterestedRestaurantPersistenceMapper,
     private val restaurantJpaRepository: RestaurantJpaRepository,
     private val memberJpaRepository: MemberJpaRepository,
-) : FindInterestedRestaurantPort, SaveInterestedRestaurantPort, DeleteInterestedRestaurantPort {
+) : ReadInterestedRestaurantPort, SaveInterestedRestaurantPort, DeleteInterestedRestaurantPort {
     @Transactional(readOnly = true)
     override fun findInterestedRestaurants(
         memberId: Long,

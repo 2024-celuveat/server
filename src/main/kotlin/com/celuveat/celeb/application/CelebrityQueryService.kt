@@ -2,15 +2,15 @@ package com.celuveat.celeb.application
 
 import com.celuveat.celeb.application.port.`in`.ReadInterestedCelebritiesUseCase
 import com.celuveat.celeb.application.port.`in`.result.CelebrityResult
-import com.celuveat.celeb.application.port.out.FindInterestedCelebritiesPort
+import com.celuveat.celeb.application.port.out.ReadInterestedCelebritiesPort
 import org.springframework.stereotype.Service
 
 @Service
 class CelebrityQueryService(
-    private val findInterestedCelebritiesPort: FindInterestedCelebritiesPort,
+    private val readInterestedCelebritiesPort: ReadInterestedCelebritiesPort,
 ) : ReadInterestedCelebritiesUseCase {
     override fun getInterestedCelebrities(memberId: Long): List<CelebrityResult> {
-        val celebrities = findInterestedCelebritiesPort.findInterestedCelebrities(memberId)
+        val celebrities = readInterestedCelebritiesPort.findInterestedCelebrities(memberId)
         return celebrities.map { CelebrityResult.from(it.celebrity) }
     }
 }

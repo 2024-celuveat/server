@@ -2,7 +2,7 @@ package com.celuveat.celeb.application.port.out
 
 import com.celuveat.celeb.domain.InterestedCelebrity
 
-interface FindInterestedCelebritiesPort {
+interface ReadInterestedCelebritiesPort {
     fun findInterestedCelebrities(memberId: Long): List<InterestedCelebrity>
 
     fun existsInterestedCelebrity(

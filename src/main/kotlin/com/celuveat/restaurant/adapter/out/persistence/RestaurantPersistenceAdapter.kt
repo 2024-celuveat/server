@@ -5,7 +5,7 @@ import com.celuveat.common.annotation.Adapter
 import com.celuveat.common.application.port.`in`.result.SliceResult
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantImageJpaRepository
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantPersistenceMapper
-import com.celuveat.restaurant.application.port.out.FindRestaurantPort
+import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
 import com.celuveat.restaurant.domain.Restaurant
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -15,7 +15,7 @@ class RestaurantPersistenceAdapter(
     private val restaurantImageJpaRepository: RestaurantImageJpaRepository,
     private val restaurantPersistenceMapper: RestaurantPersistenceMapper,
     private val celebrityRestaurantJpaRepository: CelebrityRestaurantJpaRepository,
-) : FindRestaurantPort {
+) : ReadRestaurantPort {
     override fun findVisitedRestaurantByCelebrity(
         celebrityId: Long,
         page: Int,

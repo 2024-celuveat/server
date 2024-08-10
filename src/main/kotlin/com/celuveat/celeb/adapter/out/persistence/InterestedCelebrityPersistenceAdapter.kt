@@ -6,7 +6,7 @@ import com.celuveat.celeb.adapter.out.persistence.entity.InterestedCelebrityJpaR
 import com.celuveat.celeb.adapter.out.persistence.entity.InterestedCelebrityPersistenceMapper
 import com.celuveat.celeb.adapter.out.persistence.entity.YoutubeContentJpaEntity
 import com.celuveat.celeb.application.port.out.DeleteInterestedCelebrityPort
-import com.celuveat.celeb.application.port.out.FindInterestedCelebritiesPort
+import com.celuveat.celeb.application.port.out.ReadInterestedCelebritiesPort
 import com.celuveat.celeb.application.port.out.SaveInterestedCelebrityPort
 import com.celuveat.celeb.domain.InterestedCelebrity
 import com.celuveat.celeb.exceptions.NotFoundInterestedCelebrityException
@@ -21,7 +21,7 @@ class InterestedCelebrityPersistenceAdapter(
     private val interestedCelebrityJpaRepository: InterestedCelebrityJpaRepository,
     private val memberJpaRepository: MemberJpaRepository,
     private val interestedCelebrityPersistenceMapper: InterestedCelebrityPersistenceMapper,
-) : FindInterestedCelebritiesPort, SaveInterestedCelebrityPort, DeleteInterestedCelebrityPort {
+) : ReadInterestedCelebritiesPort, SaveInterestedCelebrityPort, DeleteInterestedCelebrityPort {
     override fun findInterestedCelebrities(memberId: Long): List<InterestedCelebrity> {
         val interestedCelebrities = interestedCelebrityJpaRepository.findAllCelebritiesByMemberId(memberId)
         val celebrityIds = interestedCelebrities.map { it.celebrity.id }

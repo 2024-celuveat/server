@@ -6,7 +6,7 @@ import com.celuveat.restaurant.application.port.`in`.DeleteInterestedRestaurants
 import com.celuveat.restaurant.application.port.`in`.command.AddInterestedRestaurantCommand
 import com.celuveat.restaurant.application.port.`in`.command.DeleteInterestedRestaurantCommand
 import com.celuveat.restaurant.application.port.out.DeleteInterestedRestaurantPort
-import com.celuveat.restaurant.application.port.out.FindInterestedRestaurantPort
+import com.celuveat.restaurant.application.port.out.ReadInterestedRestaurantPort
 import com.celuveat.restaurant.application.port.out.SaveInterestedRestaurantPort
 import com.celuveat.restaurant.exception.AlreadyInterestedRestaurantException
 import org.springframework.stereotype.Service
@@ -16,12 +16,12 @@ import org.springframework.transaction.annotation.Transactional
 class RestaurantService(
     private val saveInterestedRestaurantPort: SaveInterestedRestaurantPort,
     private val deleteInterestedRestaurantPort: DeleteInterestedRestaurantPort,
-    private val findInterestedRestaurantPort: FindInterestedRestaurantPort,
+    private val readInterestedRestaurantPort: ReadInterestedRestaurantPort,
 ) : AddInterestedRestaurantsUseCase, DeleteInterestedRestaurantsUseCase {
     @Transactional
     override fun addInterestedRestaurant(command: AddInterestedRestaurantCommand) {
         throwWhen(
-            findInterestedRestaurantPort.existsInterestedRestaurant(command.memberId, command.restaurantId)
+            readInterestedRestaurantPort.existsInterestedRestaurant(command.memberId, command.restaurantId)
         ) { AlreadyInterestedRestaurantException }
         saveInterestedRestaurantPort.saveInterestedRestaurant(
             memberId = command.memberId,

@@ -7,8 +7,8 @@ import com.celuveat.celeb.application.port.`in`.command.AddInterestedCelebrityCo
 import com.celuveat.celeb.application.port.`in`.command.DeleteInterestedCelebrityCommand
 import com.celuveat.celeb.application.port.`in`.result.SimpleCelebrityResult
 import com.celuveat.celeb.application.port.out.DeleteInterestedCelebrityPort
-import com.celuveat.celeb.application.port.out.FindCelebritiesPort
-import com.celuveat.celeb.application.port.out.FindInterestedCelebritiesPort
+import com.celuveat.celeb.application.port.out.ReadCelebritiesPort
+import com.celuveat.celeb.application.port.out.ReadInterestedCelebritiesPort
 import com.celuveat.celeb.application.port.out.SaveInterestedCelebrityPort
 import com.celuveat.celeb.exceptions.AlreadyInterestedCelebrityException
 import com.celuveat.common.utils.throwWhen
@@ -16,14 +16,14 @@ import org.springframework.stereotype.Service
 
 @Service
 class CelebrityService(
-    private val findCelebritiesPort: FindCelebritiesPort,
-    private val findInterestedCelebritiesPort: FindInterestedCelebritiesPort,
+    private val readCelebritiesPort: ReadCelebritiesPort,
+    private val readInterestedCelebritiesPort: ReadInterestedCelebritiesPort,
     private val saveInterestedCelebrityPort: SaveInterestedCelebrityPort,
     private val deleteInterestedCelebrityPort: DeleteInterestedCelebrityPort,
 ) : ReadBestCelebritiesUseCase, AddInterestedCelebrityUseCase, DeleteInterestedCelebrityUseCase {
     override fun addInterestedCelebrity(command: AddInterestedCelebrityCommand) {
         throwWhen(
-            findInterestedCelebritiesPort.existsInterestedCelebrity(command.celebrityId, command.memberId),
+            readInterestedCelebritiesPort.existsInterestedCelebrity(command.celebrityId, command.memberId),
         ) { AlreadyInterestedCelebrityException }
         saveInterestedCelebrityPort.saveInterestedCelebrity(command.celebrityId, command.memberId)
     }
@@ -33,7 +33,7 @@ class CelebrityService(
     }
 
     override fun readBestCelebrities(): List<SimpleCelebrityResult> {
-        val bestCelebrities = findCelebritiesPort.findBestCelebrities()
+        val bestCelebrities = readCelebritiesPort.findBestCelebrities()
         return bestCelebrities.map { SimpleCelebrityResult.from(it) }
     }
 }

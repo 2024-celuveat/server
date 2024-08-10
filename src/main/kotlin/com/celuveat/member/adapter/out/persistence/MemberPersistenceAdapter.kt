@@ -4,7 +4,7 @@ import com.celuveat.common.annotation.Adapter
 import com.celuveat.member.adapter.out.persistence.entity.MemberJpaRepository
 import com.celuveat.member.adapter.out.persistence.entity.MemberPersistenceMapper
 import com.celuveat.member.application.port.out.DeleteMemberPort
-import com.celuveat.member.application.port.out.FindMemberPort
+import com.celuveat.member.application.port.out.ReadMemberPort
 import com.celuveat.member.application.port.out.SaveMemberPort
 import com.celuveat.member.domain.Member
 import com.celuveat.member.domain.SocialIdentifier
@@ -13,7 +13,7 @@ import com.celuveat.member.domain.SocialIdentifier
 class MemberPersistenceAdapter(
     private val memberJpaRepository: MemberJpaRepository,
     private val memberPersistenceMapper: MemberPersistenceMapper,
-) : SaveMemberPort, FindMemberPort, DeleteMemberPort {
+) : SaveMemberPort, ReadMemberPort, DeleteMemberPort {
     override fun findBySocialIdentifier(socialIdentifier: SocialIdentifier): Member? {
         return memberJpaRepository.findMemberBySocialIdAndServerType(
             socialIdentifier.socialId,
