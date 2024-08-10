@@ -9,4 +9,6 @@ interface ReadRestaurantPort {
         page: Int,
         size: Int,
     ): SliceResult<Restaurant>
+
+    fun findCelebrityRecommendRestaurant(): List<Restaurant>
 }

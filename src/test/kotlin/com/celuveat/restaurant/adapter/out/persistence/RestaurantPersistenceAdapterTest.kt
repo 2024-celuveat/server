@@ -1,5 +1,6 @@
 package com.celuveat.restaurant.adapter.out.persistence
 
+import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityJpaEntity
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityJpaRepository
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityRestaurantJpaEntity
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityRestaurantJpaRepository
@@ -18,8 +19,6 @@ import io.kotest.matchers.collections.shouldContainInOrder
 import io.kotest.matchers.shouldBe
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.context.annotation.Import
-
-private const val NOT_EXIST_ID = -1L
 
 @Import(RestaurantPersistenceAdapter::class, RestaurantPersistenceMapper::class, JpaConfig::class)
 @DataJpaTest
@@ -68,6 +67,60 @@ class RestaurantPersistenceAdapterTest(
                 savedRestaurants[1].id,
             )
             visitedRestaurants.hasNext shouldBe true
+        }
+    }
+
+    context("셀럽이 많이 다녀간 음식점 조회 시") {
+        // given
+        val savedRestaurants = restaurantJpaRepository.saveAll(sut.giveMeBuilder<RestaurantJpaEntity>().sampleList(2))
+        val savedCelebrities = celebrityJpaRepository.saveAll(sut.giveMeBuilder<CelebrityJpaEntity>().sampleList(3))
+        val restaurantA = savedRestaurants[0]
+        val restaurantB = savedRestaurants[1]
+        celebrityRestaurantJpaRepository.saveAll(
+            listOf(
+                CelebrityRestaurantJpaEntity(
+                    celebrity = savedCelebrities[0],
+                    restaurant = restaurantA,
+                ),
+                CelebrityRestaurantJpaEntity(
+                    celebrity = savedCelebrities[1],
+                    restaurant = restaurantA,
+                ),
+                CelebrityRestaurantJpaEntity(
+                    celebrity = savedCelebrities[2],
+                    restaurant = restaurantA,
+                ),
+                CelebrityRestaurantJpaEntity(
+                    celebrity = savedCelebrities[0],
+                    restaurant = restaurantB,
+                ),
+                CelebrityRestaurantJpaEntity(
+                    celebrity = savedCelebrities[1],
+                    restaurant = restaurantB,
+                ),
+            )
+        ) // 음식점 A는 3명, 음식점 B는 2명의 셀럽이 방문
+
+        restaurantImageJpaRepository.saveAll(
+            savedRestaurants.map {
+                sut.giveMeBuilder<RestaurantImageJpaEntity>()
+                    .set(RestaurantImageJpaEntity::id, 0)
+                    .set(RestaurantImageJpaEntity::restaurant, it)
+                    .set(RestaurantImageJpaEntity::isThumbnail, true, 1)
+                    .sampleList(3)
+            }.flatten(),
+        )
+
+        test("많이 다녀간 순서로 음식점을 조회한다.") {
+            // when
+            val mostVisitedRestaurants = restaurantPersistenceAdapter.findCelebrityRecommendRestaurant()
+
+            // then
+            mostVisitedRestaurants.size shouldBe 2
+            mostVisitedRestaurants.map { it.id } shouldContainInOrder listOf(
+                restaurantA.id,
+                restaurantB.id,
+            )
         }
     }
 })

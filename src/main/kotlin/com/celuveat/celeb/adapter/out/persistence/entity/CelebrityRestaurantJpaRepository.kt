@@ -18,4 +18,15 @@ interface CelebrityRestaurantJpaRepository : JpaRepository<CelebrityRestaurantJp
         celebrityId: Long,
         pageable: Pageable,
     ): Slice<RestaurantJpaEntity>
+
+    @Query(
+        """
+        SELECT cr.restaurant
+        FROM CelebrityRestaurantJpaEntity cr
+        GROUP BY cr.restaurant
+        ORDER BY COUNT(cr.celebrity) DESC
+        LIMIT 10
+    """
+    )
+    fun findMostVisitedRestaurantsTop10(): List<RestaurantJpaEntity>
 }
