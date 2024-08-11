@@ -3,7 +3,6 @@ package com.celuveat.review.application.port
 import com.celuveat.common.utils.throwWhen
 import com.celuveat.member.application.port.out.FindMemberPort
 import com.celuveat.restaurant.application.port.out.FindRestaurantPort
-import com.celuveat.restaurant.exception.AlreadyInterestedRestaurantException
 import com.celuveat.review.application.port.`in`.ClickHelpfulReviewUseCase
 import com.celuveat.review.application.port.`in`.DeleteHelpfulReviewUseCase
 import com.celuveat.review.application.port.`in`.DeleteReviewUseCase
@@ -18,6 +17,7 @@ import com.celuveat.review.application.port.out.FindReviewPort
 import com.celuveat.review.application.port.out.SaveHelpfulReviewPort
 import com.celuveat.review.application.port.out.SaveReviewPort
 import com.celuveat.review.domain.ReviewImage
+import com.celuveat.review.exception.AlreadyClickHelpfulReviewException
 import org.springframework.stereotype.Service
 
 @Service
@@ -69,7 +69,7 @@ class ReviewService(
                 reviewId = reviewId,
                 memberId = memberId,
             ),
-        ) { throw AlreadyInterestedRestaurantException }
+        ) { throw AlreadyClickHelpfulReviewException }
         val member = findMemberPort.getById(memberId)
         val review = findReviewPort.getById(reviewId)
         val helpfulReview = review.clickHelpful(member)
