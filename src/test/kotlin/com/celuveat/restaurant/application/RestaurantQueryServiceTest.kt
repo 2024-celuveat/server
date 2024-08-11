@@ -4,8 +4,9 @@ import com.celuveat.celeb.application.port.out.ReadCelebritiesPort
 import com.celuveat.celeb.domain.Celebrity
 import com.celuveat.celeb.domain.YoutubeContent
 import com.celuveat.common.application.port.`in`.result.SliceResult
-import com.celuveat.restaurant.application.port.`in`.query.GetInterestedRestaurantsQuery
+import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityRecommendRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
+import com.celuveat.restaurant.application.port.`in`.query.ReadInterestedRestaurantsQuery
 import com.celuveat.restaurant.application.port.out.ReadInterestedRestaurantPort
 import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
 import com.celuveat.restaurant.domain.InterestedRestaurant
@@ -30,7 +31,7 @@ class RestaurantQueryServiceTest : BehaviorSpec({
     val readCelebritiesPort: ReadCelebritiesPort = mockk()
     val readInterestedRestaurantPort: ReadInterestedRestaurantPort = mockk()
 
-    val restaurantQueryService = RestaurantQueryServiceCelebrity(
+    val restaurantQueryService = RestaurantQueryService(
         readRestaurantPort,
         readCelebritiesPort,
         readInterestedRestaurantPort,
@@ -65,12 +66,12 @@ class RestaurantQueryServiceTest : BehaviorSpec({
                 .sampleList(1),
         )
         When("회원이 관심 식당을 조회하면") {
-            val getInterestedRestaurantsQuery = GetInterestedRestaurantsQuery(
+            val readInterestedRestaurantsQuery = ReadInterestedRestaurantsQuery(
                 memberId = memberId,
                 page = page,
                 size = size,
             )
-            val interestedRestaurants = restaurantQueryService.getInterestedRestaurant(getInterestedRestaurantsQuery)
+            val interestedRestaurants = restaurantQueryService.readInterestedRestaurant(readInterestedRestaurantsQuery)
 
             Then("관심 식당 목록을 반환한다") {
                 interestedRestaurants.contents.size shouldBe 3
@@ -145,6 +146,62 @@ class RestaurantQueryServiceTest : BehaviorSpec({
             Then("관심 등록 여부는 false로 응답한다") {
                 visitedRestaurants.contents.size shouldBe 2
                 visitedRestaurants.contents.map { it.liked } shouldBe listOf(false, false)
+                verify { readInterestedRestaurantPort wasNot Called }
+            }
+        }
+    }
+
+    Given("셀럽 추천 음식점 조회 시") {
+        val restaurants = sut.giveMeBuilder<Restaurant>().sampleList(2)
+        val restaurantIds = restaurants.map { it.id }
+        val celebritiesByRestaurants = mapOf(
+            restaurantIds[0] to sut.giveMeBuilder<Celebrity>()
+                .setExp(Celebrity::youtubeContents, generateYoutubeContents(size = 2))
+                .sampleList(2),
+            restaurantIds[1] to sut.giveMeBuilder<Celebrity>()
+                .setExp(Celebrity::youtubeContents, generateYoutubeContents(size = 1))
+                .sampleList(1),
+        )
+        When("회원이 추천 음식점을 조회하면") {
+            val memberId = 1L
+            every { readRestaurantPort.findCelebrityRecommendRestaurant() } returns restaurants
+            every { readCelebritiesPort.findVisitedCelebritiesByRestaurants(restaurantIds) } returns celebritiesByRestaurants
+            every {
+                readInterestedRestaurantPort.findInterestedRestaurantsByIds(
+                    memberId,
+                    restaurantIds,
+                )
+            } returns listOf(
+                sut.giveMeBuilder<InterestedRestaurant>()
+                    .setExp(InterestedRestaurant::restaurant, restaurants[0])
+                    .sample(),
+            ) // 첫 번째 음식점만 관심 등록
+
+            val readCelebrityRecommendRestaurantsQuery = ReadCelebrityRecommendRestaurantsQuery(memberId = memberId)
+            val recommendRestaurants = restaurantQueryService.readCelebrityRecommendRestaurants(
+                readCelebrityRecommendRestaurantsQuery
+            )
+
+            Then("관심 등록 여부가 포함되어 응답한다") {
+                recommendRestaurants.size shouldBe 2
+                recommendRestaurants[0].liked shouldBe true
+                recommendRestaurants[0].visitedCelebrities.size shouldBe 2
+                recommendRestaurants[1].liked shouldBe false
+                recommendRestaurants[1].visitedCelebrities.size shouldBe 1
+            }
+        }
+
+        When("비회원이 추천 음식점을 조회하면") {
+            every { readRestaurantPort.findCelebrityRecommendRestaurant() } returns restaurants
+            every { readCelebritiesPort.findVisitedCelebritiesByRestaurants(restaurantIds) } returns celebritiesByRestaurants
+            val readCelebrityRecommendRestaurantsQuery = ReadCelebrityRecommendRestaurantsQuery(memberId = null)
+            val recommendRestaurants = restaurantQueryService.readCelebrityRecommendRestaurants(
+                readCelebrityRecommendRestaurantsQuery
+            )
+
+            Then("관심 등록 여부는 false로 응답한다") {
+                recommendRestaurants.size shouldBe 2
+                recommendRestaurants.map { it.liked } shouldBe listOf(false, false)
                 verify { readInterestedRestaurantPort wasNot Called }
             }
         }
