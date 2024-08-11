@@ -1,8 +1,8 @@
 package com.celuveat.review.application.port
 
 import com.celuveat.common.application.port.`in`.result.SliceResult
-import com.celuveat.review.application.port.`in`.GetReviewListUseCase
-import com.celuveat.review.application.port.`in`.GetSingleReviewUseCase
+import com.celuveat.review.application.port.`in`.ReadReviewListUseCase
+import com.celuveat.review.application.port.`in`.ReadSingleReviewUseCase
 import com.celuveat.review.application.port.`in`.result.ReviewPreviewResult
 import com.celuveat.review.application.port.`in`.result.SingleReviewResult
 import com.celuveat.review.application.port.out.FindReviewPort
@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service
 class ReviewQueryService(
     private val findReviewPort: FindReviewPort,
     private val saveReviewPort: SaveReviewPort,
-) : GetReviewListUseCase, GetSingleReviewUseCase {
-    override fun getAll(
+) : ReadReviewListUseCase, ReadSingleReviewUseCase {
+    override fun readAll(
         restaurantId: Long,
         page: Int,
         size: Int,
@@ -24,7 +24,7 @@ class ReviewQueryService(
             .convertContent { ReviewPreviewResult.from(it) }
     }
 
-    override fun get(id: Long): SingleReviewResult {
+    override fun read(id: Long): SingleReviewResult {
         val review = findReviewPort.getById(id)
         review.increaseView()
         saveReviewPort.save(review)

@@ -9,8 +9,8 @@ import com.celuveat.review.adapter.`in`.rest.response.SingleReviewResponse
 import com.celuveat.review.application.port.`in`.ClickHelpfulReviewUseCase
 import com.celuveat.review.application.port.`in`.DeleteHelpfulReviewUseCase
 import com.celuveat.review.application.port.`in`.DeleteReviewUseCase
-import com.celuveat.review.application.port.`in`.GetReviewListUseCase
-import com.celuveat.review.application.port.`in`.GetSingleReviewUseCase
+import com.celuveat.review.application.port.`in`.ReadReviewListUseCase
+import com.celuveat.review.application.port.`in`.ReadSingleReviewUseCase
 import com.celuveat.review.application.port.`in`.UpdateReviewUseCase
 import com.celuveat.review.application.port.`in`.WriteReviewUseCase
 import jakarta.validation.Valid
@@ -33,14 +33,13 @@ class ReviewController(
     private val deleteReviewUseCase: DeleteReviewUseCase,
     private val clickHelpfulReviewUseCase: ClickHelpfulReviewUseCase,
     private val deleteHelpfulReviewUseCase: DeleteHelpfulReviewUseCase,
-    private val getReviewListUseCase: GetReviewListUseCase,
-    private val getSingleReviewUseCase: GetSingleReviewUseCase,
+    private val readReviewListUseCase: ReadReviewListUseCase,
+    private val readSingleReviewUseCase: ReadSingleReviewUseCase,
 ) : ReviewApi {
-
     @PostMapping
     override fun writeReview(
         @AuthId memberId: Long,
-        @Valid @RequestBody request: WriteReviewRequest
+        @Valid @RequestBody request: WriteReviewRequest,
     ) {
         writeReviewUseCase.write(request.toCommand(memberId))
     }
@@ -71,7 +70,10 @@ class ReviewController(
     }
 
     @DeleteMapping("/help/{reviewId}")
-    override fun deleteHelpfulReview(memberId: Long, reviewId: Long) {
+    override fun deleteHelpfulReview(
+        memberId: Long,
+        reviewId: Long,
+    ) {
         deleteHelpfulReviewUseCase.deleteHelpfulReview(memberId = memberId, reviewId = reviewId)
     }
 
@@ -80,7 +82,7 @@ class ReviewController(
         @PathVariable restaurantId: Long,
         @PageableDefault(size = 10, page = 0) pageable: Pageable,
     ): SliceResponse<ReviewPreviewResponse> {
-        val reviews = getReviewListUseCase.getAll(
+        val reviews = readReviewListUseCase.readAll(
             restaurantId = restaurantId,
             page = pageable.pageNumber,
             size = pageable.pageSize,
@@ -93,8 +95,8 @@ class ReviewController(
 
     @GetMapping("/{reviewId}")
     override fun readReview(
-        @PathVariable reviewId: Long
+        @PathVariable reviewId: Long,
     ): SingleReviewResponse {
-        return SingleReviewResponse.from(getSingleReviewUseCase.get(id = reviewId))
+        return SingleReviewResponse.from(readSingleReviewUseCase.read(id = reviewId))
     }
 }
