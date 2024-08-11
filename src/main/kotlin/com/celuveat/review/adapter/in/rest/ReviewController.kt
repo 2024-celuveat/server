@@ -10,7 +10,7 @@ import com.celuveat.review.adapter.`in`.rest.response.SingleReviewResponse
 import com.celuveat.review.application.port.`in`.ClickHelpfulReviewUseCase
 import com.celuveat.review.application.port.`in`.DeleteHelpfulReviewUseCase
 import com.celuveat.review.application.port.`in`.DeleteReviewUseCase
-import com.celuveat.review.application.port.`in`.ReadReviewListUseCase
+import com.celuveat.review.application.port.`in`.ReadReviewsUseCase
 import com.celuveat.review.application.port.`in`.ReadSingleReviewUseCase
 import com.celuveat.review.application.port.`in`.UpdateReviewUseCase
 import com.celuveat.review.application.port.`in`.WriteReviewUseCase
@@ -35,7 +35,7 @@ class ReviewController(
     private val deleteReviewUseCase: DeleteReviewUseCase,
     private val clickHelpfulReviewUseCase: ClickHelpfulReviewUseCase,
     private val deleteHelpfulReviewUseCase: DeleteHelpfulReviewUseCase,
-    private val readReviewListUseCase: ReadReviewListUseCase,
+    private val readReviewsUseCase: ReadReviewsUseCase,
     private val readSingleReviewUseCase: ReadSingleReviewUseCase,
 ) : ReviewApi {
     @PostMapping
@@ -89,7 +89,7 @@ class ReviewController(
         @PathVariable restaurantId: Long,
         @PageableDefault(size = 10, page = 0) pageable: Pageable,
     ): SliceResponse<ReviewPreviewResponse> {
-        val reviews = readReviewListUseCase.readAll(
+        val reviews = readReviewsUseCase.readAll(
             restaurantId = restaurantId,
             page = pageable.pageNumber,
             size = pageable.pageSize,
