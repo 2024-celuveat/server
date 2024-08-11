@@ -5,7 +5,7 @@ import com.celuveat.review.application.port.`in`.result.ReviewPreviewResult
 
 interface GetReviewListUseCase {
     fun getAll(
-        restaurantsId: Long,
+        restaurantId: Long,
         page: Int,
         size: Int,
     ): SliceResult<ReviewPreviewResult>

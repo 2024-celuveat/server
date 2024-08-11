@@ -8,6 +8,7 @@ import com.celuveat.review.application.port.out.FindHelpfulReviewPort
 import com.celuveat.review.application.port.out.SaveHelpfulReviewPort
 import com.celuveat.review.domain.HelpfulReview
 
+// TODO test
 @Adapter
 class HelpfulReviewPersistenceAdapter(
     private val helpfulReviewJpaEntityRepository: HelpfulReviewJpaEntityRepository,

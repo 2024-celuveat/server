@@ -9,17 +9,18 @@ import com.celuveat.review.application.port.out.FindReviewPort
 import com.celuveat.review.application.port.out.SaveReviewPort
 import org.springframework.stereotype.Service
 
+// TODO test
 @Service
 class ReviewQueryService(
     private val findReviewPort: FindReviewPort,
     private val saveReviewPort: SaveReviewPort,
 ) : GetReviewListUseCase, GetSingleReviewUseCase {
     override fun getAll(
-        restaurantsId: Long,
+        restaurantId: Long,
         page: Int,
         size: Int,
     ): SliceResult<ReviewPreviewResult> {
-        return findReviewPort.findAllByRestaurantId(restaurantsId, page, size)
+        return findReviewPort.findAllByRestaurantId(restaurantId, page, size)
             .convertContent { ReviewPreviewResult.from(it) }
     }
 

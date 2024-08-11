@@ -11,6 +11,7 @@ import com.celuveat.review.domain.Review
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 
+// TODO test
 @Adapter
 class ReviewPersistenceAdapter(
     private val reviewJpaEntityRepository: ReviewJpaEntityRepository,
