@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestBody
 
 @Tag(name = "리뷰 API")
 interface ReviewApi {
-
     @SecurityRequirement(name = "JWT")
     @Operation(summary = "리뷰 작성")
     @Parameters(

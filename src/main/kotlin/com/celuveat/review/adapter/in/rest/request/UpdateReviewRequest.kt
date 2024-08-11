@@ -21,7 +21,7 @@ data class UpdateReviewRequest(
             reviewId = reviewId,
             content = content,
             star = star,
-            images = images
+            images = images,
         )
     }
 }

@@ -22,7 +22,7 @@ data class WriteReviewCommand(
             writer = member,
             content = content,
             star = star,
-            images = images.map { ReviewImage(imageUrl = it) }
+            images = images.map { ReviewImage(imageUrl = it) },
         )
     }
 }

@@ -52,7 +52,7 @@ class ReviewServiceTest : BehaviorSpec({
         saveHelpfulReviewPort,
         saveReviewPort,
         deleteReviewPort,
-        deleteHelpfulReviewPort
+        deleteHelpfulReviewPort,
     )
 
     Given("리뷰 작성 시") {

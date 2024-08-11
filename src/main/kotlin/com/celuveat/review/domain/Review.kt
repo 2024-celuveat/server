@@ -10,9 +10,12 @@ class Review(
     val restaurant: Restaurant,
     val writer: Member,
     var content: String,
-    var star: Star, // 별점
-    var views: Long = 0, // 조회수
-    var helps: Long = 0, // '도움돼요' 수.
+    // 별점
+    var star: Star,
+    // 조회수
+    var views: Long = 0,
+    // '도움돼요' 수.
+    var helps: Long = 0,
     var images: List<ReviewImage>,
     val createdAt: LocalDateTime = LocalDateTime.now(),
     var updatedAt: LocalDateTime = createdAt,
@@ -28,10 +31,10 @@ class Review(
         star: Star,
         images: List<ReviewImage>,
     ) {
-        this.content = content;
+        this.content = content
         this.star = star
         this.updatedAt = LocalDateTime.now()
-        this.images = images;
+        this.images = images
     }
 
     fun increaseView() {

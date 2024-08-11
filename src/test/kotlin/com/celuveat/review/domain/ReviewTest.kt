@@ -50,7 +50,7 @@ class ReviewTest : BehaviorSpec({
             review.update(
                 content = "update",
                 star = Star.TWO,
-                images = listOf("img1", "img2").map { ReviewImage(imageUrl = it) }
+                images = listOf("img1", "img2").map { ReviewImage(imageUrl = it) },
             )
 
             Then("내용이 수정된다.") {

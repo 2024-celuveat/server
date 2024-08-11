@@ -27,14 +27,16 @@ class ReviewJpaEntity(
     @JoinColumn(name = "writer_id", foreignKey = ForeignKey(NO_CONSTRAINT))
     val writer: MemberJpaEntity,
     var content: String,
-    var star: Int, // 별점
-    var views: Long = 0, // 조회수
-    var helps: Long = 0, // '도움돼요' 수.
+    // 별점
+    var star: Int,
+    // 조회수
+    var views: Long = 0,
+    // '도움돼요' 수.
+    var helps: Long = 0,
     images: List<String> = emptyList(),
     createdAt: LocalDateTime,
     updatedAt: LocalDateTime,
 ) : RootEntity<Long>() {
-
     @OneToMany(mappedBy = "review", cascade = [CascadeType.ALL], orphanRemoval = true)
     val images: List<ReviewImageJpaEntity>
 

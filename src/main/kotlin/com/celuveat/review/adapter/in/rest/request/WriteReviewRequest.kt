@@ -16,15 +16,13 @@ data class WriteReviewRequest(
     @Schema(description = "리뷰 이미지들", example = "[\"imgUrl1\", \"imgUrl2\"]")
     var images: List<String>,
 ) {
-    fun toCommand(
-        memberId: Long,
-    ): WriteReviewCommand {
+    fun toCommand(memberId: Long): WriteReviewCommand {
         return WriteReviewCommand(
             memberId = memberId,
             restaurantId = restaurantId,
             content = content,
             star = star,
-            images = images
+            images = images,
         )
     }
 }
