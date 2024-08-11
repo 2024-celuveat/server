@@ -6,11 +6,9 @@ import com.celuveat.support.sut
 import com.navercorp.fixturemonkey.kotlin.setExp
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
-import io.kotest.core.annotation.DisplayName
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 
-@DisplayName("리뷰는")
 class ReviewTest : BehaviorSpec({
 
     Given("작성자 검증 시") {
