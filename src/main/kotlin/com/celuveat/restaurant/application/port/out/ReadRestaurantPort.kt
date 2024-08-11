@@ -9,4 +9,6 @@ interface ReadRestaurantPort {
         page: Int,
         size: Int,
     ): SliceResult<Restaurant>
+
+    fun getById(id: Long): Restaurant
 }

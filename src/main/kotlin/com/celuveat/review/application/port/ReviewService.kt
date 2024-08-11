@@ -1,8 +1,8 @@
 package com.celuveat.review.application.port
 
 import com.celuveat.common.utils.throwWhen
-import com.celuveat.member.application.port.out.FindMemberPort
-import com.celuveat.restaurant.application.port.out.FindRestaurantPort
+import com.celuveat.member.application.port.out.ReadMemberPort
+import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
 import com.celuveat.review.application.port.`in`.ClickHelpfulReviewUseCase
 import com.celuveat.review.application.port.`in`.DeleteHelpfulReviewUseCase
 import com.celuveat.review.application.port.`in`.DeleteReviewUseCase
@@ -22,8 +22,8 @@ import org.springframework.stereotype.Service
 
 @Service
 class ReviewService(
-    private val findMemberPort: FindMemberPort,
-    private val findRestaurantPort: FindRestaurantPort,
+    private val findMemberPort: ReadMemberPort,
+    private val findRestaurantPort: ReadRestaurantPort,
     private val findReviewPort: FindReviewPort,
     private val findHelpfulReviewPort: FindHelpfulReviewPort,
     private val saveHelpfulReviewPort: SaveHelpfulReviewPort,

@@ -1,8 +1,8 @@
 package com.celuveat.review.application.port
 
-import com.celuveat.member.application.port.out.FindMemberPort
+import com.celuveat.member.application.port.out.ReadMemberPort
 import com.celuveat.member.domain.Member
-import com.celuveat.restaurant.application.port.out.FindRestaurantPort
+import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
 import com.celuveat.restaurant.domain.Restaurant
 import com.celuveat.review.application.port.`in`.command.UpdateReviewCommand
 import com.celuveat.review.application.port.`in`.command.WriteReviewCommand
@@ -35,8 +35,8 @@ import io.mockk.verify
 
 class ReviewServiceTest : BehaviorSpec({
 
-    val findMemberPort: FindMemberPort = mockk()
-    val findRestaurantPort: FindRestaurantPort = mockk()
+    val readMemberPort: ReadMemberPort = mockk()
+    val readRestaurantPort: ReadRestaurantPort = mockk()
     val findReviewPort: FindReviewPort = mockk()
     val findHelpfulReviewPort: FindHelpfulReviewPort = mockk()
     val saveHelpfulReviewPort: SaveHelpfulReviewPort = mockk()
@@ -45,8 +45,8 @@ class ReviewServiceTest : BehaviorSpec({
     val deleteHelpfulReviewPort: DeleteHelpfulReviewPort = mockk()
 
     val reviewService = ReviewService(
-        findMemberPort,
-        findRestaurantPort,
+        readMemberPort,
+        readRestaurantPort,
         findReviewPort,
         findHelpfulReviewPort,
         saveHelpfulReviewPort,
@@ -60,8 +60,8 @@ class ReviewServiceTest : BehaviorSpec({
         val restaurant = sut.giveMeOne(Restaurant::class.java)
         val review = sut.giveMeOne(Review::class.java)
         val command = WriteReviewCommand(1L, 1L, "맛나요", FOUR, listOf("img1", "img2"))
-        every { findMemberPort.getById(1L) } returns member
-        every { findRestaurantPort.getById(1L) } returns restaurant
+        every { readMemberPort.getById(1L) } returns member
+        every { readRestaurantPort.getById(1L) } returns restaurant
         every { saveReviewPort.save(any()) } returns review
 
         When("회원이 리뷰를 작성하면") {
@@ -86,7 +86,7 @@ class ReviewServiceTest : BehaviorSpec({
         When("해당 리뷰를 작성한 회원이 수정을 시도하면") {
 
             every { findReviewPort.getById(1L) } returns review
-            every { findMemberPort.getById(1L) } returns member
+            every { readMemberPort.getById(1L) } returns member
             every { saveReviewPort.save(any()) } returns review
             val command = UpdateReviewCommand(1L, 1L, "맛나요", FOUR, listOf("img1", "img2"))
             reviewService.update(command)
@@ -99,7 +99,7 @@ class ReviewServiceTest : BehaviorSpec({
         When("해당 리뷰를 작성하지 않은 회원이 수정을 시도하면") {
 
             every { findReviewPort.getById(1L) } returns review
-            every { findMemberPort.getById(2L) } returns other
+            every { readMemberPort.getById(2L) } returns other
             val command = UpdateReviewCommand(2L, 1L, "맛나요", FOUR, listOf("img1", "img2"))
             val exception = shouldThrow<NoAuthorityReviewException> {
                 reviewService.update(command)
@@ -123,7 +123,7 @@ class ReviewServiceTest : BehaviorSpec({
         When("해당 리뷰를 작성한 회원이 삭제를 시도하면") {
 
             every { deleteReviewPort.delete(any()) } just Runs
-            every { findMemberPort.getById(1L) } returns member
+            every { readMemberPort.getById(1L) } returns member
             every { findReviewPort.getById(1L) } returns review
             reviewService.delete(1L, 1L)
 
@@ -135,7 +135,7 @@ class ReviewServiceTest : BehaviorSpec({
 
         When("해당 리뷰를 작성하지 않은 회원이 삭제를 시도하면") {
 
-            every { findMemberPort.getById(2L) } returns other
+            every { readMemberPort.getById(2L) } returns other
             every { findReviewPort.getById(1L) } returns review
             val exception = shouldThrow<NoAuthorityReviewException> {
                 reviewService.delete(2L, 1L)
@@ -158,7 +158,7 @@ class ReviewServiceTest : BehaviorSpec({
         When("해당 리뷰에 도움돼요를 처음 클릭하는 거라면") {
 
             every { findHelpfulReviewPort.existsByReviewAndMember(1L, 1L) } returns false
-            every { findMemberPort.getById(1L) } returns member
+            every { readMemberPort.getById(1L) } returns member
             every { findReviewPort.getById(1L) } returns review
             every { saveReviewPort.save(any()) } returns review
             every { saveHelpfulReviewPort.save(any()) } returns mockk()

@@ -1,7 +1,8 @@
 package com.celuveat.review.adapter.`in`.rest
 
-import com.celuveat.auth.adaptor.`in`.rest.AuthId
-import com.celuveat.common.adapter.out.rest.response.SliceResponse
+import com.celuveat.auth.adaptor.`in`.rest.Auth
+import com.celuveat.auth.adaptor.`in`.rest.AuthContext
+import com.celuveat.common.adapter.`in`.rest.response.SliceResponse
 import com.celuveat.review.adapter.`in`.rest.request.UpdateReviewRequest
 import com.celuveat.review.adapter.`in`.rest.request.WriteReviewRequest
 import com.celuveat.review.adapter.`in`.rest.response.ReviewPreviewResponse
@@ -39,42 +40,47 @@ class ReviewController(
 ) : ReviewApi {
     @PostMapping
     override fun writeReview(
-        @AuthId memberId: Long,
+        @Auth auth: AuthContext,
         @Valid @RequestBody request: WriteReviewRequest,
     ) {
+        val memberId = auth.memberId()
         writeReviewUseCase.write(request.toCommand(memberId))
     }
 
     @PutMapping("/{reviewId}")
     override fun updateReview(
-        @AuthId memberId: Long,
+        @Auth auth: AuthContext,
         @PathVariable reviewId: Long,
         @RequestBody request: UpdateReviewRequest,
     ) {
+        val memberId = auth.memberId()
         updateReviewUseCase.update(request.toCommand(reviewId = reviewId, memberId = memberId))
     }
 
     @DeleteMapping("/{reviewId}")
     override fun deleteReview(
-        @AuthId memberId: Long,
+        @Auth auth: AuthContext,
         @PathVariable reviewId: Long,
     ) {
+        val memberId = auth.memberId()
         deleteReviewUseCase.delete(memberId = memberId, reviewId = reviewId)
     }
 
     @PostMapping("/help/{reviewId}")
     override fun clickHelpfulReview(
-        @AuthId memberId: Long,
+        @Auth auth: AuthContext,
         @PathVariable reviewId: Long,
     ) {
+        val memberId = auth.memberId()
         clickHelpfulReviewUseCase.clickHelpfulReview(memberId = memberId, reviewId = reviewId)
     }
 
     @DeleteMapping("/help/{reviewId}")
     override fun deleteHelpfulReview(
-        memberId: Long,
-        reviewId: Long,
+        @Auth auth: AuthContext,
+        @PathVariable reviewId: Long,
     ) {
+        val memberId = auth.memberId()
         deleteHelpfulReviewUseCase.deleteHelpfulReview(memberId = memberId, reviewId = reviewId)
     }
 

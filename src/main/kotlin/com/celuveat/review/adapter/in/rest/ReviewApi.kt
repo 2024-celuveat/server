@@ -1,7 +1,8 @@
 package com.celuveat.review.adapter.`in`.rest
 
-import com.celuveat.auth.adaptor.`in`.rest.AuthId
-import com.celuveat.common.adapter.out.rest.response.SliceResponse
+import com.celuveat.auth.adaptor.`in`.rest.Auth
+import com.celuveat.auth.adaptor.`in`.rest.AuthContext
+import com.celuveat.common.adapter.`in`.rest.response.SliceResponse
 import com.celuveat.review.adapter.`in`.rest.request.UpdateReviewRequest
 import com.celuveat.review.adapter.`in`.rest.request.WriteReviewRequest
 import com.celuveat.review.adapter.`in`.rest.response.ReviewPreviewResponse
@@ -31,7 +32,7 @@ interface ReviewApi {
     )
     @PostMapping
     fun writeReview(
-        @AuthId memberId: Long,
+        @Auth auth: AuthContext,
         @RequestBody request: WriteReviewRequest,
     )
 
@@ -39,7 +40,7 @@ interface ReviewApi {
     @Operation(summary = "리뷰 수정")
     @PutMapping("/{reviewId}")
     fun updateReview(
-        @AuthId memberId: Long,
+        @Auth auth: AuthContext,
         @Parameter(
             `in` = ParameterIn.PATH,
             description = "리뷰 ID",
@@ -54,7 +55,7 @@ interface ReviewApi {
     @Operation(summary = "리뷰 삭제")
     @DeleteMapping("/{reviewId}")
     fun deleteReview(
-        @AuthId memberId: Long,
+        @Auth auth: AuthContext,
         @Parameter(
             `in` = ParameterIn.PATH,
             description = "리뷰 ID",
@@ -68,7 +69,7 @@ interface ReviewApi {
     @Operation(summary = "리뷰 도움돼요")
     @PostMapping("/help/{reviewId}")
     fun clickHelpfulReview(
-        @AuthId memberId: Long,
+        @Auth auth: AuthContext,
         @Parameter(
             `in` = ParameterIn.PATH,
             description = "리뷰 ID",
@@ -82,7 +83,7 @@ interface ReviewApi {
     @Operation(summary = "리뷰 도움돼요 삭제")
     @DeleteMapping("/help/{reviewId}")
     fun deleteHelpfulReview(
-        @AuthId memberId: Long,
+        @Auth auth: AuthContext,
         @Parameter(
             `in` = ParameterIn.PATH,
             description = "리뷰 ID",
