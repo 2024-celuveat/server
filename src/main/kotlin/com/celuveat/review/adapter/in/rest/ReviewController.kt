@@ -66,7 +66,7 @@ class ReviewController(
         deleteReviewUseCase.delete(memberId = memberId, reviewId = reviewId)
     }
 
-    @PostMapping("/help/{reviewId}")
+    @PostMapping("/helpful/{reviewId}")
     override fun clickHelpfulReview(
         @Auth auth: AuthContext,
         @PathVariable reviewId: Long,
@@ -75,7 +75,7 @@ class ReviewController(
         clickHelpfulReviewUseCase.clickHelpfulReview(memberId = memberId, reviewId = reviewId)
     }
 
-    @DeleteMapping("/help/{reviewId}")
+    @DeleteMapping("/helpful/{reviewId}")
     override fun deleteHelpfulReview(
         @Auth auth: AuthContext,
         @PathVariable reviewId: Long,

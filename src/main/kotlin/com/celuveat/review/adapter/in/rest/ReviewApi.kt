@@ -26,10 +26,6 @@ import org.springframework.web.bind.annotation.RequestBody
 interface ReviewApi {
     @SecurityRequirement(name = "JWT")
     @Operation(summary = "리뷰 작성")
-    @Parameters(
-        Parameter(name = "page", description = "페이지 번호", example = "0", required = true),
-        Parameter(name = "size", description = "페이지 크기", example = "10", required = true),
-    )
     @PostMapping
     fun writeReview(
         @Auth auth: AuthContext,
@@ -67,7 +63,7 @@ interface ReviewApi {
 
     @SecurityRequirement(name = "JWT")
     @Operation(summary = "리뷰 도움돼요")
-    @PostMapping("/help/{reviewId}")
+    @PostMapping("/helpful/{reviewId}")
     fun clickHelpfulReview(
         @Auth auth: AuthContext,
         @Parameter(
@@ -81,7 +77,7 @@ interface ReviewApi {
 
     @SecurityRequirement(name = "JWT")
     @Operation(summary = "리뷰 도움돼요 삭제")
-    @DeleteMapping("/help/{reviewId}")
+    @DeleteMapping("/helpful/{reviewId}")
     fun deleteHelpfulReview(
         @Auth auth: AuthContext,
         @Parameter(
