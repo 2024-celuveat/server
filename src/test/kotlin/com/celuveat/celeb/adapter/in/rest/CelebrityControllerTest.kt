@@ -1,15 +1,15 @@
 package com.celuveat.celeb.adapter.`in`.rest
 
 import com.celuveat.auth.application.port.`in`.ExtractMemberIdUseCase
-import com.celuveat.celeb.adapter.`in`.rest.response.SimpleCelebrityResponse
+import com.celuveat.celeb.adapter.`in`.rest.response.BestCelebrityResponse
 import com.celuveat.celeb.application.port.`in`.AddInterestedCelebrityUseCase
 import com.celuveat.celeb.application.port.`in`.DeleteInterestedCelebrityUseCase
 import com.celuveat.celeb.application.port.`in`.ReadBestCelebritiesUseCase
 import com.celuveat.celeb.application.port.`in`.ReadInterestedCelebritiesUseCase
 import com.celuveat.celeb.application.port.`in`.command.AddInterestedCelebrityCommand
 import com.celuveat.celeb.application.port.`in`.command.DeleteInterestedCelebrityCommand
+import com.celuveat.celeb.application.port.`in`.result.BestCelebrityResult
 import com.celuveat.celeb.application.port.`in`.result.CelebrityResult
-import com.celuveat.celeb.application.port.`in`.result.SimpleCelebrityResult
 import com.celuveat.support.sut
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.navercorp.fixturemonkey.kotlin.giveMeBuilder
@@ -96,11 +96,11 @@ class CelebrityControllerTest(
     }
 
     context("인기 셀럽을 조회 한다") {
-        val results = sut.giveMeBuilder<SimpleCelebrityResult>()
+        val results = sut.giveMeBuilder<BestCelebrityResult>()
             .sampleList(3)
-        val response = results.map { SimpleCelebrityResponse.from(it) }
+        val response = results.map { BestCelebrityResponse.from(it) }
         test("조회 성공") {
-            every { readBestCelebritiesUseCase.readBestCelebrities() } returns results
+            every { readBestCelebritiesUseCase.readBestCelebrities(null) } returns results
 
             mockMvc.get("/celebrities/best").andExpect {
                 status { isOk() }

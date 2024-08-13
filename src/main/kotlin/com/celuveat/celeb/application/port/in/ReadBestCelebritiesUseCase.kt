@@ -1,7 +1,7 @@
 package com.celuveat.celeb.application.port.`in`
 
-import com.celuveat.celeb.application.port.`in`.result.SimpleCelebrityResult
+import com.celuveat.celeb.application.port.`in`.result.BestCelebrityResult
 
 interface ReadBestCelebritiesUseCase {
-    fun readBestCelebrities(): List<SimpleCelebrityResult>
+    fun readBestCelebrities(memberId: Long?): List<BestCelebrityResult>
 }

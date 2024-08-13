@@ -1,8 +1,10 @@
 package com.celuveat.celeb.adapter.`in`.rest.response
 
+import com.celuveat.celeb.application.port.`in`.result.BestCelebrityResult
 import com.celuveat.celeb.application.port.`in`.result.CelebrityResult
 import com.celuveat.celeb.application.port.`in`.result.SimpleCelebrityResult
 import com.celuveat.celeb.application.port.`in`.result.YoutubeContentResult
+import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantPreviewResponse
 import io.swagger.v3.oas.annotations.media.Schema
 
 data class CelebrityResponse(
@@ -127,6 +129,26 @@ data class SimpleCelebrityResponse(
                 id = result.id,
                 name = result.name,
                 profileImageUrl = result.profileImageUrl,
+            )
+        }
+    }
+}
+
+data class BestCelebrityResponse(
+    @Schema(
+        description = "연예인 정보",
+    )
+    val celebrity: SimpleCelebrityResponse,
+    @Schema(
+        description = "식당 정보",
+    )
+    val restaurants: List<RestaurantPreviewResponse>,
+) {
+    companion object {
+        fun from(result: BestCelebrityResult): BestCelebrityResponse {
+            return BestCelebrityResponse(
+                celebrity = SimpleCelebrityResponse.from(result.celebrity),
+                restaurants = result.restaurants.map { RestaurantPreviewResponse.from(it) },
             )
         }
     }
