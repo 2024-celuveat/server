@@ -23,3 +23,7 @@ data object AlreadyClickHelpfulReviewException : ReviewExceptions(HttpStatus.NOT
 data object NotFoundHelpfulReviewException : ReviewExceptions(HttpStatus.NOT_FOUND, "해당 리뷰에 '도움돼요'를 누르지 않았습니다.") {
     private fun readResolve(): Any = NotFoundHelpfulReviewException
 }
+
+data object InvalidStarScoreException : ReviewExceptions(HttpStatus.BAD_REQUEST, "별점은 1 ~ 5 점 사이어야 합니다/.") {
+    private fun readResolve(): Any = InvalidStarScoreException
+}
