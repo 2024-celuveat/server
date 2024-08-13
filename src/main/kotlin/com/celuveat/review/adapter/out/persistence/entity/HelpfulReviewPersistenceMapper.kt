@@ -26,4 +26,14 @@ class HelpfulReviewPersistenceMapper(
             member = memberPersistenceMapper.toDomain(helpfulReview.member),
         )
     }
+
+    fun toDomainWithoutImage(
+        helpfulReview: HelpfulReviewJpaEntity
+    ): HelpfulReview {
+        return HelpfulReview(
+            id = helpfulReview.id,
+            review = reviewPersistenceMapper.toDomain(helpfulReview.review, emptyList()),
+            member = memberPersistenceMapper.toDomain(helpfulReview.member),
+        )
+    }
 }

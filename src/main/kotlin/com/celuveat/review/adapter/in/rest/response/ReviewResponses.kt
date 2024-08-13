@@ -21,6 +21,8 @@ data class ReviewPreviewResponse(
     var views: Long,
     @Schema(description = "리뷰 도움돼요 수", example = "3")
     var helps: Long,
+    @Schema(description = "리뷰 도움돼요 클릭 여부", example = "true")
+    val clickedHelpful: Boolean,
     @Schema(description = "리뷰 이미지 url 들", example = "[\"imgUrl1\", \"imgUrl2\"]")
     var images: List<String>,
     @Schema(description = "리뷰 작성일")
@@ -38,6 +40,7 @@ data class ReviewPreviewResponse(
                 star = review.star.score,
                 views = review.views,
                 helps = review.helps,
+                clickedHelpful = review.clickedHelpful,
                 images = review.images,
                 createdAt = review.createdAt,
                 updatedAt = review.updatedAt,
@@ -61,6 +64,8 @@ data class SingleReviewResponse(
     var views: Long,
     @Schema(description = "리뷰 도움돼요 수", example = "3")
     var helps: Long,
+    @Schema(description = "리뷰 도움돼요 클릭 여부", example = "true")
+    val clickedHelpful: Boolean,
     @Schema(description = "리뷰 이미지들", example = "[\"imgUrl1\", \"imgUrl2\"]")
     var images: List<String>,
     @Schema(description = "리뷰 작성일")
@@ -78,6 +83,7 @@ data class SingleReviewResponse(
                 star = review.star.score,
                 views = review.views,
                 helps = review.helps,
+                clickedHelpful = review.clickedHelpful,
                 images = review.images,
                 createdAt = review.createdAt,
                 updatedAt = review.updatedAt,

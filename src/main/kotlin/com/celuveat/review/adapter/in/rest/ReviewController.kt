@@ -86,6 +86,7 @@ class ReviewController(
 
     @GetMapping("/restaurants/{restaurantId}")
     override fun readAllRestaurantsReviews(
+        @Auth auth: AuthContext,
         @PathVariable restaurantId: Long,
         @PageableDefault(size = 10, page = 0) pageable: Pageable,
     ): SliceResponse<ReviewPreviewResponse> {
@@ -93,6 +94,7 @@ class ReviewController(
             restaurantId = restaurantId,
             page = pageable.pageNumber,
             size = pageable.pageSize,
+            memberId = auth.optionalMemberId()
         )
         return SliceResponse.from(
             sliceResult = reviews,
@@ -102,8 +104,14 @@ class ReviewController(
 
     @GetMapping("/{reviewId}")
     override fun readReview(
+        @Auth auth: AuthContext,
         @PathVariable reviewId: Long,
     ): SingleReviewResponse {
-        return SingleReviewResponse.from(readSingleReviewUseCase.read(id = reviewId))
+        return SingleReviewResponse.from(
+            readSingleReviewUseCase.read(
+                id = reviewId,
+                memberId = auth.optionalMemberId()
+            )
+        )
     }
 }

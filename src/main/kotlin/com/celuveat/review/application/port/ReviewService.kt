@@ -12,8 +12,8 @@ import com.celuveat.review.application.port.`in`.command.UpdateReviewCommand
 import com.celuveat.review.application.port.`in`.command.WriteReviewCommand
 import com.celuveat.review.application.port.out.DeleteHelpfulReviewPort
 import com.celuveat.review.application.port.out.DeleteReviewPort
-import com.celuveat.review.application.port.out.FindHelpfulReviewPort
 import com.celuveat.review.application.port.out.FindReviewPort
+import com.celuveat.review.application.port.out.ReadHelpfulReviewPort
 import com.celuveat.review.application.port.out.SaveHelpfulReviewPort
 import com.celuveat.review.application.port.out.SaveReviewPort
 import com.celuveat.review.domain.ReviewImage
@@ -25,7 +25,7 @@ class ReviewService(
     private val findMemberPort: ReadMemberPort,
     private val findRestaurantPort: ReadRestaurantPort,
     private val findReviewPort: FindReviewPort,
-    private val findHelpfulReviewPort: FindHelpfulReviewPort,
+    private val readHelpfulReviewPort: ReadHelpfulReviewPort,
     private val saveHelpfulReviewPort: SaveHelpfulReviewPort,
     private val saveReviewPort: SaveReviewPort,
     private val deleteReviewPort: DeleteReviewPort,
@@ -65,7 +65,7 @@ class ReviewService(
         reviewId: Long,
     ) {
         throwWhen(
-            findHelpfulReviewPort.existsByReviewAndMember(
+            readHelpfulReviewPort.existsByReviewAndMember(
                 reviewId = reviewId,
                 memberId = memberId,
             ),
@@ -81,7 +81,7 @@ class ReviewService(
         memberId: Long,
         reviewId: Long,
     ) {
-        val helpfulReview = findHelpfulReviewPort.getByReviewAndMember(reviewId, memberId)
+        val helpfulReview = readHelpfulReviewPort.readByReviewAndMember(reviewId, memberId)
         helpfulReview.unClick()
         saveReviewPort.save(helpfulReview.review)
         deleteHelpfulReviewPort.deleteHelpfulReview(helpfulReview)

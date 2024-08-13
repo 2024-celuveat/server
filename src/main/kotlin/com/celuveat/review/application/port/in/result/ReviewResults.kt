@@ -13,12 +13,13 @@ data class ReviewPreviewResult(
     var star: Star,
     var views: Long,
     var helps: Long,
+    val clickedHelpful: Boolean,
     var images: List<String>,
     val createdAt: LocalDateTime = LocalDateTime.now(),
     var updatedAt: LocalDateTime = createdAt,
 ) {
     companion object {
-        fun from(review: Review): ReviewPreviewResult {
+        fun of(review: Review, clickedHelpful: Boolean): ReviewPreviewResult {
             return ReviewPreviewResult(
                 id = review.id,
                 restaurantId = review.restaurant.id,
@@ -27,6 +28,7 @@ data class ReviewPreviewResult(
                 star = review.star,
                 views = review.views,
                 helps = review.helps,
+                clickedHelpful = clickedHelpful,
                 images = review.images.map { it.imageUrl },
                 createdAt = review.createdAt,
                 updatedAt = review.updatedAt,
@@ -43,12 +45,13 @@ data class SingleReviewResult(
     var star: Star,
     var views: Long,
     var helps: Long,
+    val clickedHelpful: Boolean,
     var images: List<String>,
     val createdAt: LocalDateTime = LocalDateTime.now(),
     var updatedAt: LocalDateTime = createdAt,
 ) {
     companion object {
-        fun from(review: Review): SingleReviewResult {
+        fun of(review: Review, clickedHelpful: Boolean): SingleReviewResult {
             return SingleReviewResult(
                 id = review.id,
                 restaurantId = review.restaurant.id,
@@ -57,6 +60,7 @@ data class SingleReviewResult(
                 star = review.star,
                 views = review.views,
                 helps = review.helps,
+                clickedHelpful = clickedHelpful,
                 images = review.images.map { it.imageUrl },
                 createdAt = review.createdAt,
                 updatedAt = review.updatedAt,

@@ -20,4 +20,9 @@ interface HelpfulReviewJpaEntityRepository : JpaRepository<HelpfulReviewJpaEntit
     ): HelpfulReviewJpaEntity {
         return findByMemberIdAndReviewId(memberId, reviewId) ?: throw NotFoundHelpfulReviewException
     }
+
+    fun findAllByMemberIdAndReviewId(
+        memberId: Long,
+        reviewIds: List<Long>,
+    ): List<HelpfulReviewJpaEntity>
 }

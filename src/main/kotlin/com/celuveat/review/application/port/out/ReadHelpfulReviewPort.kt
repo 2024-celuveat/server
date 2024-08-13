@@ -1,9 +1,16 @@
 package com.celuveat.review.application.port.out
 
 import com.celuveat.review.domain.HelpfulReview
+import com.celuveat.review.domain.Review
 
-interface FindHelpfulReviewPort {
-    fun getByReviewAndMember(
+interface ReadHelpfulReviewPort {
+
+    fun readHelpfulReviewByMemberAndReviews(
+        memberId: Long,
+        reviews: List<Review>,
+    ): List<HelpfulReview>
+
+    fun readByReviewAndMember(
         reviewId: Long,
         memberId: Long,
     ): HelpfulReview

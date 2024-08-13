@@ -96,6 +96,7 @@ interface ReviewApi {
         Parameter(name = "size", description = "페이지 크기", example = "10", required = true),
     )
     fun readAllRestaurantsReviews(
+        @Auth auth: AuthContext,
         @Parameter(
             `in` = ParameterIn.PATH,
             description = "음식점 ID",
@@ -109,6 +110,7 @@ interface ReviewApi {
     @Operation(summary = "리뷰 상세조회")
     @GetMapping("/{reviewId}")
     fun readReview(
+        @Auth auth: AuthContext,
         @Parameter(
             `in` = ParameterIn.PATH,
             description = "리뷰 ID",

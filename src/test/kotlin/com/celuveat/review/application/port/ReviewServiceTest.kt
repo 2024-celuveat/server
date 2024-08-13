@@ -8,8 +8,8 @@ import com.celuveat.review.application.port.`in`.command.UpdateReviewCommand
 import com.celuveat.review.application.port.`in`.command.WriteReviewCommand
 import com.celuveat.review.application.port.out.DeleteHelpfulReviewPort
 import com.celuveat.review.application.port.out.DeleteReviewPort
-import com.celuveat.review.application.port.out.FindHelpfulReviewPort
 import com.celuveat.review.application.port.out.FindReviewPort
+import com.celuveat.review.application.port.out.ReadHelpfulReviewPort
 import com.celuveat.review.application.port.out.SaveHelpfulReviewPort
 import com.celuveat.review.application.port.out.SaveReviewPort
 import com.celuveat.review.domain.HelpfulReview
@@ -38,7 +38,7 @@ class ReviewServiceTest : BehaviorSpec({
     val readMemberPort: ReadMemberPort = mockk()
     val readRestaurantPort: ReadRestaurantPort = mockk()
     val findReviewPort: FindReviewPort = mockk()
-    val findHelpfulReviewPort: FindHelpfulReviewPort = mockk()
+    val readHelpfulReviewPort: ReadHelpfulReviewPort = mockk()
     val saveHelpfulReviewPort: SaveHelpfulReviewPort = mockk()
     val saveReviewPort: SaveReviewPort = mockk()
     val deleteReviewPort: DeleteReviewPort = mockk()
@@ -48,7 +48,7 @@ class ReviewServiceTest : BehaviorSpec({
         readMemberPort,
         readRestaurantPort,
         findReviewPort,
-        findHelpfulReviewPort,
+        readHelpfulReviewPort,
         saveHelpfulReviewPort,
         saveReviewPort,
         deleteReviewPort,
@@ -157,7 +157,7 @@ class ReviewServiceTest : BehaviorSpec({
 
         When("해당 리뷰에 도움돼요를 처음 클릭하는 거라면") {
 
-            every { findHelpfulReviewPort.existsByReviewAndMember(1L, 1L) } returns false
+            every { readHelpfulReviewPort.existsByReviewAndMember(1L, 1L) } returns false
             every { readMemberPort.getById(1L) } returns member
             every { findReviewPort.getById(1L) } returns review
             every { saveReviewPort.save(any()) } returns review
@@ -173,7 +173,7 @@ class ReviewServiceTest : BehaviorSpec({
 
         When("이미 해당 리뷰에 대해 도움돼요를 클릭했다면") {
 
-            every { findHelpfulReviewPort.existsByReviewAndMember(1L, 1L) } returns true
+            every { readHelpfulReviewPort.existsByReviewAndMember(1L, 1L) } returns true
             val exception = shouldThrow<AlreadyClickHelpfulReviewException> {
                 reviewService.clickHelpfulReview(1L, 1L)
             }
@@ -194,7 +194,7 @@ class ReviewServiceTest : BehaviorSpec({
 
         When("해당 리뷰에 대해 도움돼요 클릭을 한 적이 없다면") {
 
-            every { findHelpfulReviewPort.getByReviewAndMember(1L, 1L) } throws NotFoundHelpfulReviewException
+            every { readHelpfulReviewPort.readByReviewAndMember(1L, 1L) } throws NotFoundHelpfulReviewException
             val exception = shouldThrow<NotFoundHelpfulReviewException> {
                 reviewService.deleteHelpfulReview(1L, 1L)
             }
@@ -206,7 +206,7 @@ class ReviewServiceTest : BehaviorSpec({
 
         When("해당 리뷰에 대해 도움돼요 클릭을 한 적이 있다면") {
 
-            every { findHelpfulReviewPort.getByReviewAndMember(1L, 1L) } returns helpfulReview
+            every { readHelpfulReviewPort.readByReviewAndMember(1L, 1L) } returns helpfulReview
             every { saveReviewPort.save(any()) } returns review
             every { deleteHelpfulReviewPort.deleteHelpfulReview(any()) } just Runs
             reviewService.deleteHelpfulReview(1L, 1L)
