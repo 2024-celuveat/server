@@ -29,7 +29,10 @@ class HelpfulReviewPersistenceAdapter(
         helpfulReviewJpaEntityRepository.delete(entity)
     }
 
-    override fun readHelpfulReviewByMemberAndReviews(memberId: Long, reviews: List<Review>): List<HelpfulReview> {
+    override fun readHelpfulReviewByMemberAndReviews(
+        memberId: Long,
+        reviews: List<Review>,
+    ): List<HelpfulReview> {
         return helpfulReviewJpaEntityRepository.findAllByMemberIdAndReviewId(memberId, reviews.map { it.id })
             .map { helpfulReviewPersistenceMapper.toDomainWithoutImage(it) }
     }

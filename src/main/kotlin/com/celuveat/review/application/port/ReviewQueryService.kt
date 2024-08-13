@@ -24,13 +24,18 @@ class ReviewQueryService(
         size: Int,
     ): SliceResult<ReviewPreviewResult> {
         val reviewResults = findReviewPort.findAllByRestaurantId(restaurantId, page, size)
-        val reviewHelpfulReviewMapping = (memberId?.let {
-            readHelpfulReviewPort.readHelpfulReviewByMemberAndReviews(it, reviewResults.contents)
-        } ?: emptyList()).associateBy { it.review }
+        val reviewHelpfulReviewMapping = (
+            memberId?.let {
+                readHelpfulReviewPort.readHelpfulReviewByMemberAndReviews(it, reviewResults.contents)
+            } ?: emptyList()
+        ).associateBy { it.review }
         return reviewResults.convertContent { ReviewPreviewResult.of(it, reviewHelpfulReviewMapping.contains(it)) }
     }
 
-    override fun read(memberId: Long?, id: Long): SingleReviewResult {
+    override fun read(
+        memberId: Long?,
+        id: Long,
+    ): SingleReviewResult {
         val review = findReviewPort.getById(id)
         review.increaseView()
         val clickedHelpful =

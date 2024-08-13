@@ -19,7 +19,10 @@ data class ReviewPreviewResult(
     var updatedAt: LocalDateTime = createdAt,
 ) {
     companion object {
-        fun of(review: Review, clickedHelpful: Boolean): ReviewPreviewResult {
+        fun of(
+            review: Review,
+            clickedHelpful: Boolean,
+        ): ReviewPreviewResult {
             return ReviewPreviewResult(
                 id = review.id,
                 restaurantId = review.restaurant.id,
@@ -51,7 +54,10 @@ data class SingleReviewResult(
     var updatedAt: LocalDateTime = createdAt,
 ) {
     companion object {
-        fun of(review: Review, clickedHelpful: Boolean): SingleReviewResult {
+        fun of(
+            review: Review,
+            clickedHelpful: Boolean,
+        ): SingleReviewResult {
             return SingleReviewResult(
                 id = review.id,
                 restaurantId = review.restaurant.id,

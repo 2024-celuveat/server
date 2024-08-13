@@ -94,7 +94,7 @@ class ReviewController(
             restaurantId = restaurantId,
             page = pageable.pageNumber,
             size = pageable.pageSize,
-            memberId = auth.optionalMemberId()
+            memberId = auth.optionalMemberId(),
         )
         return SliceResponse.from(
             sliceResult = reviews,
@@ -110,8 +110,8 @@ class ReviewController(
         return SingleReviewResponse.from(
             readSingleReviewUseCase.read(
                 id = reviewId,
-                memberId = auth.optionalMemberId()
-            )
+                memberId = auth.optionalMemberId(),
+            ),
         )
     }
 }
