@@ -33,7 +33,7 @@ class HelpfulReviewPersistenceAdapter(
         memberId: Long,
         reviews: List<Review>,
     ): List<HelpfulReview> {
-        return helpfulReviewJpaEntityRepository.findAllByMemberIdAndReviewId(memberId, reviews.map { it.id })
+        return helpfulReviewJpaEntityRepository.findAllByMemberIdAndReviewIdIn(memberId, reviews.map { it.id })
             .map { helpfulReviewPersistenceMapper.toDomainWithoutImage(it) }
     }
 
