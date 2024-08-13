@@ -6,12 +6,14 @@ import com.celuveat.common.adapter.`in`.rest.response.SliceResponse
 import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantPreviewResponse
 import com.celuveat.restaurant.application.port.`in`.AddInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.DeleteInterestedRestaurantsUseCase
+import com.celuveat.restaurant.application.port.`in`.ReadCelebrityRecommendRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityVisitedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.command.AddInterestedRestaurantCommand
 import com.celuveat.restaurant.application.port.`in`.command.DeleteInterestedRestaurantCommand
-import com.celuveat.restaurant.application.port.`in`.query.GetInterestedRestaurantsQuery
+import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityRecommendRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
+import com.celuveat.restaurant.application.port.`in`.query.ReadInterestedRestaurantsQuery
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -28,6 +30,7 @@ class RestaurantController(
     private val addInterestedRestaurantsUseCase: AddInterestedRestaurantsUseCase,
     private val deleteInterestedRestaurantsUseCase: DeleteInterestedRestaurantsUseCase,
     private val readCelebrityVisitedRestaurantUseCase: ReadCelebrityVisitedRestaurantUseCase,
+    private val readCelebrityRecommendRestaurantsUseCase: ReadCelebrityRecommendRestaurantsUseCase,
 ) : RestaurantApi {
     @GetMapping("/interested")
     override fun getInterestedRestaurants(
@@ -35,12 +38,12 @@ class RestaurantController(
         @PageableDefault(size = 10, page = 0) pageable: Pageable,
     ): SliceResponse<RestaurantPreviewResponse> {
         val memberId = auth.memberId()
-        val query = GetInterestedRestaurantsQuery(
+        val query = ReadInterestedRestaurantsQuery(
             memberId = memberId,
             page = pageable.pageNumber,
             size = pageable.pageSize,
         )
-        val interestedRestaurant = readInterestedRestaurantsUseCase.getInterestedRestaurant(query)
+        val interestedRestaurant = readInterestedRestaurantsUseCase.readInterestedRestaurant(query)
         return SliceResponse.from(
             sliceResult = interestedRestaurant,
             converter = RestaurantPreviewResponse::from,
@@ -91,5 +94,15 @@ class RestaurantController(
             sliceResult = visitedRestaurant,
             converter = RestaurantPreviewResponse::from,
         )
+    }
+
+    @GetMapping("/celebrity/recommend")
+    override fun readCelebrityRecommendRestaurants(
+        @Auth auth: AuthContext
+    ): List<RestaurantPreviewResponse> {
+        val memberId = auth.optionalMemberId()
+        val query = ReadCelebrityRecommendRestaurantsQuery(memberId = memberId)
+        val interestedRestaurant = readCelebrityRecommendRestaurantsUseCase.readCelebrityRecommendRestaurants(query)
+        return interestedRestaurant.map(RestaurantPreviewResponse::from)
     }
 }

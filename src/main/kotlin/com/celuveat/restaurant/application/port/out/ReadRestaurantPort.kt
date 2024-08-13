@@ -11,4 +11,6 @@ interface ReadRestaurantPort {
     ): SliceResult<Restaurant>
 
     fun getById(id: Long): Restaurant
+
+    fun findCelebrityRecommendRestaurant(): List<Restaurant>
 }

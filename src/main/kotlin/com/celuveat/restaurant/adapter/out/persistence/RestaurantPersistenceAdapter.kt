@@ -43,6 +43,18 @@ class RestaurantPersistenceAdapter(
         return restaurantPersistenceMapper.toDomainWithoutImage(restaurantJpaRepository.getById(id))
     }
 
+    override fun findCelebrityRecommendRestaurant(): List<Restaurant> {
+        val restaurants = celebrityRestaurantJpaRepository.findMostVisitedRestaurantsTop10()
+        val imagesByRestaurants = restaurantImageJpaRepository.findByRestaurantIn(restaurants)
+            .groupBy { it.restaurant.id }
+        return restaurants.map {
+            restaurantPersistenceMapper.toDomain(
+                it,
+                imagesByRestaurants[it.id]!!,
+            )
+        }
+    }
+
     companion object {
         val LATEST_SORTER = Sort.by("createdAt").descending()
     }
