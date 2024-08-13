@@ -97,7 +97,7 @@ class RestaurantPersistenceAdapterTest(
                     celebrity = savedCelebrities[1],
                     restaurant = restaurantB,
                 ),
-            )
+            ),
         ) // 음식점 A는 3명, 음식점 B는 2명의 셀럽이 방문
 
         restaurantImageJpaRepository.saveAll(

@@ -179,7 +179,7 @@ class RestaurantQueryServiceTest : BehaviorSpec({
 
             val readCelebrityRecommendRestaurantsQuery = ReadCelebrityRecommendRestaurantsQuery(memberId = memberId)
             val recommendRestaurants = restaurantQueryService.readCelebrityRecommendRestaurants(
-                readCelebrityRecommendRestaurantsQuery
+                readCelebrityRecommendRestaurantsQuery,
             )
 
             Then("관심 등록 여부가 포함되어 응답한다") {
@@ -196,7 +196,7 @@ class RestaurantQueryServiceTest : BehaviorSpec({
             every { readCelebritiesPort.findVisitedCelebritiesByRestaurants(restaurantIds) } returns celebritiesByRestaurants
             val readCelebrityRecommendRestaurantsQuery = ReadCelebrityRecommendRestaurantsQuery(memberId = null)
             val recommendRestaurants = restaurantQueryService.readCelebrityRecommendRestaurants(
-                readCelebrityRecommendRestaurantsQuery
+                readCelebrityRecommendRestaurantsQuery,
             )
 
             Then("관심 등록 여부는 false로 응답한다") {

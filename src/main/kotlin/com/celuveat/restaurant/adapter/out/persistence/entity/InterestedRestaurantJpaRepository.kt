@@ -30,7 +30,7 @@ interface InterestedRestaurantJpaRepository : JpaRepository<InterestedRestaurant
         FROM InterestedRestaurantJpaEntity ir
         WHERE ir.member.id = :memberId
         AND ir.restaurant.id IN :ids
-    """
+    """,
     )
     fun findAllByMemberIdAndIdIn(
         memberId: Long,

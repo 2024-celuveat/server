@@ -69,6 +69,6 @@ class RestaurantQueryService(
 
     private fun readInterestedRestaurants(
         memberId: Long?,
-        restaurantIds: List<Long>
+        restaurantIds: List<Long>,
     ) = memberId?.let { readInterestedRestaurantPort.findInterestedRestaurantsByIds(it, restaurantIds) } ?: emptyList()
 }
