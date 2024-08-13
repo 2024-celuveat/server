@@ -12,15 +12,15 @@ class HelpfulReviewPersistenceMapper(
     fun toEntity(helpfulReview: HelpfulReview): HelpfulReviewJpaEntity {
         return HelpfulReviewJpaEntity(
             review = reviewPersistenceMapper.toEntity(helpfulReview.review),
-            member = memberPersistenceMapper.toEntity(helpfulReview.clicker),
+            member = memberPersistenceMapper.toEntity(helpfulReview.member),
         )
     }
 
-    fun toDomain(entity: HelpfulReviewJpaEntity): HelpfulReview {
+    fun toDomain(helpfulReview: HelpfulReviewJpaEntity, images: List<ReviewImageJpaEntity>): HelpfulReview {
         return HelpfulReview(
-            id = entity.id,
-            review = reviewPersistenceMapper.toDomain(entity.review),
-            clicker = memberPersistenceMapper.toDomain(entity.member),
+            id = helpfulReview.id,
+            review = reviewPersistenceMapper.toDomain(helpfulReview.review, images),
+            member = memberPersistenceMapper.toDomain(helpfulReview.member),
         )
     }
 }

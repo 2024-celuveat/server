@@ -41,9 +41,9 @@ class Review(
         views += 1
     }
 
-    fun clickHelpful(clicker: Member): HelpfulReview {
+    fun clickHelpful(member: Member): HelpfulReview {
         helps += 1
-        return HelpfulReview(review = this, clicker = clicker)
+        return HelpfulReview(review = this, member = member)
     }
 
     fun unClickHelpful() {

@@ -2,6 +2,8 @@ package com.celuveat.review.adapter.out.persistence
 
 import com.celuveat.common.annotation.Adapter
 import com.celuveat.common.application.port.`in`.result.SliceResult
+import com.celuveat.review.adapter.out.persistence.entity.ReviewImageJpaEntityRepository
+import com.celuveat.review.adapter.out.persistence.entity.ReviewImagePersistenceMapper
 import com.celuveat.review.adapter.out.persistence.entity.ReviewJpaEntityRepository
 import com.celuveat.review.adapter.out.persistence.entity.ReviewPersistenceMapper
 import com.celuveat.review.application.port.out.DeleteReviewPort
@@ -10,17 +12,25 @@ import com.celuveat.review.application.port.out.SaveReviewPort
 import com.celuveat.review.domain.Review
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
+import org.springframework.transaction.annotation.Transactional
 
 // TODO test
 @Adapter
 class ReviewPersistenceAdapter(
     private val reviewJpaEntityRepository: ReviewJpaEntityRepository,
     private val reviewPersistenceMapper: ReviewPersistenceMapper,
+    private val reviewImagePersistenceMapper: ReviewImagePersistenceMapper,
+    private val reviewImageJpaEntityRepository: ReviewImageJpaEntityRepository
 ) : SaveReviewPort, DeleteReviewPort, FindReviewPort {
+    @Transactional
     override fun save(review: Review): Review {
-        val entity = reviewPersistenceMapper.toEntity(review)
-        val saved = reviewJpaEntityRepository.save(entity)
-        return reviewPersistenceMapper.toDomain(saved)
+        // TODO 이대로면 리뷰 조회시마다 image 계속 제거 & 등록됨. 언젠가 개선할 것.
+        val reviewEntity = reviewPersistenceMapper.toEntity(review)
+        reviewImageJpaEntityRepository.deleteAllByReviewId(reviewEntity.id)
+        val savedReview = reviewJpaEntityRepository.save(reviewEntity)
+        val images = review.images.map { reviewImagePersistenceMapper.toEntity(savedReview, it) }
+        val savedImages = reviewImageJpaEntityRepository.saveAll(images)
+        return reviewPersistenceMapper.toDomain(savedReview, savedImages)
     }
 
     override fun delete(review: Review) {
@@ -30,7 +40,8 @@ class ReviewPersistenceAdapter(
 
     override fun getById(reviewId: Long): Review {
         val review = reviewJpaEntityRepository.getById(reviewId)
-        return reviewPersistenceMapper.toDomain(review)
+        val images = reviewImageJpaEntityRepository.findAllByReview(review)
+        return reviewPersistenceMapper.toDomain(review, images)
     }
 
     override fun findAllByRestaurantId(
@@ -41,7 +52,12 @@ class ReviewPersistenceAdapter(
         val pageRequest = PageRequest.of(page, size, LATEST_SORTER)
         val reviews = reviewJpaEntityRepository.findAllByRestaurantId(restaurantsId, pageRequest)
         return SliceResult.of(
-            contents = reviews.content.map { reviewPersistenceMapper.toDomain(it) },
+            contents = reviews.content.map {
+                reviewPersistenceMapper.toDomain(
+                    it,
+                    reviewImageJpaEntityRepository.findAllByReview(it)
+                )
+            },
             currentPage = page,
             hasNext = reviews.hasNext(),
         )
