@@ -20,7 +20,7 @@ class ReviewPersistenceAdapter(
     private val reviewJpaEntityRepository: ReviewJpaEntityRepository,
     private val reviewPersistenceMapper: ReviewPersistenceMapper,
     private val reviewImagePersistenceMapper: ReviewImagePersistenceMapper,
-    private val reviewImageJpaEntityRepository: ReviewImageJpaEntityRepository
+    private val reviewImageJpaEntityRepository: ReviewImageJpaEntityRepository,
 ) : SaveReviewPort, DeleteReviewPort, FindReviewPort {
     @Transactional
     override fun save(review: Review): Review {
@@ -55,7 +55,7 @@ class ReviewPersistenceAdapter(
             contents = reviews.content.map {
                 reviewPersistenceMapper.toDomain(
                     it,
-                    reviewImageJpaEntityRepository.findAllByReview(it)
+                    reviewImageJpaEntityRepository.findAllByReview(it),
                 )
             },
             currentPage = page,

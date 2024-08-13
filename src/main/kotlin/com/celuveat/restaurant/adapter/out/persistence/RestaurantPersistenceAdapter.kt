@@ -16,7 +16,7 @@ class RestaurantPersistenceAdapter(
     private val restaurantImageJpaRepository: RestaurantImageJpaRepository,
     private val restaurantPersistenceMapper: RestaurantPersistenceMapper,
     private val celebrityRestaurantJpaRepository: CelebrityRestaurantJpaRepository,
-    private val restaurantJpaRepository: RestaurantJpaRepository
+    private val restaurantJpaRepository: RestaurantJpaRepository,
 ) : ReadRestaurantPort {
     override fun findVisitedRestaurantByCelebrity(
         celebrityId: Long,

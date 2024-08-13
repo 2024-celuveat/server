@@ -34,7 +34,6 @@ class ReviewJpaEntity(
     createdAt: LocalDateTime,
     updatedAt: LocalDateTime,
 ) : RootEntity<Long>() {
-
     init {
         this.createdAt = createdAt
         this.updatedAt = updatedAt

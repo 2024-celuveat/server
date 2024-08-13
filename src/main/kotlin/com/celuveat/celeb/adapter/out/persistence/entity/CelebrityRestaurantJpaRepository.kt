@@ -26,7 +26,7 @@ interface CelebrityRestaurantJpaRepository : JpaRepository<CelebrityRestaurantJp
         GROUP BY cr.restaurant
         ORDER BY COUNT(cr.celebrity) DESC
         LIMIT 10
-    """
+    """,
     )
     fun findMostVisitedRestaurantsTop10(): List<RestaurantJpaEntity>
 }

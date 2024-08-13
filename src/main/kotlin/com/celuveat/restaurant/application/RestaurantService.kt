@@ -19,7 +19,7 @@ class RestaurantService(
 ) : AddInterestedRestaurantsUseCase, DeleteInterestedRestaurantsUseCase {
     override fun addInterestedRestaurant(command: AddInterestedRestaurantCommand) {
         throwWhen(
-            readInterestedRestaurantPort.existsInterestedRestaurant(command.memberId, command.restaurantId)
+            readInterestedRestaurantPort.existsInterestedRestaurant(command.memberId, command.restaurantId),
         ) { AlreadyInterestedRestaurantException }
         saveInterestedRestaurantPort.saveInterestedRestaurant(
             memberId = command.memberId,

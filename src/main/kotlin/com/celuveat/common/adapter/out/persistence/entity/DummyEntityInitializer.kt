@@ -19,11 +19,11 @@ import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantImageJpa
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantImageJpaRepository
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantJpaEntity
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantJpaRepository
-import java.time.LocalDate
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.annotation.Profile
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
+import java.time.LocalDate
 
 @Component
 @Profile("local", "prod")
@@ -38,7 +38,6 @@ class DummyEntityInitializer(
     private val restaurantJpaRepository: RestaurantJpaRepository,
     private val restaurantImageJpaRepository: RestaurantImageJpaRepository,
 ) {
-
     @EventListener(ApplicationReadyEvent::class)
     fun initializeData() {
         saveMember()
@@ -296,27 +295,27 @@ class DummyEntityInitializer(
             CelebrityJpaEntity(
                 name = "성시경",
                 profileImageUrl = "https://yt3.googleusercontent.com/vQrdlCaT4Tx1axJtSUa1oxp2zlnRxH-oMreTwWqB-2tdNFStIOrWWw-0jwPvVCUEjm_MywltBFY=s176-c-k-c0x00ffffff-no-rj",
-                introduction = "성시경"
+                introduction = "성시경",
             ),
             CelebrityJpaEntity(
                 name = "이원일",
                 profileImageUrl = "https://search.pstatic.net/common?type=b&size=216&expire=1&refresh=true&quality=100&direct=true&src=http%3A%2F%2Fsstatic.naver.net%2Fpeople%2Fportrait%2F201808%2F20180801002809461.jpg",
-                introduction = "셰프 이원일"
+                introduction = "셰프 이원일",
             ),
             CelebrityJpaEntity(
                 name = "홍석천",
                 profileImageUrl = "https://search.pstatic.net/common?type=b&size=216&expire=1&refresh=true&quality=100&direct=true&src=http%3A%2F%2Fsstatic.naver.net%2Fpeople%2Fportrait%2F201404%2F20140405221057493-4339837.jpg",
-                introduction = "홍석천"
+                introduction = "홍석천",
             ),
             CelebrityJpaEntity(
                 name = "먹적",
                 profileImageUrl = "https://yt3.googleusercontent.com/ytc/AOPolaQ0vUJt9JWhig6GY1lWLPt_qIRiH-cKgO5Nnl5uicQ=s176-c-k-c0x00ffffff-no-rj",
-                introduction = "스시 먹적"
+                introduction = "스시 먹적",
             ),
             CelebrityJpaEntity(
                 name = "빅페이스",
                 profileImageUrl = "https://yt3.googleusercontent.com/ytc/AOPolaTCwJ_nAk7CRvRT5S6fL7pfYse6O7IZeANzxGamDQ=s176-c-k-c0x00ffffff-no-rj",
-                introduction = "빅페이스"
+                introduction = "빅페이스",
             ),
         )
         return celebrityJpaRepository.saveAll(celebrities)
@@ -461,7 +460,7 @@ class DummyEntityInitializer(
 
     private fun saveCelebrityYoutubeContents(
         savedCelebrities: List<CelebrityJpaEntity>,
-        savedYoutubeContents: List<YoutubeContentJpaEntity>
+        savedYoutubeContents: List<YoutubeContentJpaEntity>,
     ) {
         val celebrityYoutubeContents = listOf(
             CelebrityYoutubeContentJpaEntity(
@@ -608,7 +607,6 @@ class DummyEntityInitializer(
                 celebrity = savedCelebrities[1],
                 restaurant = savedRestaurants[8],
             ),
-
             // [셀럽C] -> [컨텐츠B, C] 에 출연
             CelebrityRestaurantJpaEntity(
                 celebrity = savedCelebrities[2],
@@ -717,7 +715,7 @@ class DummyEntityInitializer(
                 *restaurantsInVideoOfContentC.toTypedArray(),
                 *restaurantsInVideoOfContentD.toTypedArray(),
                 *restaurantsInVideoOfContentE.toTypedArray(),
-            )
+            ),
         )
         celebrityRestaurantJpaRepository.saveAll(
             listOf(
@@ -725,7 +723,7 @@ class DummyEntityInitializer(
                 *celebrityRestaurantBC.toTypedArray(),
                 *celebrityRestaurantD.toTypedArray(),
                 *celebrityRestaurantE.toTypedArray(),
-            )
+            ),
         )
     }
 }

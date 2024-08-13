@@ -38,7 +38,7 @@ class ReviewPersistenceAdapterTest(
     restaurantJpaRepository: RestaurantJpaRepository,
     reviewJpaEntityRepository: ReviewJpaEntityRepository,
     reviewImageJpaEntityRepository: ReviewImageJpaEntityRepository,
-    reviewJpaAdapter: ReviewPersistenceAdapter
+    reviewJpaAdapter: ReviewPersistenceAdapter,
 ) : BehaviorSpec({
 
     Given("리뷰 save 시") {
@@ -57,7 +57,7 @@ class ReviewPersistenceAdapterTest(
             writer = member,
             content = "hi",
             star = FOUR,
-            images = listOf(ReviewImage("1"), ReviewImage("2"))
+            images = listOf(ReviewImage("1"), ReviewImage("2")),
         )
 
         When("이미 저장된 리뷰에 대해 save 를 재호출한 경우") {

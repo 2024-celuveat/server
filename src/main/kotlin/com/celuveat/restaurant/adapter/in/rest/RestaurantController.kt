@@ -98,7 +98,7 @@ class RestaurantController(
 
     @GetMapping("/celebrity/recommend")
     override fun readCelebrityRecommendRestaurants(
-        @Auth auth: AuthContext
+        @Auth auth: AuthContext,
     ): List<RestaurantPreviewResponse> {
         val memberId = auth.optionalMemberId()
         val query = ReadCelebrityRecommendRestaurantsQuery(memberId = memberId)

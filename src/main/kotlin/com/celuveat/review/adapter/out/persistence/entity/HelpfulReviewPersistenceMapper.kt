@@ -16,7 +16,10 @@ class HelpfulReviewPersistenceMapper(
         )
     }
 
-    fun toDomain(helpfulReview: HelpfulReviewJpaEntity, images: List<ReviewImageJpaEntity>): HelpfulReview {
+    fun toDomain(
+        helpfulReview: HelpfulReviewJpaEntity,
+        images: List<ReviewImageJpaEntity>,
+    ): HelpfulReview {
         return HelpfulReview(
             id = helpfulReview.id,
             review = reviewPersistenceMapper.toDomain(helpfulReview.review, images),
