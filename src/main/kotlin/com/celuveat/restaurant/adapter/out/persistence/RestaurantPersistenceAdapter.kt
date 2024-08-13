@@ -4,6 +4,7 @@ import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityRestaurantJpaR
 import com.celuveat.common.annotation.Adapter
 import com.celuveat.common.application.port.`in`.result.SliceResult
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantImageJpaRepository
+import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantJpaRepository
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantPersistenceMapper
 import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
 import com.celuveat.restaurant.domain.Restaurant
@@ -15,6 +16,7 @@ class RestaurantPersistenceAdapter(
     private val restaurantImageJpaRepository: RestaurantImageJpaRepository,
     private val restaurantPersistenceMapper: RestaurantPersistenceMapper,
     private val celebrityRestaurantJpaRepository: CelebrityRestaurantJpaRepository,
+    private val restaurantJpaRepository: RestaurantJpaRepository,
 ) : ReadRestaurantPort {
     override fun findVisitedRestaurantByCelebrity(
         celebrityId: Long,
@@ -35,6 +37,10 @@ class RestaurantPersistenceAdapter(
             currentPage = page,
             hasNext = restaurantSlice.hasNext(),
         )
+    }
+
+    override fun getById(id: Long): Restaurant {
+        return restaurantPersistenceMapper.toDomainWithoutImage(restaurantJpaRepository.getById(id))
     }
 
     override fun findCelebrityRecommendRestaurant(): List<Restaurant> {
