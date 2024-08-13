@@ -16,8 +16,8 @@ interface CelebrityJpaRepository : JpaRepository<CelebrityJpaEntity, Long> {
             FROM CelebrityYoutubeContentJpaEntity cyc
             JOIN cyc.youtubeContent yc
             JOIN cyc.celebrity c
-            ORDER BY yc.subscriberCount DESC LIMIT 15
+            ORDER BY yc.subscriberCount DESC LIMIT 10
         """,
     )
-    fun findAllBySubscriberCountDescTop15(): Set<CelebrityJpaEntity>
+    fun findAllBySubscriberCountDescTop10(): Set<CelebrityJpaEntity>
 }

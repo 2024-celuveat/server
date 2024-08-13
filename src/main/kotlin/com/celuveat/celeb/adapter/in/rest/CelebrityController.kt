@@ -2,8 +2,8 @@ package com.celuveat.celeb.adapter.`in`.rest
 
 import com.celuveat.auth.adaptor.`in`.rest.Auth
 import com.celuveat.auth.adaptor.`in`.rest.AuthContext
+import com.celuveat.celeb.adapter.`in`.rest.response.BestCelebrityResponse
 import com.celuveat.celeb.adapter.`in`.rest.response.CelebrityResponse
-import com.celuveat.celeb.adapter.`in`.rest.response.SimpleCelebrityResponse
 import com.celuveat.celeb.application.port.`in`.AddInterestedCelebrityUseCase
 import com.celuveat.celeb.application.port.`in`.DeleteInterestedCelebrityUseCase
 import com.celuveat.celeb.application.port.`in`.ReadBestCelebritiesUseCase
@@ -55,7 +55,11 @@ class CelebrityController(
     }
 
     @GetMapping("/best")
-    override fun readBestCelebrities(): List<SimpleCelebrityResponse> {
-        return readBestCelebritiesUseCase.readBestCelebrities().map { SimpleCelebrityResponse.from(it) }
+    override fun readBestCelebrities(
+        @Auth auth: AuthContext,
+    ): List<BestCelebrityResponse> {
+        val optionalMemberId = auth.optionalMemberId()
+        val celebritiesResults = readBestCelebritiesUseCase.readBestCelebrities(optionalMemberId)
+        return celebritiesResults.map { BestCelebrityResponse.from(it) }
     }
 }

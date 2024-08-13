@@ -1,6 +1,7 @@
 package com.celuveat.celeb.application.port.`in`.result
 
 import com.celuveat.celeb.domain.Celebrity
+import com.celuveat.restaurant.application.port.`in`.result.RestaurantPreviewResult
 
 data class CelebrityResult(
     val id: Long,
@@ -37,3 +38,8 @@ data class SimpleCelebrityResult(
         }
     }
 }
+
+data class BestCelebrityResult(
+    val celebrity: SimpleCelebrityResult,
+    val restaurants: List<RestaurantPreviewResult>,
+)
