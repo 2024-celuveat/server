@@ -2,7 +2,6 @@ package com.celuveat.celeb.adapter.out.persistence
 
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityJpaEntity
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityJpaRepository
-import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityPersistenceMapper
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityYoutubeContentJpaEntity
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityYoutubeContentJpaRepository
 import com.celuveat.celeb.adapter.out.persistence.entity.RestaurantInVideoJpaEntity
@@ -11,9 +10,9 @@ import com.celuveat.celeb.adapter.out.persistence.entity.VideoJpaEntity
 import com.celuveat.celeb.adapter.out.persistence.entity.VideoJpaRepository
 import com.celuveat.celeb.adapter.out.persistence.entity.YoutubeContentJpaEntity
 import com.celuveat.celeb.adapter.out.persistence.entity.YoutubeContentJpaRepository
-import com.celuveat.common.adapter.out.persistence.JpaConfig
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantJpaEntity
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantJpaRepository
+import com.celuveat.support.PersistenceAdapterTest
 import com.celuveat.support.sut
 import com.navercorp.fixturemonkey.kotlin.giveMeBuilder
 import com.navercorp.fixturemonkey.kotlin.set
@@ -21,11 +20,8 @@ import io.kotest.assertions.assertSoftly
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.context.annotation.Import
 
-@Import(CelebrityPersistenceAdapter::class, CelebrityPersistenceMapper::class, JpaConfig::class)
-@DataJpaTest
+@PersistenceAdapterTest
 class CelebrityPersistenceAdapterTest(
     private val celebrityPersistenceAdapter: CelebrityPersistenceAdapter,
     private val celebrityJpaRepository: CelebrityJpaRepository,

@@ -4,12 +4,11 @@ import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityJpaEntity
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityJpaRepository
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityRestaurantJpaEntity
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityRestaurantJpaRepository
-import com.celuveat.common.adapter.out.persistence.JpaConfig
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantImageJpaEntity
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantImageJpaRepository
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantJpaEntity
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantJpaRepository
-import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantPersistenceMapper
+import com.celuveat.support.PersistenceAdapterTest
 import com.celuveat.support.sut
 import com.navercorp.fixturemonkey.kotlin.giveMeBuilder
 import com.navercorp.fixturemonkey.kotlin.giveMeOne
@@ -17,11 +16,8 @@ import com.navercorp.fixturemonkey.kotlin.set
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContainInOrder
 import io.kotest.matchers.shouldBe
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.context.annotation.Import
 
-@Import(RestaurantPersistenceAdapter::class, RestaurantPersistenceMapper::class, JpaConfig::class)
-@DataJpaTest
+@PersistenceAdapterTest
 class RestaurantPersistenceAdapterTest(
     private val restaurantPersistenceAdapter: RestaurantPersistenceAdapter,
     private val restaurantJpaRepository: RestaurantJpaRepository,

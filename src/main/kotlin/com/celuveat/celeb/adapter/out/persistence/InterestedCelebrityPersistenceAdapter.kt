@@ -29,7 +29,7 @@ class InterestedCelebrityPersistenceAdapter(
         return interestedCelebrities.map {
             interestedCelebrityPersistenceMapper.toDomain(
                 it,
-                youtubeContentsByCelebrity[it.id]!!,
+                youtubeContentsByCelebrity[it.celebrity.id]!!,
             )
         }
     }
