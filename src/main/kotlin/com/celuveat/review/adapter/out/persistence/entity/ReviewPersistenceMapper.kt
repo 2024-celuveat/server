@@ -13,19 +13,19 @@ class ReviewPersistenceMapper(
     private val restaurantPersistenceMapper: RestaurantPersistenceMapper,
 ) {
     fun toDomain(
-        entity: ReviewJpaEntity,
+        review: ReviewJpaEntity,
         images: List<ReviewImageJpaEntity>,
     ): Review {
         return Review(
-            id = entity.id,
-            restaurant = restaurantPersistenceMapper.toDomainWithoutImage(entity.restaurant),
-            writer = memberPersistenceMapper.toDomain(entity.writer),
-            content = entity.content,
-            star = Star.from(entity.star),
-            views = entity.views,
-            helps = entity.helps,
-            createdAt = entity.createdAt,
-            updatedAt = entity.updatedAt,
+            id = review.id,
+            restaurant = restaurantPersistenceMapper.toDomainWithoutImage(review.restaurant),
+            writer = memberPersistenceMapper.toDomain(review.writer),
+            content = review.content,
+            star = Star.from(review.star),
+            views = review.views,
+            helps = review.helps,
+            createdAt = review.createdAt,
+            updatedAt = review.updatedAt,
             images = images.map { ReviewImage(it.imageUrl) },
         )
     }

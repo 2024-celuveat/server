@@ -6,6 +6,6 @@ interface WithdrawSocialMemberPort {
     fun withdraw(
         authCode: String,
         socialLoginType: SocialLoginType,
-        redirectUrl: String,
+        requestOrigin: String,
     )
 }

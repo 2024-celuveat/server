@@ -16,8 +16,8 @@ import javax.crypto.SecretKey
 class TokenAdaptor(
     tokenProperty: TokenProperty,
 ) : CreateTokenPort, ExtractClaimPort {
-    private val secretKey: SecretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(tokenProperty.secretKey))
-    private val accessTokenExpirationMillis: Long = tokenProperty.accessTokenExpirationMillis
+    private final val secretKey: SecretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(tokenProperty.secretKey))
+    private final val accessTokenExpirationMillis: Long = tokenProperty.accessTokenExpirationMillis
 
     override fun create(
         key: String,
