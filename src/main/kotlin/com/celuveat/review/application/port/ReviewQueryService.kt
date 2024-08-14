@@ -10,7 +10,6 @@ import com.celuveat.review.application.port.out.ReadHelpfulReviewPort
 import com.celuveat.review.application.port.out.SaveReviewPort
 import org.springframework.stereotype.Service
 
-// TODO test
 @Service
 class ReviewQueryService(
     private val findReviewPort: FindReviewPort,
@@ -26,16 +25,16 @@ class ReviewQueryService(
         val reviewResults = findReviewPort.findAllByRestaurantId(restaurantId, page, size)
         val reviewHelpfulReviewMapping = memberId?.let {
             readHelpfulReviewPort.readHelpfulReviewByMemberAndReviews(it, reviewResults.contents)
-                .map { interested -> interested.review }.toSet()
+                .map { helpful -> helpful.review }.toSet()
         } ?: emptySet()
         return reviewResults.convertContent { ReviewPreviewResult.of(it, reviewHelpfulReviewMapping.contains(it)) }
     }
 
     override fun read(
         memberId: Long?,
-        id: Long,
+        reviewId: Long,
     ): SingleReviewResult {
-        val review = findReviewPort.getById(id)
+        val review = findReviewPort.getById(reviewId)
         review.increaseView()
         saveReviewPort.save(review)
         val clickedHelpful = memberId?.let {

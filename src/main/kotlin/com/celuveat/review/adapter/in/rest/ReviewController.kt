@@ -109,7 +109,7 @@ class ReviewController(
     ): SingleReviewResponse {
         return SingleReviewResponse.from(
             readSingleReviewUseCase.read(
-                id = reviewId,
+                reviewId = reviewId,
                 memberId = auth.optionalMemberId(),
             ),
         )
