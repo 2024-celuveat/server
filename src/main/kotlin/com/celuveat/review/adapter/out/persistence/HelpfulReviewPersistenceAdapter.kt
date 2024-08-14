@@ -9,6 +9,7 @@ import com.celuveat.review.application.port.out.ReadHelpfulReviewPort
 import com.celuveat.review.application.port.out.SaveHelpfulReviewPort
 import com.celuveat.review.domain.HelpfulReview
 import com.celuveat.review.domain.Review
+import org.springframework.transaction.annotation.Transactional
 
 // TODO test
 @Adapter
@@ -17,6 +18,7 @@ class HelpfulReviewPersistenceAdapter(
     private val helpfulReviewPersistenceMapper: HelpfulReviewPersistenceMapper,
     private val reviewImageJpaRepository: ReviewImageJpaRepository,
 ) : SaveHelpfulReviewPort, ReadHelpfulReviewPort, DeleteHelpfulReviewPort {
+    @Transactional
     override fun save(helpfulReview: HelpfulReview): HelpfulReview {
         val entity = helpfulReviewPersistenceMapper.toEntity(helpfulReview)
         val saved = helpfulReviewJpaRepository.save(entity)
@@ -24,6 +26,7 @@ class HelpfulReviewPersistenceAdapter(
         return helpfulReviewPersistenceMapper.toDomain(saved, images)
     }
 
+    @Transactional
     override fun deleteHelpfulReview(helpfulReview: HelpfulReview) {
         val entity = helpfulReviewPersistenceMapper.toEntity(helpfulReview)
         helpfulReviewJpaRepository.delete(entity)
