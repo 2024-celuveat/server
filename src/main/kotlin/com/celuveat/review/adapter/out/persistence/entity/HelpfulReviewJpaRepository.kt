@@ -3,7 +3,7 @@ package com.celuveat.review.adapter.out.persistence.entity
 import com.celuveat.review.exception.NotFoundHelpfulReviewException
 import org.springframework.data.jpa.repository.JpaRepository
 
-interface HelpfulReviewJpaEntityRepository : JpaRepository<HelpfulReviewJpaEntity, Long> {
+interface HelpfulReviewJpaRepository : JpaRepository<HelpfulReviewJpaEntity, Long> {
     fun existsByReviewIdAndMemberId(
         reviewId: Long,
         clickerId: Long,
