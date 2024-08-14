@@ -11,6 +11,7 @@ import com.celuveat.restaurant.application.port.`in`.query.ReadInterestedRestaur
 import com.celuveat.restaurant.application.port.`in`.result.RestaurantPreviewResult
 import com.celuveat.restaurant.application.port.out.ReadInterestedRestaurantPort
 import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
+import com.celuveat.restaurant.domain.Restaurant
 import org.springframework.stereotype.Service
 
 @Service
@@ -48,7 +49,7 @@ class RestaurantQueryService(
         return visitedRestaurants.convertContent {
             RestaurantPreviewResult.of(
                 restaurant = it,
-                liked = interestedRestaurants.any { interested -> interested.restaurant.id == it.id },
+                liked = interestedRestaurants.contains(it),
             )
         }
     }
@@ -61,7 +62,7 @@ class RestaurantQueryService(
         return restaurants.map {
             RestaurantPreviewResult.of(
                 restaurant = it,
-                liked = interestedRestaurants.any { interested -> interested.restaurant.id == it.id },
+                liked = interestedRestaurants.contains(it),
                 visitedCelebrities = celebritiesByRestaurants[it.id]!!,
             )
         }
@@ -70,5 +71,10 @@ class RestaurantQueryService(
     private fun readInterestedRestaurants(
         memberId: Long?,
         restaurantIds: List<Long>,
-    ) = memberId?.let { readInterestedRestaurantPort.findInterestedRestaurantsByIds(it, restaurantIds) } ?: emptyList()
+    ): Set<Restaurant> {
+        return memberId?.let {
+            readInterestedRestaurantPort.findInterestedRestaurantsByIds(it, restaurantIds)
+                .map { interested -> interested.restaurant }.toSet()
+        } ?: emptySet()
+    }
 }

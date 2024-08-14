@@ -179,7 +179,7 @@ class ReviewServiceTest : BehaviorSpec({
             }
 
             Then("예외가 발생한다") {
-                exception.errorMessage shouldBe "해당 리뷰에 아미 '도움돼요'를 클릭하였습니다."
+                exception.errorMessage shouldBe "해당 리뷰에 이미 '도움돼요'를 클릭하였습니다."
             }
         }
     }

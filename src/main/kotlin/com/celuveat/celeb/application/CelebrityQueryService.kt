@@ -10,7 +10,6 @@ import com.celuveat.celeb.application.port.out.ReadInterestedCelebritiesPort
 import com.celuveat.restaurant.application.port.`in`.result.RestaurantPreviewResult
 import com.celuveat.restaurant.application.port.out.ReadInterestedRestaurantPort
 import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
-import com.celuveat.restaurant.domain.InterestedRestaurant
 import com.celuveat.restaurant.domain.Restaurant
 import org.springframework.stereotype.Service
 
@@ -36,14 +35,13 @@ class CelebrityQueryService(
             ).contents
         }
         val interestedRestaurants = readInterestedRestaurants(memberId, restaurantsByCelebrity)
-
         return bestCelebrities.map { celebrity ->
             BestCelebrityResult(
                 celebrity = SimpleCelebrityResult.from(celebrity),
-                restaurants = restaurantsByCelebrity[celebrity.id]!!.map {
+                restaurants = restaurantsByCelebrity[celebrity.id]!!.map { restaurant ->
                     RestaurantPreviewResult.of(
-                        restaurant = it,
-                        liked = interestedRestaurants[it.id]?.let { true } ?: false
+                        restaurant = restaurant,
+                        liked = interestedRestaurants.contains(restaurant)
                     )
                 }
             )
@@ -53,14 +51,13 @@ class CelebrityQueryService(
     private fun readInterestedRestaurants(
         memberId: Long?,
         restaurantsByCelebrity: Map<Long, List<Restaurant>>
-    ): Map<Long, InterestedRestaurant> {
-        val interestedRestaurants = memberId?.let {
-            val restaurantIds = restaurantsByCelebrity.values.flatten().map { it.id }
+    ): Set<Restaurant> {
+        return memberId?.let {
+            val restaurantIds = restaurantsByCelebrity.values.flatten().map { readRestaurant -> readRestaurant.id }
             readInterestedRestaurantPort.findInterestedRestaurantsByIds(
                 memberId = it,
                 restaurantIds = restaurantIds
-            ).associateBy { interested -> interested.restaurant.id }
-        } ?: emptyMap()
-        return interestedRestaurants
+            ).map { interested -> interested.restaurant }.toSet()
+        } ?: emptySet()
     }
 }
