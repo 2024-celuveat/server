@@ -11,7 +11,9 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
+import jakarta.persistence.Table
 
+@Table(name = "restaurant_in_video")
 @Entity
 class RestaurantInVideoJpaEntity(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
