@@ -1,7 +1,7 @@
 package com.celuveat.review.adapter.`in`.rest
 
-import com.celuveat.auth.adaptor.`in`.rest.Auth
-import com.celuveat.auth.adaptor.`in`.rest.AuthContext
+import com.celuveat.auth.adapter.`in`.rest.Auth
+import com.celuveat.auth.adapter.`in`.rest.AuthContext
 import com.celuveat.common.adapter.`in`.rest.response.SliceResponse
 import com.celuveat.review.adapter.`in`.rest.request.UpdateReviewRequest
 import com.celuveat.review.adapter.`in`.rest.request.WriteReviewRequest
@@ -9,7 +9,6 @@ import com.celuveat.review.adapter.`in`.rest.response.ReviewPreviewResponse
 import com.celuveat.review.adapter.`in`.rest.response.SingleReviewResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
-import io.swagger.v3.oas.annotations.Parameters
 import io.swagger.v3.oas.annotations.enums.ParameterIn
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -91,10 +90,6 @@ interface ReviewApi {
 
     @Operation(summary = "특정 음식점의 리뷰 전체 조회")
     @GetMapping("/restaurants/{restaurantId}")
-    @Parameters(
-        Parameter(name = "page", description = "페이지 번호", example = "0", required = true),
-        Parameter(name = "size", description = "페이지 크기", example = "10", required = true),
-    )
     fun readAllRestaurantsReviews(
         @Auth auth: AuthContext,
         @Parameter(

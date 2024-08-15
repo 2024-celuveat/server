@@ -1,12 +1,11 @@
 package com.celuveat.restaurant.adapter.`in`.rest
 
-import com.celuveat.auth.adaptor.`in`.rest.Auth
-import com.celuveat.auth.adaptor.`in`.rest.AuthContext
+import com.celuveat.auth.adapter.`in`.rest.Auth
+import com.celuveat.auth.adapter.`in`.rest.AuthContext
 import com.celuveat.common.adapter.`in`.rest.response.SliceResponse
 import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantPreviewResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
-import io.swagger.v3.oas.annotations.Parameters
 import io.swagger.v3.oas.annotations.enums.ParameterIn
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -21,10 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping
 interface RestaurantApi {
     @SecurityRequirement(name = "JWT")
     @Operation(summary = "관심 음식점 목록 조회")
-    @Parameters(
-        Parameter(name = "page", description = "페이지 번호", example = "0", required = true),
-        Parameter(name = "size", description = "페이지 크기", example = "10", required = true),
-    )
     @GetMapping("/interested")
     fun getInterestedRestaurants(
         @Auth auth: AuthContext,
@@ -60,10 +55,6 @@ interface RestaurantApi {
     )
 
     @Operation(summary = "셀럽이 다녀간 음식점 조회")
-    @Parameters(
-        Parameter(name = "page", description = "페이지 번호", example = "0", required = true),
-        Parameter(name = "size", description = "페이지 크기", example = "10", required = true),
-    )
     @GetMapping("/celebrity/{celebrityId}")
     fun readCelebrityVisitedRestaurant(
         @Auth auth: AuthContext,

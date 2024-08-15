@@ -14,8 +14,11 @@ import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import jakarta.persistence.UniqueConstraint
 
+@Table(
+    name = "helpful_review",
+    uniqueConstraints = [UniqueConstraint(columnNames = ["review_id", "member_id"])],
+)
 @Entity
-@Table(uniqueConstraints = [UniqueConstraint(columnNames = ["review_id", "member_id"])])
 class HelpfulReviewJpaEntity(
     @Id
     @GeneratedValue(strategy = IDENTITY)

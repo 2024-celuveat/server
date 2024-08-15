@@ -1,6 +1,6 @@
-package com.celuveat.auth.adaptor.`in`.rest.config
+package com.celuveat.auth.adapter.`in`.rest.config
 
-import com.celuveat.auth.adaptor.`in`.rest.AuthContextArgumentResolver
+import com.celuveat.auth.adapter.`in`.rest.AuthContextArgumentResolver
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer

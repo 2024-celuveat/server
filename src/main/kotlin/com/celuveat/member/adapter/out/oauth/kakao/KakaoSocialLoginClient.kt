@@ -24,8 +24,9 @@ class KakaoSocialLoginClient(
         authCode: String,
         requestOrigin: String,
     ): Member {
-        validateAllowedRedirectUrl(requestOrigin)
-        val socialLoginToken = fetchAccessToken(authCode, requestOrigin)
+        val redirectUrl = toRedirectUrl(requestOrigin)
+        validateAllowedRedirectUrl(redirectUrl)
+        val socialLoginToken = fetchAccessToken(authCode, redirectUrl)
         return fetchMemberInfo(socialLoginToken.accessToken).toMember()
     }
 
@@ -36,12 +37,12 @@ class KakaoSocialLoginClient(
 
     private fun fetchAccessToken(
         authCode: String,
-        requestOrigin: String,
+        redirectUrl: String,
     ): KakaoSocialLoginToken {
         val tokenRequestBody = mapOf(
             "grant_type" to "authorization_code",
             "client_id" to kakaoSocialLoginProperty.clientId,
-            "redirect_uri" to "$requestOrigin/oauth/kakao",
+            "redirect_uri" to redirectUrl,
             "code" to authCode,
             "client_secret" to kakaoSocialLoginProperty.clientSecret,
         )
@@ -56,7 +57,7 @@ class KakaoSocialLoginClient(
         return UriComponentsBuilder
             .fromHttpUrl(kakaoSocialLoginProperty.authorizationUrl)
             .queryParam("client_id", kakaoSocialLoginProperty.clientId)
-            .queryParam("redirect_uri", "$requestOrigin/oauth/kakao")
+            .queryParam("redirect_uri", toRedirectUrl(requestOrigin))
             .queryParam("response_type", "code")
             .queryParam("scope", kakaoSocialLoginProperty.scope.joinToString(","))
             .build()
@@ -67,7 +68,9 @@ class KakaoSocialLoginClient(
         authCode: String,
         requestOrigin: String,
     ) {
-        val socialLoginToken = fetchAccessToken(authCode, "$requestOrigin/oauth/kakao")
+        val socialLoginToken = fetchAccessToken(authCode, toRedirectUrl(requestOrigin))
         kakaoApiClient.withdraw("Bearer ${socialLoginToken.accessToken}")
     }
+
+    private fun toRedirectUrl(requestOrigin: String) = "$requestOrigin/oauth/kakao"
 }

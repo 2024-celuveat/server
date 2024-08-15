@@ -1,7 +1,7 @@
 package com.celuveat.review.adapter.`in`.rest
 
-import com.celuveat.auth.adaptor.`in`.rest.Auth
-import com.celuveat.auth.adaptor.`in`.rest.AuthContext
+import com.celuveat.auth.adapter.`in`.rest.Auth
+import com.celuveat.auth.adapter.`in`.rest.AuthContext
 import com.celuveat.common.adapter.`in`.rest.response.SliceResponse
 import com.celuveat.review.adapter.`in`.rest.request.UpdateReviewRequest
 import com.celuveat.review.adapter.`in`.rest.request.WriteReviewRequest
@@ -10,7 +10,7 @@ import com.celuveat.review.adapter.`in`.rest.response.SingleReviewResponse
 import com.celuveat.review.application.port.`in`.ClickHelpfulReviewUseCase
 import com.celuveat.review.application.port.`in`.DeleteHelpfulReviewUseCase
 import com.celuveat.review.application.port.`in`.DeleteReviewUseCase
-import com.celuveat.review.application.port.`in`.ReadReviewsUseCase
+import com.celuveat.review.application.port.`in`.ReadRestaurantReviewsUseCase
 import com.celuveat.review.application.port.`in`.ReadSingleReviewUseCase
 import com.celuveat.review.application.port.`in`.UpdateReviewUseCase
 import com.celuveat.review.application.port.`in`.WriteReviewUseCase
@@ -35,7 +35,7 @@ class ReviewController(
     private val deleteReviewUseCase: DeleteReviewUseCase,
     private val clickHelpfulReviewUseCase: ClickHelpfulReviewUseCase,
     private val deleteHelpfulReviewUseCase: DeleteHelpfulReviewUseCase,
-    private val readReviewsUseCase: ReadReviewsUseCase,
+    private val readRestaurantReviewsUseCase: ReadRestaurantReviewsUseCase,
     private val readSingleReviewUseCase: ReadSingleReviewUseCase,
 ) : ReviewApi {
     @PostMapping
@@ -90,7 +90,7 @@ class ReviewController(
         @PathVariable restaurantId: Long,
         @PageableDefault(size = 10, page = 0) pageable: Pageable,
     ): SliceResponse<ReviewPreviewResponse> {
-        val reviews = readReviewsUseCase.readAll(
+        val reviews = readRestaurantReviewsUseCase.readAll(
             restaurantId = restaurantId,
             page = pageable.pageNumber,
             size = pageable.pageSize,
@@ -109,7 +109,7 @@ class ReviewController(
     ): SingleReviewResponse {
         return SingleReviewResponse.from(
             readSingleReviewUseCase.read(
-                id = reviewId,
+                reviewId = reviewId,
                 memberId = auth.optionalMemberId(),
             ),
         )

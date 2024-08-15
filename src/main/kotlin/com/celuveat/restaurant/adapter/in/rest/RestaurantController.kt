@@ -1,7 +1,7 @@
 package com.celuveat.restaurant.adapter.`in`.rest
 
-import com.celuveat.auth.adaptor.`in`.rest.Auth
-import com.celuveat.auth.adaptor.`in`.rest.AuthContext
+import com.celuveat.auth.adapter.`in`.rest.Auth
+import com.celuveat.auth.adapter.`in`.rest.AuthContext
 import com.celuveat.common.adapter.`in`.rest.response.SliceResponse
 import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantPreviewResponse
 import com.celuveat.restaurant.application.port.`in`.AddInterestedRestaurantsUseCase

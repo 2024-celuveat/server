@@ -34,13 +34,13 @@ data class CelebrityResponse(
     val youtubeContentResults: List<YoutubeContentResponse>,
 ) {
     companion object {
-        fun from(celebrity: CelebrityResult): CelebrityResponse {
+        fun from(result: CelebrityResult): CelebrityResponse {
             return CelebrityResponse(
-                id = celebrity.id,
-                name = celebrity.name,
-                profileImageUrl = celebrity.profileImageUrl,
-                introduction = celebrity.introduction,
-                youtubeContentResults = celebrity.youtubeContentResults.map { YoutubeContentResponse.from(it) },
+                id = result.id,
+                name = result.name,
+                profileImageUrl = result.profileImageUrl,
+                introduction = result.introduction,
+                youtubeContentResults = result.youtubeContentResults.map { YoutubeContentResponse.from(it) },
             )
         }
     }

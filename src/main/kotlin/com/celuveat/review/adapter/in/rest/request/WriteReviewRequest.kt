@@ -7,13 +7,25 @@ import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 
 data class WriteReviewRequest(
-    @Schema(description = "음식점 ID", example = "1")
+    @Schema(
+        description = "음식점 ID",
+        example = "1",
+    )
     @NotNull val restaurantId: Long,
-    @Schema(description = "리뷰 내용", example = "맛있어요")
+    @Schema(
+        description = "리뷰 내용",
+        example = "맛있어요",
+    )
     @NotBlank var content: String,
-    @Schema(description = "리뷰 별점", example = "THREE")
+    @Schema(
+        description = "리뷰 별점",
+        example = "THREE",
+    )
     @NotNull var star: Star,
-    @Schema(description = "리뷰 이미지들", example = "[\"imgUrl1\", \"imgUrl2\"]")
+    @Schema(
+        description = "리뷰 이미지들",
+        example = "[\"imgUrl1\", \"imgUrl2\"]",
+    )
     var images: List<String>,
 ) {
     fun toCommand(memberId: Long): WriteReviewCommand {

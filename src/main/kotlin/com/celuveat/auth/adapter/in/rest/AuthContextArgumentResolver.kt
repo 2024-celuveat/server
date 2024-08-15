@@ -1,4 +1,4 @@
-package com.celuveat.auth.adaptor.`in`.rest
+package com.celuveat.auth.adapter.`in`.rest
 
 import com.celuveat.auth.application.port.`in`.ExtractMemberIdUseCase
 import com.celuveat.common.adapter.`in`.rest.getTokenAuthorizationOrNull

@@ -15,9 +15,9 @@ data object NotFoundRestaurantException : RestaurantExceptions(HttpStatus.NOT_FO
 
 data object AlreadyInterestedRestaurantException :
     RestaurantExceptions(HttpStatus.BAD_REQUEST, "이미 관심 식당으로 등록된 식당입니다.") {
-    private fun readResolve(): Any = NotFoundMemberException
+    private fun readResolve(): Any = AlreadyInterestedRestaurantException
 }
 
 data object NotFoundInterestedRestaurantException : RestaurantExceptions(HttpStatus.NOT_FOUND, "관심 식당을 찾을 수 없습니다.") {
-    private fun readResolve(): Any = NotFoundMemberException
+    private fun readResolve(): Any = NotFoundInterestedRestaurantException
 }

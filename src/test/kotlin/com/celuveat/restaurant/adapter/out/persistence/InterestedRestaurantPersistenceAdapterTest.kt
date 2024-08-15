@@ -1,20 +1,17 @@
 package com.celuveat.restaurant.adapter.out.persistence
 
-import com.celuveat.common.adapter.out.persistence.JpaConfig
 import com.celuveat.member.adapter.out.persistence.entity.MemberJpaEntity
 import com.celuveat.member.adapter.out.persistence.entity.MemberJpaRepository
-import com.celuveat.member.adapter.out.persistence.entity.MemberPersistenceMapper
 import com.celuveat.member.exception.NotFoundMemberException
 import com.celuveat.restaurant.adapter.out.persistence.entity.InterestedRestaurantJpaEntity
 import com.celuveat.restaurant.adapter.out.persistence.entity.InterestedRestaurantJpaRepository
-import com.celuveat.restaurant.adapter.out.persistence.entity.InterestedRestaurantPersistenceMapper
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantImageJpaEntity
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantImageJpaRepository
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantJpaEntity
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantJpaRepository
-import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantPersistenceMapper
 import com.celuveat.restaurant.exception.NotFoundInterestedRestaurantException
 import com.celuveat.restaurant.exception.NotFoundRestaurantException
+import com.celuveat.support.PersistenceAdapterTest
 import com.celuveat.support.sut
 import com.navercorp.fixturemonkey.kotlin.giveMeBuilder
 import com.navercorp.fixturemonkey.kotlin.giveMeOne
@@ -26,20 +23,11 @@ import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.collections.shouldContainInOrder
 import io.kotest.matchers.collections.shouldNotContain
 import io.kotest.matchers.shouldBe
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.context.annotation.Import
 import org.springframework.dao.DataIntegrityViolationException
 
 private const val NOT_EXIST_ID = -1L
 
-@Import(
-    InterestedRestaurantPersistenceAdapter::class,
-    InterestedRestaurantPersistenceMapper::class,
-    RestaurantPersistenceMapper::class,
-    MemberPersistenceMapper::class,
-    JpaConfig::class,
-)
-@DataJpaTest
+@PersistenceAdapterTest
 class InterestedRestaurantPersistenceAdapterTest(
     private val restaurantPersistenceAdapter: InterestedRestaurantPersistenceAdapter,
     private val restaurantJpaRepository: RestaurantJpaRepository,
@@ -81,7 +69,7 @@ class InterestedRestaurantPersistenceAdapterTest(
 
         test("추가로 조회할 수 있는 음식점의 여부를 응답한다") {
             // when
-            val interestedRestaurantResults = restaurantPersistenceAdapter.findInterestedRestaurants(
+            val interestedRestaurantResults = restaurantPersistenceAdapter.readInterestedRestaurants(
                 savedMember.id,
                 0,
                 1,
@@ -95,7 +83,7 @@ class InterestedRestaurantPersistenceAdapterTest(
 
         test("마지막 음식점을 조회한 경우 hasNext는 false를 응답한다") {
             // when
-            val interestedRestaurantResults = restaurantPersistenceAdapter.findInterestedRestaurants(
+            val interestedRestaurantResults = restaurantPersistenceAdapter.readInterestedRestaurants(
                 savedMember.id,
                 0,
                 2,
@@ -204,7 +192,7 @@ class InterestedRestaurantPersistenceAdapterTest(
         test("음식점 id로 관심 음식점을 조회한다.") {
             // when
             val restaurantIds = savedRestaurants.map { it.id }
-            val interestedRestaurants = restaurantPersistenceAdapter.findInterestedRestaurantsByIds(
+            val interestedRestaurants = restaurantPersistenceAdapter.readInterestedRestaurantsByIds(
                 savedMember.id,
                 restaurantIds,
             )

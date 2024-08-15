@@ -13,7 +13,6 @@ import com.celuveat.member.application.port.out.SaveMemberPort
 import com.celuveat.member.application.port.out.WithdrawSocialMemberPort
 import com.celuveat.member.domain.SocialLoginType
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 
 @Service
 class SocialLoginService(
@@ -24,7 +23,6 @@ class SocialLoginService(
     private val deleteMemberPort: DeleteMemberPort,
     private val withdrawSocialMemberPort: WithdrawSocialMemberPort,
 ) : SocialLoginUseCase, ReadSocialLoginUrlUseCase, WithdrawSocialLoginUseCase {
-    @Transactional
     override fun login(command: SocialLoginCommand): Long {
         val member = fetchSocialMemberPort.fetchMember(
             command.socialLoginType,
@@ -40,10 +38,9 @@ class SocialLoginService(
         socialLoginType: SocialLoginType,
         requestOrigin: String,
     ): String {
-        return readSocialLoginUrlPort.getSocialLoginUrl(socialLoginType, requestOrigin)
+        return readSocialLoginUrlPort.readSocialLoginUrl(socialLoginType, requestOrigin)
     }
 
-    @Transactional
     override fun withdraw(command: WithdrawSocialLoginCommand) {
         withdrawSocialMemberPort.withdraw(
             command.authCode,

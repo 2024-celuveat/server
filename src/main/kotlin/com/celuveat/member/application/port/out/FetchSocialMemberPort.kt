@@ -7,6 +7,6 @@ interface FetchSocialMemberPort {
     fun fetchMember(
         socialLoginType: SocialLoginType,
         authCode: String,
-        redirectUrl: String,
+        requestOrigin: String,
     ): Member
 }

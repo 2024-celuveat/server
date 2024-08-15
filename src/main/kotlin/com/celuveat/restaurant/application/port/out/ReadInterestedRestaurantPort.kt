@@ -4,7 +4,7 @@ import com.celuveat.common.application.port.`in`.result.SliceResult
 import com.celuveat.restaurant.domain.InterestedRestaurant
 
 interface ReadInterestedRestaurantPort {
-    fun findInterestedRestaurants(
+    fun readInterestedRestaurants(
         memberId: Long,
         page: Int,
         size: Int,
@@ -15,7 +15,7 @@ interface ReadInterestedRestaurantPort {
         restaurantId: Long,
     ): Boolean
 
-    fun findInterestedRestaurantsByIds(
+    fun readInterestedRestaurantsByIds(
         memberId: Long,
         restaurantIds: List<Long>,
     ): List<InterestedRestaurant>

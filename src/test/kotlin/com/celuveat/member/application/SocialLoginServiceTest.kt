@@ -91,14 +91,14 @@ class SocialLoginServiceTest : BehaviorSpec({
         val serverType = SocialLoginType.KAKAO
         val redirectUrl = "redirectUrl"
         val socialLoginUrl = "https://social.com/authorize?redirect_uri=$redirectUrl&client_id=clientId"
-        every { readSocialLoginUrlPort.getSocialLoginUrl(serverType, redirectUrl) } returns socialLoginUrl
+        every { readSocialLoginUrlPort.readSocialLoginUrl(serverType, redirectUrl) } returns socialLoginUrl
         When("소셜 로그인 타입과 리다이렉트될 URL을 전달하면") {
             val result = socialLoginService.getSocialLoginUrl(serverType, redirectUrl)
 
             Then("소셜 로그인 URL이 반환된다") {
                 result shouldBe socialLoginUrl
 
-                verify { readSocialLoginUrlPort.getSocialLoginUrl(serverType, redirectUrl) }
+                verify { readSocialLoginUrlPort.readSocialLoginUrl(serverType, redirectUrl) }
             }
         }
     }

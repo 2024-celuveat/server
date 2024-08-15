@@ -26,7 +26,7 @@ class InterestedRestaurantPersistenceAdapter(
     private val memberJpaRepository: MemberJpaRepository,
 ) : ReadInterestedRestaurantPort, SaveInterestedRestaurantPort, DeleteInterestedRestaurantPort {
     @Transactional(readOnly = true)
-    override fun findInterestedRestaurants(
+    override fun readInterestedRestaurants(
         memberId: Long,
         page: Int,
         size: Int,
@@ -55,7 +55,6 @@ class InterestedRestaurantPersistenceAdapter(
         return interestedRestaurantJpaRepository.existsByMemberIdAndRestaurantId(memberId, restaurantId)
     }
 
-    @Transactional
     override fun saveInterestedRestaurant(
         memberId: Long,
         restaurantId: Long,
@@ -70,7 +69,6 @@ class InterestedRestaurantPersistenceAdapter(
         )
     }
 
-    @Transactional
     override fun deleteInterestedRestaurant(
         memberId: Long,
         restaurantId: Long,
@@ -80,7 +78,7 @@ class InterestedRestaurantPersistenceAdapter(
             ?: throw NotFoundInterestedRestaurantException
     }
 
-    override fun findInterestedRestaurantsByIds(
+    override fun readInterestedRestaurantsByIds(
         memberId: Long,
         restaurantIds: List<Long>,
     ): List<InterestedRestaurant> {

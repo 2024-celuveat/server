@@ -15,10 +15,10 @@ class FetchSocialMemberAdapter(
     override fun fetchMember(
         socialLoginType: SocialLoginType,
         authCode: String,
-        redirectUrl: String,
+        requestOrigin: String,
     ): Member {
         val socialLoginClient = getSocialLoginClient(socialLoginType)
-        return socialLoginClient.fetchMember(authCode, redirectUrl)
+        return socialLoginClient.fetchMember(authCode, requestOrigin)
     }
 
     private fun getSocialLoginClient(socialLoginType: SocialLoginType): SocialLoginClient {
@@ -26,7 +26,7 @@ class FetchSocialMemberAdapter(
             ?: throw NotSupportedSocialLoginTypeException(socialLoginType)
     }
 
-    override fun getSocialLoginUrl(
+    override fun readSocialLoginUrl(
         socialLoginType: SocialLoginType,
         requestOrigin: String,
     ): String {
@@ -37,9 +37,9 @@ class FetchSocialMemberAdapter(
     override fun withdraw(
         authCode: String,
         socialLoginType: SocialLoginType,
-        redirectUrl: String,
+        requestOrigin: String,
     ) {
         val socialLoginClient = getSocialLoginClient(socialLoginType)
-        socialLoginClient.withdraw(authCode, redirectUrl)
+        socialLoginClient.withdraw(authCode, requestOrigin)
     }
 }

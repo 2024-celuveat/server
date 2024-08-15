@@ -14,8 +14,11 @@ import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import jakarta.persistence.UniqueConstraint
 
+@Table(
+    name = "interested_restaurant",
+    uniqueConstraints = [UniqueConstraint(columnNames = ["member_id", "restaurant_id"])],
+)
 @Entity
-@Table(uniqueConstraints = [UniqueConstraint(columnNames = ["member_id", "restaurant_id"])])
 class InterestedRestaurantJpaEntity(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,

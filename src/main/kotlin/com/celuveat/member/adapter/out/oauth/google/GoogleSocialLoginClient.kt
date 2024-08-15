@@ -25,7 +25,7 @@ class GoogleSocialLoginClient(
         requestOrigin: String,
     ): Member {
         validateAllowedRedirectUrl(requestOrigin)
-        val socialLoginToken = fetchAccessToken(authCode, "$requestOrigin/oauth/google")
+        val socialLoginToken = fetchAccessToken(authCode, toRedirectUrl(requestOrigin))
         return fetchMemberInfo(socialLoginToken.accessToken).toMember()
     }
 
@@ -56,7 +56,7 @@ class GoogleSocialLoginClient(
         return UriComponentsBuilder
             .fromHttpUrl(googleSocialLoginProperty.authorizationUrl)
             .queryParam("client_id", googleSocialLoginProperty.clientId)
-            .queryParam("redirect_uri", "$requestOrigin/oauth/google")
+            .queryParam("redirect_uri", toRedirectUrl(requestOrigin))
             .queryParam("response_type", "code")
             .queryParam("scope", googleSocialLoginProperty.scope.joinToString(","))
             .build()
@@ -67,7 +67,9 @@ class GoogleSocialLoginClient(
         authCode: String,
         requestOrigin: String,
     ) {
-        val socialLoginToken = fetchAccessToken(authCode, "$requestOrigin/oauth/google")
+        val socialLoginToken = fetchAccessToken(authCode, toRedirectUrl(requestOrigin))
         googleApiClient.withdraw(socialLoginToken.accessToken)
     }
+
+    private fun toRedirectUrl(requestOrigin: String) = "$requestOrigin/oauth/google"
 }

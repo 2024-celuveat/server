@@ -62,19 +62,19 @@ data class RestaurantPreviewResponse(
     val images: List<RestaurantImageResponse>,
 ) {
     companion object {
-        fun from(restaurantPreviewResult: RestaurantPreviewResult): RestaurantPreviewResponse {
+        fun from(result: RestaurantPreviewResult): RestaurantPreviewResponse {
             return RestaurantPreviewResponse(
-                id = restaurantPreviewResult.id,
-                name = restaurantPreviewResult.name,
-                category = restaurantPreviewResult.category,
-                roadAddress = restaurantPreviewResult.roadAddress,
-                phoneNumber = restaurantPreviewResult.phoneNumber,
-                naverMapUrl = restaurantPreviewResult.naverMapUrl,
-                latitude = restaurantPreviewResult.latitude,
-                longitude = restaurantPreviewResult.longitude,
-                liked = restaurantPreviewResult.liked,
-                visitedCelebrities = restaurantPreviewResult.visitedCelebrities.map { SimpleCelebrityResponse.from(it) },
-                images = restaurantPreviewResult.images.map { RestaurantImageResponse.from(it) },
+                id = result.id,
+                name = result.name,
+                category = result.category,
+                roadAddress = result.roadAddress,
+                phoneNumber = result.phoneNumber,
+                naverMapUrl = result.naverMapUrl,
+                latitude = result.latitude,
+                longitude = result.longitude,
+                liked = result.liked,
+                visitedCelebrities = result.visitedCelebrities.map { SimpleCelebrityResponse.from(it) },
+                images = result.images.map { RestaurantImageResponse.from(it) },
             )
         }
     }
@@ -103,12 +103,12 @@ data class RestaurantImageResponse(
     val isThumbnail: Boolean,
 ) {
     companion object {
-        fun from(restaurantImage: RestaurantImageResult): RestaurantImageResponse {
+        fun from(result: RestaurantImageResult): RestaurantImageResponse {
             return RestaurantImageResponse(
-                name = restaurantImage.name,
-                author = restaurantImage.author,
-                url = restaurantImage.url,
-                isThumbnail = restaurantImage.isThumbnail,
+                name = result.name,
+                author = result.author,
+                url = result.url,
+                isThumbnail = result.isThumbnail,
             )
         }
     }

@@ -1,4 +1,4 @@
-package com.celuveat.auth.adaptor.out
+package com.celuveat.auth.adapter.out
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 

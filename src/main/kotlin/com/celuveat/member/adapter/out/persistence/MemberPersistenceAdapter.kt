@@ -8,6 +8,7 @@ import com.celuveat.member.application.port.out.ReadMemberPort
 import com.celuveat.member.application.port.out.SaveMemberPort
 import com.celuveat.member.domain.Member
 import com.celuveat.member.domain.SocialIdentifier
+import org.springframework.transaction.annotation.Transactional
 
 @Adapter
 class MemberPersistenceAdapter(
@@ -21,11 +22,12 @@ class MemberPersistenceAdapter(
         )?.let { memberPersistenceMapper.toDomain(it) }
     }
 
-    override fun getById(id: Long): Member {
+    override fun readById(id: Long): Member {
         val entity = memberJpaRepository.getById(id)
         return memberPersistenceMapper.toDomain(entity)
     }
 
+    @Transactional
     override fun save(member: Member): Member {
         val memberEntity = memberPersistenceMapper.toEntity(member)
         val saveMember = memberJpaRepository.save(memberEntity)

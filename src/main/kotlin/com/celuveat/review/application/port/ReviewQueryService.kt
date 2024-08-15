@@ -1,47 +1,45 @@
 package com.celuveat.review.application.port
 
 import com.celuveat.common.application.port.`in`.result.SliceResult
-import com.celuveat.review.application.port.`in`.ReadReviewsUseCase
+import com.celuveat.review.application.port.`in`.ReadRestaurantReviewsUseCase
 import com.celuveat.review.application.port.`in`.ReadSingleReviewUseCase
 import com.celuveat.review.application.port.`in`.result.ReviewPreviewResult
 import com.celuveat.review.application.port.`in`.result.SingleReviewResult
-import com.celuveat.review.application.port.out.FindReviewPort
 import com.celuveat.review.application.port.out.ReadHelpfulReviewPort
+import com.celuveat.review.application.port.out.ReadReviewPort
 import com.celuveat.review.application.port.out.SaveReviewPort
 import org.springframework.stereotype.Service
 
-// TODO test
 @Service
 class ReviewQueryService(
-    private val findReviewPort: FindReviewPort,
+    private val readReviewPort: ReadReviewPort,
     private val readHelpfulReviewPort: ReadHelpfulReviewPort,
     private val saveReviewPort: SaveReviewPort,
-) : ReadReviewsUseCase, ReadSingleReviewUseCase {
+) : ReadRestaurantReviewsUseCase, ReadSingleReviewUseCase {
     override fun readAll(
         memberId: Long?,
         restaurantId: Long,
         page: Int,
         size: Int,
     ): SliceResult<ReviewPreviewResult> {
-        val reviewResults = findReviewPort.findAllByRestaurantId(restaurantId, page, size)
-        val reviewHelpfulReviewMapping = (
-            memberId?.let {
-                readHelpfulReviewPort.readHelpfulReviewByMemberAndReviews(it, reviewResults.contents)
-            } ?: emptyList()
-        ).associateBy { it.review }
+        val reviewResults = readReviewPort.readAllByRestaurantId(restaurantId, page, size)
+        val reviewHelpfulReviewMapping = memberId?.let {
+            readHelpfulReviewPort.readHelpfulReviewByMemberAndReviews(it, reviewResults.contents)
+                .map { helpful -> helpful.review }.toSet()
+        } ?: emptySet()
         return reviewResults.convertContent { ReviewPreviewResult.of(it, reviewHelpfulReviewMapping.contains(it)) }
     }
 
     override fun read(
         memberId: Long?,
-        id: Long,
+        reviewId: Long,
     ): SingleReviewResult {
-        val review = findReviewPort.getById(id)
+        val review = readReviewPort.readById(reviewId)
         review.increaseView()
-        val clickedHelpful =
-            memberId?.let { readHelpfulReviewPort.existsByReviewAndMember(reviewId = review.id, memberId = it) }
-                ?: false
         saveReviewPort.save(review)
+        val clickedHelpful = memberId?.let {
+            readHelpfulReviewPort.existsByReviewAndMember(reviewId = review.id, memberId = it)
+        } ?: false
         return SingleReviewResult.of(review, clickedHelpful)
     }
 }

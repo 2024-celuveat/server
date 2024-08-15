@@ -1,4 +1,4 @@
-package com.celuveat.auth.adaptor.`in`.rest
+package com.celuveat.auth.adapter.`in`.rest
 
 import io.swagger.v3.oas.annotations.Hidden
 

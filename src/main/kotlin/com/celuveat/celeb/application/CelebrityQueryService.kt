@@ -10,7 +10,6 @@ import com.celuveat.celeb.application.port.out.ReadInterestedCelebritiesPort
 import com.celuveat.restaurant.application.port.`in`.result.RestaurantPreviewResult
 import com.celuveat.restaurant.application.port.out.ReadInterestedRestaurantPort
 import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
-import com.celuveat.restaurant.domain.InterestedRestaurant
 import com.celuveat.restaurant.domain.Restaurant
 import org.springframework.stereotype.Service
 
@@ -22,45 +21,43 @@ class CelebrityQueryService(
     private val readInterestedRestaurantPort: ReadInterestedRestaurantPort,
 ) : ReadInterestedCelebritiesUseCase, ReadBestCelebritiesUseCase {
     override fun getInterestedCelebrities(memberId: Long): List<CelebrityResult> {
-        val celebrities = readInterestedCelebritiesPort.findInterestedCelebrities(memberId)
+        val celebrities = readInterestedCelebritiesPort.readInterestedCelebrities(memberId)
         return celebrities.map { CelebrityResult.from(it.celebrity) }
     }
 
     override fun readBestCelebrities(memberId: Long?): List<BestCelebrityResult> {
-        val bestCelebrities = readCelebritiesPort.findBestCelebrities()
+        val bestCelebrities = readCelebritiesPort.readBestCelebrities()
         val restaurantsByCelebrity = bestCelebrities.associate {
-            it.id to readRestaurantPort.findVisitedRestaurantByCelebrity(
+            it.id to readRestaurantPort.readVisitedRestaurantByCelebrity(
                 celebrityId = it.id,
                 page = 0,
-                size = 3
+                size = 3,
             ).contents
         }
         val interestedRestaurants = readInterestedRestaurants(memberId, restaurantsByCelebrity)
-
         return bestCelebrities.map { celebrity ->
             BestCelebrityResult(
                 celebrity = SimpleCelebrityResult.from(celebrity),
-                restaurants = restaurantsByCelebrity[celebrity.id]!!.map {
+                restaurants = restaurantsByCelebrity[celebrity.id]!!.map { restaurant ->
                     RestaurantPreviewResult.of(
-                        restaurant = it,
-                        liked = interestedRestaurants[it.id]?.let { true } ?: false
+                        restaurant = restaurant,
+                        liked = interestedRestaurants.contains(restaurant),
                     )
-                }
+                },
             )
         }
     }
 
     private fun readInterestedRestaurants(
         memberId: Long?,
-        restaurantsByCelebrity: Map<Long, List<Restaurant>>
-    ): Map<Long, InterestedRestaurant> {
-        val interestedRestaurants = memberId?.let {
-            val restaurantIds = restaurantsByCelebrity.values.flatten().map { it.id }
-            readInterestedRestaurantPort.findInterestedRestaurantsByIds(
+        restaurantsByCelebrity: Map<Long, List<Restaurant>>,
+    ): Set<Restaurant> {
+        return memberId?.let {
+            val restaurantIds = restaurantsByCelebrity.values.flatten().map { readRestaurant -> readRestaurant.id }
+            readInterestedRestaurantPort.readInterestedRestaurantsByIds(
                 memberId = it,
-                restaurantIds = restaurantIds
-            ).associateBy { interested -> interested.restaurant.id }
-        } ?: emptyMap()
-        return interestedRestaurants
+                restaurantIds = restaurantIds,
+            ).map { interested -> interested.restaurant }.toSet()
+        } ?: emptySet()
     }
 }

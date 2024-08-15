@@ -12,8 +12,10 @@ import jakarta.persistence.GenerationType.IDENTITY
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
+import jakarta.persistence.Table
 import java.time.LocalDateTime
 
+@Table(name = "review")
 @Entity
 class ReviewJpaEntity(
     @Id @GeneratedValue(strategy = IDENTITY)

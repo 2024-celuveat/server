@@ -7,19 +7,19 @@ import com.celuveat.restaurant.domain.RestaurantImage
 @Mapper
 class RestaurantPersistenceMapper {
     fun toDomain(
-        restaurantJpaEntity: RestaurantJpaEntity,
-        restaurantImageJpaEntities: List<RestaurantImageJpaEntity>,
+        restaurant: RestaurantJpaEntity,
+        restaurantImages: List<RestaurantImageJpaEntity>,
     ): Restaurant {
         return Restaurant(
-            id = restaurantJpaEntity.id,
-            name = restaurantJpaEntity.name,
-            category = restaurantJpaEntity.category,
-            roadAddress = restaurantJpaEntity.roadAddress,
-            phoneNumber = restaurantJpaEntity.phoneNumber,
-            naverMapUrl = restaurantJpaEntity.naverMapUrl,
-            latitude = restaurantJpaEntity.latitude,
-            longitude = restaurantJpaEntity.longitude,
-            images = restaurantImageJpaEntities.map { imageJpaEntity ->
+            id = restaurant.id,
+            name = restaurant.name,
+            category = restaurant.category,
+            roadAddress = restaurant.roadAddress,
+            phoneNumber = restaurant.phoneNumber,
+            naverMapUrl = restaurant.naverMapUrl,
+            latitude = restaurant.latitude,
+            longitude = restaurant.longitude,
+            images = restaurantImages.map { imageJpaEntity ->
                 RestaurantImage(
                     id = imageJpaEntity.id,
                     name = imageJpaEntity.name,
@@ -31,16 +31,16 @@ class RestaurantPersistenceMapper {
         )
     }
 
-    fun toDomainWithoutImage(restaurantJpaEntity: RestaurantJpaEntity): Restaurant {
+    fun toDomainWithoutImage(restaurant: RestaurantJpaEntity): Restaurant {
         return Restaurant(
-            id = restaurantJpaEntity.id,
-            name = restaurantJpaEntity.name,
-            category = restaurantJpaEntity.category,
-            roadAddress = restaurantJpaEntity.roadAddress,
-            phoneNumber = restaurantJpaEntity.phoneNumber,
-            naverMapUrl = restaurantJpaEntity.naverMapUrl,
-            latitude = restaurantJpaEntity.latitude,
-            longitude = restaurantJpaEntity.longitude,
+            id = restaurant.id,
+            name = restaurant.name,
+            category = restaurant.category,
+            roadAddress = restaurant.roadAddress,
+            phoneNumber = restaurant.phoneNumber,
+            naverMapUrl = restaurant.naverMapUrl,
+            latitude = restaurant.latitude,
+            longitude = restaurant.longitude,
             images = emptyList(),
         )
     }

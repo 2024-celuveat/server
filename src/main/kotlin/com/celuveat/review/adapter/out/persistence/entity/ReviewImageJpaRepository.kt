@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 
-interface ReviewImageJpaEntityRepository : JpaRepository<ReviewImageJpaEntity, Long> {
+interface ReviewImageJpaRepository : JpaRepository<ReviewImageJpaEntity, Long> {
     @Modifying
     @Query("DELETE FROM ReviewImageJpaEntity ri WHERE ri.review.id = :reviewId")
     fun deleteAllByReviewId(reviewId: Long)

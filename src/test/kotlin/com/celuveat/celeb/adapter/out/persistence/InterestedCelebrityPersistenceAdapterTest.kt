@@ -2,21 +2,18 @@ package com.celuveat.celeb.adapter.out.persistence
 
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityJpaEntity
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityJpaRepository
-import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityPersistenceMapper
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityYoutubeContentJpaEntity
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityYoutubeContentJpaRepository
 import com.celuveat.celeb.adapter.out.persistence.entity.InterestedCelebrityJpaEntity
 import com.celuveat.celeb.adapter.out.persistence.entity.InterestedCelebrityJpaRepository
-import com.celuveat.celeb.adapter.out.persistence.entity.InterestedCelebrityPersistenceMapper
 import com.celuveat.celeb.adapter.out.persistence.entity.YoutubeContentJpaEntity
 import com.celuveat.celeb.adapter.out.persistence.entity.YoutubeContentJpaRepository
 import com.celuveat.celeb.exceptions.NotFoundCelebrityException
 import com.celuveat.celeb.exceptions.NotFoundInterestedCelebrityException
-import com.celuveat.common.adapter.out.persistence.JpaConfig
 import com.celuveat.member.adapter.out.persistence.entity.MemberJpaEntity
 import com.celuveat.member.adapter.out.persistence.entity.MemberJpaRepository
-import com.celuveat.member.adapter.out.persistence.entity.MemberPersistenceMapper
 import com.celuveat.member.exception.NotFoundMemberException
+import com.celuveat.support.PersistenceAdapterTest
 import com.celuveat.support.sut
 import com.navercorp.fixturemonkey.kotlin.giveMeBuilder
 import com.navercorp.fixturemonkey.kotlin.giveMeOne
@@ -27,18 +24,9 @@ import io.kotest.core.spec.style.FunSpec
 import io.kotest.inspectors.forAll
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.context.annotation.Import
 import org.springframework.dao.DataIntegrityViolationException
 
-@Import(
-    InterestedCelebrityPersistenceAdapter::class,
-    InterestedCelebrityPersistenceMapper::class,
-    CelebrityPersistenceMapper::class,
-    MemberPersistenceMapper::class,
-    JpaConfig::class,
-)
-@DataJpaTest
+@PersistenceAdapterTest
 class InterestedCelebrityPersistenceAdapterTest(
     private val celebrityPersistenceAdapter: InterestedCelebrityPersistenceAdapter,
     private val celebrityJpaRepository: CelebrityJpaRepository,
@@ -93,7 +81,7 @@ class InterestedCelebrityPersistenceAdapterTest(
         )
 
         // when
-        val celebrities = celebrityPersistenceAdapter.findInterestedCelebrities(savedMember.id)
+        val celebrities = celebrityPersistenceAdapter.readInterestedCelebrities(savedMember.id)
 
         // then
         celebrities.size shouldBe 2

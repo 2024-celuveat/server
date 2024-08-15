@@ -1,4 +1,4 @@
-package com.celuveat.auth.adaptor.out
+package com.celuveat.auth.adapter.out
 
 import com.celuveat.auth.application.port.out.CreateTokenPort
 import com.celuveat.auth.application.port.out.ExtractClaimPort
@@ -13,7 +13,7 @@ import java.util.Date
 import javax.crypto.SecretKey
 
 @Adapter
-class TokenAdaptor(
+class TokenAdapter(
     tokenProperty: TokenProperty,
 ) : CreateTokenPort, ExtractClaimPort {
     private val secretKey: SecretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(tokenProperty.secretKey))

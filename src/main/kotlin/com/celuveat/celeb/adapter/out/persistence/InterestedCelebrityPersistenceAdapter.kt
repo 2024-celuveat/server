@@ -12,7 +12,6 @@ import com.celuveat.celeb.domain.InterestedCelebrity
 import com.celuveat.celeb.exceptions.NotFoundInterestedCelebrityException
 import com.celuveat.common.annotation.Adapter
 import com.celuveat.member.adapter.out.persistence.entity.MemberJpaRepository
-import org.springframework.transaction.annotation.Transactional
 
 @Adapter
 class InterestedCelebrityPersistenceAdapter(
@@ -22,14 +21,14 @@ class InterestedCelebrityPersistenceAdapter(
     private val memberJpaRepository: MemberJpaRepository,
     private val interestedCelebrityPersistenceMapper: InterestedCelebrityPersistenceMapper,
 ) : ReadInterestedCelebritiesPort, SaveInterestedCelebrityPort, DeleteInterestedCelebrityPort {
-    override fun findInterestedCelebrities(memberId: Long): List<InterestedCelebrity> {
+    override fun readInterestedCelebrities(memberId: Long): List<InterestedCelebrity> {
         val interestedCelebrities = interestedCelebrityJpaRepository.findAllCelebritiesByMemberId(memberId)
         val celebrityIds = interestedCelebrities.map { it.celebrity.id }
         val youtubeContentsByCelebrity = celebritiesToContentMap(celebrityIds)
         return interestedCelebrities.map {
             interestedCelebrityPersistenceMapper.toDomain(
                 it,
-                youtubeContentsByCelebrity[it.id]!!,
+                youtubeContentsByCelebrity[it.celebrity.id]!!,
             )
         }
     }
@@ -39,7 +38,6 @@ class InterestedCelebrityPersistenceAdapter(
             .groupBy { it.celebrity.id }
             .mapValues { (_, celebrityYoutubeContents) -> celebrityYoutubeContents.map { it.youtubeContent } }
 
-    @Transactional
     override fun saveInterestedCelebrity(
         celebrityId: Long,
         memberId: Long,
@@ -53,7 +51,6 @@ class InterestedCelebrityPersistenceAdapter(
         interestedCelebrityJpaRepository.save(entity)
     }
 
-    @Transactional
     override fun deleteInterestedCelebrity(
         celebrityId: Long,
         memberId: Long,
