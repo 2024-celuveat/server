@@ -1,7 +1,9 @@
 package com.celuveat.celeb.application
 
 import com.celuveat.celeb.application.port.`in`.ReadBestCelebritiesUseCase
+import com.celuveat.celeb.application.port.`in`.ReadCelebrityUseCase
 import com.celuveat.celeb.application.port.`in`.ReadInterestedCelebritiesUseCase
+import com.celuveat.celeb.application.port.`in`.query.ReadCelebrityQuery
 import com.celuveat.celeb.application.port.`in`.result.BestCelebrityResult
 import com.celuveat.celeb.application.port.`in`.result.CelebrityResult
 import com.celuveat.celeb.application.port.`in`.result.SimpleCelebrityResult
@@ -19,7 +21,7 @@ class CelebrityQueryService(
     private val readRestaurantPort: ReadRestaurantPort,
     private val readInterestedCelebritiesPort: ReadInterestedCelebritiesPort,
     private val readInterestedRestaurantPort: ReadInterestedRestaurantPort,
-) : ReadInterestedCelebritiesUseCase, ReadBestCelebritiesUseCase {
+) : ReadInterestedCelebritiesUseCase, ReadBestCelebritiesUseCase, ReadCelebrityUseCase {
     override fun getInterestedCelebrities(memberId: Long): List<CelebrityResult> {
         val celebrities = readInterestedCelebritiesPort.readInterestedCelebrities(memberId)
         return celebrities.map { CelebrityResult.from(it.celebrity) }
@@ -59,5 +61,13 @@ class CelebrityQueryService(
                 restaurantIds = restaurantIds,
             ).map { interested -> interested.restaurant }.toSet()
         } ?: emptySet()
+    }
+
+    override fun readCelebrity(query: ReadCelebrityQuery): Pair<CelebrityResult, Boolean> {
+        val celebrity = readCelebritiesPort.readCelebrity(query.celebrityId)
+        val interested = query.memberId?.let {
+            readInterestedCelebritiesPort.existsInterestedCelebrity(it, query.celebrityId)
+        } ?: false
+        return CelebrityResult.from(celebrity) to interested
     }
 }
