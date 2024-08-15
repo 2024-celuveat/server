@@ -40,7 +40,7 @@ class SocialLoginService(
         socialLoginType: SocialLoginType,
         requestOrigin: String,
     ): String {
-        return readSocialLoginUrlPort.getSocialLoginUrl(socialLoginType, requestOrigin)
+        return readSocialLoginUrlPort.readSocialLoginUrl(socialLoginType, requestOrigin)
     }
 
     @Transactional

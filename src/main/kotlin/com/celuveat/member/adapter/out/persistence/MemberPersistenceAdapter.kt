@@ -22,7 +22,7 @@ class MemberPersistenceAdapter(
         )?.let { memberPersistenceMapper.toDomain(it) }
     }
 
-    override fun getById(id: Long): Member {
+    override fun readById(id: Long): Member {
         val entity = memberJpaRepository.getById(id)
         return memberPersistenceMapper.toDomain(entity)
     }

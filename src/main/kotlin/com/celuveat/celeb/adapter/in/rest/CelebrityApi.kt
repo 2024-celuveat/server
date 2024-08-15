@@ -1,7 +1,7 @@
 package com.celuveat.celeb.adapter.`in`.rest
 
-import com.celuveat.auth.adaptor.`in`.rest.Auth
-import com.celuveat.auth.adaptor.`in`.rest.AuthContext
+import com.celuveat.auth.adapter.`in`.rest.Auth
+import com.celuveat.auth.adapter.`in`.rest.AuthContext
 import com.celuveat.celeb.adapter.`in`.rest.response.BestCelebrityResponse
 import com.celuveat.celeb.adapter.`in`.rest.response.CelebrityResponse
 import io.swagger.v3.oas.annotations.Operation

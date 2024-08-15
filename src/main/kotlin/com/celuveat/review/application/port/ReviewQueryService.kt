@@ -5,14 +5,14 @@ import com.celuveat.review.application.port.`in`.ReadReviewsUseCase
 import com.celuveat.review.application.port.`in`.ReadSingleReviewUseCase
 import com.celuveat.review.application.port.`in`.result.ReviewPreviewResult
 import com.celuveat.review.application.port.`in`.result.SingleReviewResult
-import com.celuveat.review.application.port.out.FindReviewPort
 import com.celuveat.review.application.port.out.ReadHelpfulReviewPort
+import com.celuveat.review.application.port.out.ReadReviewPort
 import com.celuveat.review.application.port.out.SaveReviewPort
 import org.springframework.stereotype.Service
 
 @Service
 class ReviewQueryService(
-    private val findReviewPort: FindReviewPort,
+    private val readReviewPort: ReadReviewPort,
     private val readHelpfulReviewPort: ReadHelpfulReviewPort,
     private val saveReviewPort: SaveReviewPort,
 ) : ReadReviewsUseCase, ReadSingleReviewUseCase {
@@ -22,7 +22,7 @@ class ReviewQueryService(
         page: Int,
         size: Int,
     ): SliceResult<ReviewPreviewResult> {
-        val reviewResults = findReviewPort.findAllByRestaurantId(restaurantId, page, size)
+        val reviewResults = readReviewPort.readAllByRestaurantId(restaurantId, page, size)
         val reviewHelpfulReviewMapping = memberId?.let {
             readHelpfulReviewPort.readHelpfulReviewByMemberAndReviews(it, reviewResults.contents)
                 .map { helpful -> helpful.review }.toSet()
@@ -34,7 +34,7 @@ class ReviewQueryService(
         memberId: Long?,
         reviewId: Long,
     ): SingleReviewResult {
-        val review = findReviewPort.getById(reviewId)
+        val review = readReviewPort.readById(reviewId)
         review.increaseView()
         saveReviewPort.save(review)
         val clickedHelpful = memberId?.let {

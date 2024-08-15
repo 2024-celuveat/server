@@ -1,6 +1,6 @@
 package com.celuveat.support
 
-import com.celuveat.auth.adaptor.out.TokenAdaptor
+import com.celuveat.auth.adapter.out.TokenAdaptor
 import com.celuveat.common.adapter.out.persistence.JpaConfig
 import com.celuveat.common.annotation.Adapter
 import com.celuveat.common.annotation.Mapper

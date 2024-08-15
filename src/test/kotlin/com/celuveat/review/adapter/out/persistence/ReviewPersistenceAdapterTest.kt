@@ -97,7 +97,7 @@ class ReviewPersistenceAdapterTest(
 
         When("리뷰가 존재하는 경우") {
             val saved = reviewPersistenceAdapter.save(review)
-            val found = reviewPersistenceAdapter.getById(saved.id)
+            val found = reviewPersistenceAdapter.readById(saved.id)
 
             Then("리뷰가 조회된다") {
                 found.id shouldBe saved.id
@@ -105,7 +105,7 @@ class ReviewPersistenceAdapterTest(
         }
 
         When("리뷰가 존재하지 않는 경우") {
-            val exception = shouldThrow<NotFoundReviewException> { reviewPersistenceAdapter.getById(0) }
+            val exception = shouldThrow<NotFoundReviewException> { reviewPersistenceAdapter.readById(0) }
 
             Then("NotFoundReviewException 예외가 발생한다") {
                 exception.message shouldBe "존재 하지 않는 리뷰입니다."
@@ -131,7 +131,7 @@ class ReviewPersistenceAdapterTest(
         reviewImageJpaRepository.saveAll(reviewAImages + reviewBImages)
 
         When("음식점에 달린 리뷰를 조회한 경우") {
-            val sliceResult = reviewPersistenceAdapter.findAllByRestaurantId(restaurant.id, 0, 1)
+            val sliceResult = reviewPersistenceAdapter.readAllByRestaurantId(restaurant.id, 0, 1)
 
             Then("리뷰가 조회된다") {
                 sliceResult.contents.size shouldBe 1

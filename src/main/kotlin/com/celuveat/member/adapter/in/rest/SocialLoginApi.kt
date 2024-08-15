@@ -1,7 +1,7 @@
 package com.celuveat.member.adapter.`in`.rest
 
-import com.celuveat.auth.adaptor.`in`.rest.Auth
-import com.celuveat.auth.adaptor.`in`.rest.AuthContext
+import com.celuveat.auth.adapter.`in`.rest.Auth
+import com.celuveat.auth.adapter.`in`.rest.AuthContext
 import com.celuveat.member.adapter.`in`.rest.response.LoginResponse
 import com.celuveat.member.domain.SocialLoginType
 import io.swagger.v3.oas.annotations.Operation

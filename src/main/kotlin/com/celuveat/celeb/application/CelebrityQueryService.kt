@@ -21,14 +21,14 @@ class CelebrityQueryService(
     private val readInterestedRestaurantPort: ReadInterestedRestaurantPort,
 ) : ReadInterestedCelebritiesUseCase, ReadBestCelebritiesUseCase {
     override fun getInterestedCelebrities(memberId: Long): List<CelebrityResult> {
-        val celebrities = readInterestedCelebritiesPort.findInterestedCelebrities(memberId)
+        val celebrities = readInterestedCelebritiesPort.readInterestedCelebrities(memberId)
         return celebrities.map { CelebrityResult.from(it.celebrity) }
     }
 
     override fun readBestCelebrities(memberId: Long?): List<BestCelebrityResult> {
-        val bestCelebrities = readCelebritiesPort.findBestCelebrities()
+        val bestCelebrities = readCelebritiesPort.readBestCelebrities()
         val restaurantsByCelebrity = bestCelebrities.associate {
-            it.id to readRestaurantPort.findVisitedRestaurantByCelebrity(
+            it.id to readRestaurantPort.readVisitedRestaurantByCelebrity(
                 celebrityId = it.id,
                 page = 0,
                 size = 3
@@ -54,7 +54,7 @@ class CelebrityQueryService(
     ): Set<Restaurant> {
         return memberId?.let {
             val restaurantIds = restaurantsByCelebrity.values.flatten().map { readRestaurant -> readRestaurant.id }
-            readInterestedRestaurantPort.findInterestedRestaurantsByIds(
+            readInterestedRestaurantPort.readInterestedRestaurantsByIds(
                 memberId = it,
                 restaurantIds = restaurantIds
             ).map { interested -> interested.restaurant }.toSet()

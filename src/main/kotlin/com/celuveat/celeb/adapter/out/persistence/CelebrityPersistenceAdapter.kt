@@ -16,7 +16,7 @@ class CelebrityPersistenceAdapter(
     private val restaurantInVideoJpaRepository: RestaurantInVideoJpaRepository,
     private val celebrityPersistenceMapper: CelebrityPersistenceMapper,
 ) : ReadCelebritiesPort {
-    override fun findVisitedCelebritiesByRestaurants(restaurantIds: List<Long>): Map<Long, List<Celebrity>> {
+    override fun readVisitedCelebritiesByRestaurants(restaurantIds: List<Long>): Map<Long, List<Celebrity>> {
         val celebritiesWithRestaurant = restaurantInVideoJpaRepository.findVisitedCelebrities(restaurantIds)
         val celebrityIds = celebritiesWithRestaurant.map { it.celebrity.id }
         val youtubeContentsByCelebrity = celebritiesToContentMap(celebrityIds)
@@ -36,7 +36,7 @@ class CelebrityPersistenceAdapter(
             .groupBy { it.celebrity.id }
             .mapValues { (_, celebrityYoutubeContents) -> celebrityYoutubeContents.map { it.youtubeContent } }
 
-    override fun findBestCelebrities(): List<Celebrity> {
+    override fun readBestCelebrities(): List<Celebrity> {
         return celebrityJpaRepository.findAllBySubscriberCountDescTop10().map {
             celebrityPersistenceMapper.toDomainWithoutYoutubeContent(it)
         }

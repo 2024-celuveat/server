@@ -8,8 +8,8 @@ import com.celuveat.review.application.port.`in`.command.UpdateReviewCommand
 import com.celuveat.review.application.port.`in`.command.WriteReviewCommand
 import com.celuveat.review.application.port.out.DeleteHelpfulReviewPort
 import com.celuveat.review.application.port.out.DeleteReviewPort
-import com.celuveat.review.application.port.out.FindReviewPort
 import com.celuveat.review.application.port.out.ReadHelpfulReviewPort
+import com.celuveat.review.application.port.out.ReadReviewPort
 import com.celuveat.review.application.port.out.SaveHelpfulReviewPort
 import com.celuveat.review.application.port.out.SaveReviewPort
 import com.celuveat.review.domain.HelpfulReview
@@ -37,7 +37,7 @@ class ReviewServiceTest : BehaviorSpec({
 
     val readMemberPort: ReadMemberPort = mockk()
     val readRestaurantPort: ReadRestaurantPort = mockk()
-    val findReviewPort: FindReviewPort = mockk()
+    val readReviewPort: ReadReviewPort = mockk()
     val readHelpfulReviewPort: ReadHelpfulReviewPort = mockk()
     val saveHelpfulReviewPort: SaveHelpfulReviewPort = mockk()
     val saveReviewPort: SaveReviewPort = mockk()
@@ -47,7 +47,7 @@ class ReviewServiceTest : BehaviorSpec({
     val reviewService = ReviewService(
         readMemberPort,
         readRestaurantPort,
-        findReviewPort,
+        readReviewPort,
         readHelpfulReviewPort,
         saveHelpfulReviewPort,
         saveReviewPort,
@@ -60,8 +60,8 @@ class ReviewServiceTest : BehaviorSpec({
         val restaurant = sut.giveMeOne(Restaurant::class.java)
         val review = sut.giveMeOne(Review::class.java)
         val command = WriteReviewCommand(1L, 1L, "맛나요", FOUR, listOf("img1", "img2"))
-        every { readMemberPort.getById(1L) } returns member
-        every { readRestaurantPort.getById(1L) } returns restaurant
+        every { readMemberPort.readById(1L) } returns member
+        every { readRestaurantPort.readById(1L) } returns restaurant
         every { saveReviewPort.save(any()) } returns review
 
         When("회원이 리뷰를 작성하면") {
@@ -85,8 +85,8 @@ class ReviewServiceTest : BehaviorSpec({
 
         When("해당 리뷰를 작성한 회원이 수정을 시도하면") {
 
-            every { findReviewPort.getById(1L) } returns review
-            every { readMemberPort.getById(1L) } returns member
+            every { readReviewPort.readById(1L) } returns review
+            every { readMemberPort.readById(1L) } returns member
             every { saveReviewPort.save(any()) } returns review
             val command = UpdateReviewCommand(1L, 1L, "맛나요", FOUR, listOf("img1", "img2"))
             reviewService.update(command)
@@ -98,8 +98,8 @@ class ReviewServiceTest : BehaviorSpec({
 
         When("해당 리뷰를 작성하지 않은 회원이 수정을 시도하면") {
 
-            every { findReviewPort.getById(1L) } returns review
-            every { readMemberPort.getById(2L) } returns other
+            every { readReviewPort.readById(1L) } returns review
+            every { readMemberPort.readById(2L) } returns other
             val command = UpdateReviewCommand(2L, 1L, "맛나요", FOUR, listOf("img1", "img2"))
             val exception = shouldThrow<NoAuthorityReviewException> {
                 reviewService.update(command)
@@ -123,8 +123,8 @@ class ReviewServiceTest : BehaviorSpec({
         When("해당 리뷰를 작성한 회원이 삭제를 시도하면") {
 
             every { deleteReviewPort.delete(any()) } just Runs
-            every { readMemberPort.getById(1L) } returns member
-            every { findReviewPort.getById(1L) } returns review
+            every { readMemberPort.readById(1L) } returns member
+            every { readReviewPort.readById(1L) } returns review
             reviewService.delete(1L, 1L)
 
             Then("리뷰가 삭제된다.") {
@@ -135,8 +135,8 @@ class ReviewServiceTest : BehaviorSpec({
 
         When("해당 리뷰를 작성하지 않은 회원이 삭제를 시도하면") {
 
-            every { readMemberPort.getById(2L) } returns other
-            every { findReviewPort.getById(1L) } returns review
+            every { readMemberPort.readById(2L) } returns other
+            every { readReviewPort.readById(1L) } returns review
             val exception = shouldThrow<NoAuthorityReviewException> {
                 reviewService.delete(2L, 1L)
             }
@@ -158,8 +158,8 @@ class ReviewServiceTest : BehaviorSpec({
         When("해당 리뷰에 도움돼요를 처음 클릭하는 거라면") {
 
             every { readHelpfulReviewPort.existsByReviewAndMember(1L, 1L) } returns false
-            every { readMemberPort.getById(1L) } returns member
-            every { findReviewPort.getById(1L) } returns review
+            every { readMemberPort.readById(1L) } returns member
+            every { readReviewPort.readById(1L) } returns review
             every { saveReviewPort.save(any()) } returns review
             every { saveHelpfulReviewPort.save(any()) } returns mockk()
             reviewService.clickHelpfulReview(1L, 1L)

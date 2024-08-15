@@ -12,8 +12,8 @@ import com.celuveat.review.application.port.`in`.command.UpdateReviewCommand
 import com.celuveat.review.application.port.`in`.command.WriteReviewCommand
 import com.celuveat.review.application.port.out.DeleteHelpfulReviewPort
 import com.celuveat.review.application.port.out.DeleteReviewPort
-import com.celuveat.review.application.port.out.FindReviewPort
 import com.celuveat.review.application.port.out.ReadHelpfulReviewPort
+import com.celuveat.review.application.port.out.ReadReviewPort
 import com.celuveat.review.application.port.out.SaveHelpfulReviewPort
 import com.celuveat.review.application.port.out.SaveReviewPort
 import com.celuveat.review.domain.ReviewImage
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service
 class ReviewService(
     private val findMemberPort: ReadMemberPort,
     private val findRestaurantPort: ReadRestaurantPort,
-    private val findReviewPort: FindReviewPort,
+    private val readReviewPort: ReadReviewPort,
     private val readHelpfulReviewPort: ReadHelpfulReviewPort,
     private val saveHelpfulReviewPort: SaveHelpfulReviewPort,
     private val saveReviewPort: SaveReviewPort,
@@ -36,15 +36,15 @@ class ReviewService(
     ClickHelpfulReviewUseCase,
     DeleteHelpfulReviewUseCase {
     override fun write(command: WriteReviewCommand): Long {
-        val member = findMemberPort.getById(command.memberId)
-        val restaurant = findRestaurantPort.getById(command.restaurantId)
+        val member = findMemberPort.readById(command.memberId)
+        val restaurant = findRestaurantPort.readById(command.restaurantId)
         val review = command.toReview(member, restaurant)
         return saveReviewPort.save(review).id
     }
 
     override fun update(command: UpdateReviewCommand) {
-        val member = findMemberPort.getById(command.memberId)
-        val review = findReviewPort.getById(command.reviewId)
+        val member = findMemberPort.readById(command.memberId)
+        val review = readReviewPort.readById(command.reviewId)
         review.validateWriter(member)
         review.update(command.content, command.star, command.images.map { ReviewImage(imageUrl = it) })
         saveReviewPort.save(review)
@@ -54,8 +54,8 @@ class ReviewService(
         memberId: Long,
         reviewId: Long,
     ) {
-        val member = findMemberPort.getById(memberId)
-        val review = findReviewPort.getById(reviewId)
+        val member = findMemberPort.readById(memberId)
+        val review = readReviewPort.readById(reviewId)
         review.validateWriter(member)
         deleteReviewPort.delete(review)
     }
@@ -70,8 +70,8 @@ class ReviewService(
                 memberId = memberId,
             ),
         ) { throw AlreadyClickHelpfulReviewException }
-        val member = findMemberPort.getById(memberId)
-        val review = findReviewPort.getById(reviewId)
+        val member = findMemberPort.readById(memberId)
+        val review = readReviewPort.readById(reviewId)
         val helpfulReview = review.clickHelpful(member)
         saveReviewPort.save(review)
         saveHelpfulReviewPort.save(helpfulReview)

@@ -1,8 +1,8 @@
 package com.celuveat.review.application.port
 
 import com.celuveat.common.application.port.`in`.result.SliceResult
-import com.celuveat.review.application.port.out.FindReviewPort
 import com.celuveat.review.application.port.out.ReadHelpfulReviewPort
+import com.celuveat.review.application.port.out.ReadReviewPort
 import com.celuveat.review.application.port.out.SaveReviewPort
 import com.celuveat.review.domain.HelpfulReview
 import com.celuveat.review.domain.Review
@@ -22,12 +22,12 @@ import io.mockk.unmockkAll
 
 class ReviewQueryServiceTest : BehaviorSpec({
 
-    val findReviewPort: FindReviewPort = mockk()
+    val readReviewPort: ReadReviewPort = mockk()
     val readHelpfulReviewPort: ReadHelpfulReviewPort = mockk()
     val saveReviewPort: SaveReviewPort = mockk()
 
     val reviewQueryService = ReviewQueryService(
-        findReviewPort,
+        readReviewPort,
         readHelpfulReviewPort,
         saveReviewPort,
     )
@@ -41,7 +41,7 @@ class ReviewQueryServiceTest : BehaviorSpec({
             .sample()
         When("회원이 리뷰를 조회하면") {
             val viewCount = review.views
-            every { findReviewPort.getById(reviewId) } returns review
+            every { readReviewPort.readById(reviewId) } returns review
             every { saveReviewPort.save(review) } returns review
             every { readHelpfulReviewPort.existsByReviewAndMember(reviewId, memberId) } returns true
 
@@ -55,7 +55,7 @@ class ReviewQueryServiceTest : BehaviorSpec({
 
         When("비회원이 리뷰를 조회하면") {
             val viewCount = review.views
-            every { findReviewPort.getById(reviewId) } returns review
+            every { readReviewPort.readById(reviewId) } returns review
             every { saveReviewPort.save(review) } returns review
 
             reviewQueryService.read(null, reviewId)
@@ -79,7 +79,7 @@ class ReviewQueryServiceTest : BehaviorSpec({
             .sample()
         val reviewResults = SliceResult.of(reviews, page, false)
         When("회원이 음식점의 리뷰를 조회하면") {
-            every { findReviewPort.findAllByRestaurantId(restaurantId, page, size) } returns reviewResults
+            every { readReviewPort.readAllByRestaurantId(restaurantId, page, size) } returns reviewResults
             every {
                 readHelpfulReviewPort.readHelpfulReviewByMemberAndReviews(
                     memberId,
@@ -95,7 +95,7 @@ class ReviewQueryServiceTest : BehaviorSpec({
         }
 
         When("비회원이 음식점의 리뷰를 조회하면") {
-            every { findReviewPort.findAllByRestaurantId(restaurantId, page, size) } returns reviewResults
+            every { readReviewPort.readAllByRestaurantId(restaurantId, page, size) } returns reviewResults
 
             val result = reviewQueryService.readAll(null, restaurantId, page, size)
             Then("리뷰 목록의 도움돼요 클릭 여부는 false로 반환 된다.") {

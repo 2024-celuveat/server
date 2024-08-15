@@ -21,12 +21,12 @@ class RestaurantQueryService(
     private val readInterestedRestaurantPort: ReadInterestedRestaurantPort,
 ) : ReadInterestedRestaurantsUseCase, ReadCelebrityVisitedRestaurantUseCase, ReadCelebrityRecommendRestaurantsUseCase {
     override fun readInterestedRestaurant(query: ReadInterestedRestaurantsQuery): SliceResult<RestaurantPreviewResult> {
-        val interestedRestaurants = readInterestedRestaurantPort.findInterestedRestaurants(
+        val interestedRestaurants = readInterestedRestaurantPort.readInterestedRestaurants(
             query.memberId,
             query.page,
             query.size,
         )
-        val celebritiesByRestaurants = readCelebritiesPort.findVisitedCelebritiesByRestaurants(
+        val celebritiesByRestaurants = readCelebritiesPort.readVisitedCelebritiesByRestaurants(
             interestedRestaurants.contents.map { it.restaurant.id },
         )
         return interestedRestaurants.convertContent {
@@ -39,7 +39,7 @@ class RestaurantQueryService(
     }
 
     override fun readCelebrityVisitedRestaurant(query: ReadCelebrityVisitedRestaurantQuery): SliceResult<RestaurantPreviewResult> {
-        val visitedRestaurants = readRestaurantPort.findVisitedRestaurantByCelebrity(
+        val visitedRestaurants = readRestaurantPort.readVisitedRestaurantByCelebrity(
             query.celebrityId,
             query.page,
             query.size,
@@ -55,9 +55,9 @@ class RestaurantQueryService(
     }
 
     override fun readCelebrityRecommendRestaurants(query: ReadCelebrityRecommendRestaurantsQuery): List<RestaurantPreviewResult> {
-        val restaurants = readRestaurantPort.findCelebrityRecommendRestaurant()
+        val restaurants = readRestaurantPort.readCelebrityRecommendRestaurant()
         val restaurantIds = restaurants.map { it.id }
-        val celebritiesByRestaurants = readCelebritiesPort.findVisitedCelebritiesByRestaurants(restaurantIds)
+        val celebritiesByRestaurants = readCelebritiesPort.readVisitedCelebritiesByRestaurants(restaurantIds)
         val interestedRestaurants = readInterestedRestaurants(query.memberId, restaurantIds)
         return restaurants.map {
             RestaurantPreviewResult.of(
@@ -73,7 +73,7 @@ class RestaurantQueryService(
         restaurantIds: List<Long>,
     ): Set<Restaurant> {
         return memberId?.let {
-            readInterestedRestaurantPort.findInterestedRestaurantsByIds(it, restaurantIds)
+            readInterestedRestaurantPort.readInterestedRestaurantsByIds(it, restaurantIds)
                 .map { interested -> interested.restaurant }.toSet()
         } ?: emptySet()
     }

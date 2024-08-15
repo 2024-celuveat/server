@@ -81,7 +81,7 @@ class InterestedCelebrityPersistenceAdapterTest(
         )
 
         // when
-        val celebrities = celebrityPersistenceAdapter.findInterestedCelebrities(savedMember.id)
+        val celebrities = celebrityPersistenceAdapter.readInterestedCelebrities(savedMember.id)
 
         // then
         celebrities.size shouldBe 2

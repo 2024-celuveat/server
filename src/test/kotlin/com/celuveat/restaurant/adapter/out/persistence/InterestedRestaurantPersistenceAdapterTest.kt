@@ -69,7 +69,7 @@ class InterestedRestaurantPersistenceAdapterTest(
 
         test("추가로 조회할 수 있는 음식점의 여부를 응답한다") {
             // when
-            val interestedRestaurantResults = restaurantPersistenceAdapter.findInterestedRestaurants(
+            val interestedRestaurantResults = restaurantPersistenceAdapter.readInterestedRestaurants(
                 savedMember.id,
                 0,
                 1,
@@ -83,7 +83,7 @@ class InterestedRestaurantPersistenceAdapterTest(
 
         test("마지막 음식점을 조회한 경우 hasNext는 false를 응답한다") {
             // when
-            val interestedRestaurantResults = restaurantPersistenceAdapter.findInterestedRestaurants(
+            val interestedRestaurantResults = restaurantPersistenceAdapter.readInterestedRestaurants(
                 savedMember.id,
                 0,
                 2,
@@ -192,7 +192,7 @@ class InterestedRestaurantPersistenceAdapterTest(
         test("음식점 id로 관심 음식점을 조회한다.") {
             // when
             val restaurantIds = savedRestaurants.map { it.id }
-            val interestedRestaurants = restaurantPersistenceAdapter.findInterestedRestaurantsByIds(
+            val interestedRestaurants = restaurantPersistenceAdapter.readInterestedRestaurantsByIds(
                 savedMember.id,
                 restaurantIds,
             )

@@ -50,7 +50,7 @@ class RestaurantPersistenceAdapterTest(
         )
 
         // when
-        val visitedRestaurants = restaurantPersistenceAdapter.findVisitedRestaurantByCelebrity(
+        val visitedRestaurants = restaurantPersistenceAdapter.readVisitedRestaurantByCelebrity(
             celebrityId = savedCelebrity.id,
             page = 0,
             size = 2,
@@ -107,7 +107,7 @@ class RestaurantPersistenceAdapterTest(
         )
 
         // when
-        val mostVisitedRestaurants = restaurantPersistenceAdapter.findCelebrityRecommendRestaurant()
+        val mostVisitedRestaurants = restaurantPersistenceAdapter.readCelebrityRecommendRestaurant()
 
         // then
         mostVisitedRestaurants.size shouldBe 2

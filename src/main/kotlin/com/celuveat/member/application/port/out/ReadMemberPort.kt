@@ -6,5 +6,5 @@ import com.celuveat.member.domain.SocialIdentifier
 interface ReadMemberPort {
     fun findBySocialIdentifier(socialIdentifier: SocialIdentifier): Member?
 
-    fun getById(id: Long): Member
+    fun readById(id: Long): Member
 }

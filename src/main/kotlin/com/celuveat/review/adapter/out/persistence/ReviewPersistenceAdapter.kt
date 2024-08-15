@@ -7,7 +7,7 @@ import com.celuveat.review.adapter.out.persistence.entity.ReviewImagePersistence
 import com.celuveat.review.adapter.out.persistence.entity.ReviewJpaRepository
 import com.celuveat.review.adapter.out.persistence.entity.ReviewPersistenceMapper
 import com.celuveat.review.application.port.out.DeleteReviewPort
-import com.celuveat.review.application.port.out.FindReviewPort
+import com.celuveat.review.application.port.out.ReadReviewPort
 import com.celuveat.review.application.port.out.SaveReviewPort
 import com.celuveat.review.domain.Review
 import org.springframework.data.domain.PageRequest
@@ -20,7 +20,7 @@ class ReviewPersistenceAdapter(
     private val reviewPersistenceMapper: ReviewPersistenceMapper,
     private val reviewImagePersistenceMapper: ReviewImagePersistenceMapper,
     private val reviewImageJpaRepository: ReviewImageJpaRepository,
-) : SaveReviewPort, DeleteReviewPort, FindReviewPort {
+) : SaveReviewPort, DeleteReviewPort, ReadReviewPort {
     @Transactional
     override fun save(review: Review): Review {
         // TODO 이대로면 리뷰 조회시마다 image 계속 제거 & 등록됨. 언젠가 개선할 것.
@@ -38,13 +38,13 @@ class ReviewPersistenceAdapter(
         reviewJpaRepository.delete(entity)
     }
 
-    override fun getById(reviewId: Long): Review {
+    override fun readById(reviewId: Long): Review {
         val review = reviewJpaRepository.getById(reviewId)
         val images = reviewImageJpaRepository.findAllByReview(review)
         return reviewPersistenceMapper.toDomain(review, images)
     }
 
-    override fun findAllByRestaurantId(
+    override fun readAllByRestaurantId(
         restaurantsId: Long,
         page: Int,
         size: Int,

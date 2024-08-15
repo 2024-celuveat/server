@@ -48,13 +48,13 @@ class RestaurantQueryServiceTest : BehaviorSpec({
         )
         val interestedRestaurantResultIds = interestedRestaurantResult.contents.map { it.restaurant.id }
         every {
-            readInterestedRestaurantPort.findInterestedRestaurants(
+            readInterestedRestaurantPort.readInterestedRestaurants(
                 memberId,
                 page,
                 size,
             )
         } returns interestedRestaurantResult
-        every { readCelebritiesPort.findVisitedCelebritiesByRestaurants(interestedRestaurantResultIds) } returns mapOf(
+        every { readCelebritiesPort.readVisitedCelebritiesByRestaurants(interestedRestaurantResultIds) } returns mapOf(
             interestedRestaurantResultIds[0] to sut.giveMeBuilder<Celebrity>()
                 .setExp(Celebrity::youtubeContents, generateYoutubeContents(size = 2))
                 .sampleList(2),
@@ -93,7 +93,7 @@ class RestaurantQueryServiceTest : BehaviorSpec({
         val restaurantIds = visitedRestaurantResult.contents.map { it.id }
         When("회원이 음식점을 조회하면") {
             every {
-                readRestaurantPort.findVisitedRestaurantByCelebrity(
+                readRestaurantPort.readVisitedRestaurantByCelebrity(
                     celebrityId,
                     page,
                     size,
@@ -106,7 +106,7 @@ class RestaurantQueryServiceTest : BehaviorSpec({
                     .sample(),
             )
             every {
-                readInterestedRestaurantPort.findInterestedRestaurantsByIds(
+                readInterestedRestaurantPort.readInterestedRestaurantsByIds(
                     memberId,
                     restaurantIds,
                 )
@@ -128,7 +128,7 @@ class RestaurantQueryServiceTest : BehaviorSpec({
 
         When("비회원이 음식점을 조회하면") {
             every {
-                readRestaurantPort.findVisitedRestaurantByCelebrity(
+                readRestaurantPort.readVisitedRestaurantByCelebrity(
                     celebrityId,
                     page,
                     size,
@@ -164,10 +164,10 @@ class RestaurantQueryServiceTest : BehaviorSpec({
         )
         When("회원이 추천 음식점을 조회하면") {
             val memberId = 1L
-            every { readRestaurantPort.findCelebrityRecommendRestaurant() } returns restaurants
-            every { readCelebritiesPort.findVisitedCelebritiesByRestaurants(restaurantIds) } returns celebritiesByRestaurants
+            every { readRestaurantPort.readCelebrityRecommendRestaurant() } returns restaurants
+            every { readCelebritiesPort.readVisitedCelebritiesByRestaurants(restaurantIds) } returns celebritiesByRestaurants
             every {
-                readInterestedRestaurantPort.findInterestedRestaurantsByIds(
+                readInterestedRestaurantPort.readInterestedRestaurantsByIds(
                     memberId,
                     restaurantIds,
                 )
@@ -192,8 +192,8 @@ class RestaurantQueryServiceTest : BehaviorSpec({
         }
 
         When("비회원이 추천 음식점을 조회하면") {
-            every { readRestaurantPort.findCelebrityRecommendRestaurant() } returns restaurants
-            every { readCelebritiesPort.findVisitedCelebritiesByRestaurants(restaurantIds) } returns celebritiesByRestaurants
+            every { readRestaurantPort.readCelebrityRecommendRestaurant() } returns restaurants
+            every { readCelebritiesPort.readVisitedCelebritiesByRestaurants(restaurantIds) } returns celebritiesByRestaurants
             val readCelebrityRecommendRestaurantsQuery = ReadCelebrityRecommendRestaurantsQuery(memberId = null)
             val recommendRestaurants = restaurantQueryService.readCelebrityRecommendRestaurants(
                 readCelebrityRecommendRestaurantsQuery,

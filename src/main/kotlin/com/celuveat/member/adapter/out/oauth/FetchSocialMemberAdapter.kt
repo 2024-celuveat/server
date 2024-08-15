@@ -26,7 +26,7 @@ class FetchSocialMemberAdapter(
             ?: throw NotSupportedSocialLoginTypeException(socialLoginType)
     }
 
-    override fun getSocialLoginUrl(
+    override fun readSocialLoginUrl(
         socialLoginType: SocialLoginType,
         requestOrigin: String,
     ): String {

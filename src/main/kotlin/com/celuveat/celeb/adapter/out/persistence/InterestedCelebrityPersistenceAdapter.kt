@@ -22,7 +22,7 @@ class InterestedCelebrityPersistenceAdapter(
     private val memberJpaRepository: MemberJpaRepository,
     private val interestedCelebrityPersistenceMapper: InterestedCelebrityPersistenceMapper,
 ) : ReadInterestedCelebritiesPort, SaveInterestedCelebrityPort, DeleteInterestedCelebrityPort {
-    override fun findInterestedCelebrities(memberId: Long): List<InterestedCelebrity> {
+    override fun readInterestedCelebrities(memberId: Long): List<InterestedCelebrity> {
         val interestedCelebrities = interestedCelebrityJpaRepository.findAllCelebritiesByMemberId(memberId)
         val celebrityIds = interestedCelebrities.map { it.celebrity.id }
         val youtubeContentsByCelebrity = celebritiesToContentMap(celebrityIds)

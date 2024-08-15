@@ -80,7 +80,7 @@ class CelebrityPersistenceAdapterTest(
 
         // when
         val visitedCelebritiesByRestaurants =
-            celebrityPersistenceAdapter.findVisitedCelebritiesByRestaurants(restaurants.map { it.id })
+            celebrityPersistenceAdapter.readVisitedCelebritiesByRestaurants(restaurants.map { it.id })
 
         // then
         assertSoftly {
@@ -128,7 +128,7 @@ class CelebrityPersistenceAdapterTest(
         )
 
         // when
-        val celebrities = celebrityPersistenceAdapter.findBestCelebrities()
+        val celebrities = celebrityPersistenceAdapter.readBestCelebrities()
 
         // then
         celebrities.size shouldBe 3
