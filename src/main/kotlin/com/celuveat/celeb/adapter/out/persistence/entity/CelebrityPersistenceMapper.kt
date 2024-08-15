@@ -18,6 +18,7 @@ class CelebrityPersistenceMapper {
             introduction = celebrity.introduction,
             youtubeContents = youtubeContents.map {
                 YoutubeContent(
+                    id = it.id,
                     channelId = ChannelId(it.channelId),
                     channelUrl = it.channelUrl,
                     channelName = it.channelName,
