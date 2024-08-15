@@ -104,7 +104,6 @@ class CelebrityQueryServiceTest : BehaviorSpec({
                 result[1].restaurants.forAll { it.liked shouldBe false }
                 verify { readInterestedRestaurantPort wasNot Called }
             }
-
         }
     }
 
@@ -140,7 +139,6 @@ class CelebrityQueryServiceTest : BehaviorSpec({
             }
         }
     }
-
 }) {
     override suspend fun afterEach(
         testCase: TestCase,

@@ -71,7 +71,7 @@ class CelebrityQueryService(
         } ?: false
         return CelebrityWithInterestedResult.of(
             celebrity = celebrity,
-            isInterested = interested
+            isInterested = interested,
         )
     }
 }

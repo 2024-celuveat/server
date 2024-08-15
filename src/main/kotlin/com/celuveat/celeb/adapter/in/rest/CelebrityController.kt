@@ -70,7 +70,7 @@ class CelebrityController(
     @GetMapping("/{celebrityId}")
     override fun readCelebrity(
         @Auth auth: AuthContext,
-        @PathVariable celebrityId: Long
+        @PathVariable celebrityId: Long,
     ): CelebrityWithInterestedResponse {
         val memberId = auth.optionalMemberId()
         val query = ReadCelebrityQuery(memberId, celebrityId)

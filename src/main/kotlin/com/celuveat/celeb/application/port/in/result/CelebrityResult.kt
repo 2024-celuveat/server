@@ -49,7 +49,10 @@ data class CelebrityWithInterestedResult(
     val interested: Boolean,
 ) {
     companion object {
-        fun of(celebrity: Celebrity, isInterested: Boolean): CelebrityWithInterestedResult {
+        fun of(
+            celebrity: Celebrity,
+            isInterested: Boolean,
+        ): CelebrityWithInterestedResult {
             return CelebrityWithInterestedResult(
                 celebrity = CelebrityResult.from(celebrity),
                 interested = isInterested,
