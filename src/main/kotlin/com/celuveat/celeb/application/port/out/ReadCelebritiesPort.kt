@@ -7,5 +7,5 @@ interface ReadCelebritiesPort {
 
     fun readBestCelebrities(): List<Celebrity>
 
-    fun readCelebrity(celebrityId: Long): Celebrity
+    fun readById(celebrityId: Long): Celebrity
 }

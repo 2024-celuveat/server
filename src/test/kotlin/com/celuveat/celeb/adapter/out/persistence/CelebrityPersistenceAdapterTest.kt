@@ -154,7 +154,7 @@ class CelebrityPersistenceAdapterTest(
         )
 
         // when
-        val findCelebrity = celebrityPersistenceAdapter.readCelebrity(celebrity.id)
+        val findCelebrity = celebrityPersistenceAdapter.readById(celebrity.id)
 
         // then
         celebrity.id shouldBe findCelebrity.id

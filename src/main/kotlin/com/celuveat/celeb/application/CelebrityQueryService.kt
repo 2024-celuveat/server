@@ -64,7 +64,7 @@ class CelebrityQueryService(
     }
 
     override fun readCelebrity(query: ReadCelebrityQuery): Pair<CelebrityResult, Boolean> {
-        val celebrity = readCelebritiesPort.readCelebrity(query.celebrityId)
+        val celebrity = readCelebritiesPort.readById(query.celebrityId)
         val interested = query.memberId?.let {
             readInterestedCelebritiesPort.existsInterestedCelebrity(it, query.celebrityId)
         } ?: false
