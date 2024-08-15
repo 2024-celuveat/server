@@ -26,7 +26,6 @@ class HelpfulReviewPersistenceAdapter(
         return helpfulReviewPersistenceMapper.toDomain(saved, images)
     }
 
-    @Transactional
     override fun deleteHelpfulReview(helpfulReview: HelpfulReview) {
         val entity = helpfulReviewPersistenceMapper.toEntity(helpfulReview)
         helpfulReviewJpaRepository.delete(entity)

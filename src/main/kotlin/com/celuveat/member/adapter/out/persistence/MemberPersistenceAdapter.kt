@@ -34,7 +34,6 @@ class MemberPersistenceAdapter(
         return memberPersistenceMapper.toDomain(saveMember)
     }
 
-    @Transactional
     override fun deleteById(memberId: Long) {
         memberJpaRepository.deleteById(memberId)
     }

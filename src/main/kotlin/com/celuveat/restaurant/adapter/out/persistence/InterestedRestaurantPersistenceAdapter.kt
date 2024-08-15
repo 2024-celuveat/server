@@ -55,7 +55,6 @@ class InterestedRestaurantPersistenceAdapter(
         return interestedRestaurantJpaRepository.existsByMemberIdAndRestaurantId(memberId, restaurantId)
     }
 
-    @Transactional
     override fun saveInterestedRestaurant(
         memberId: Long,
         restaurantId: Long,
@@ -70,7 +69,6 @@ class InterestedRestaurantPersistenceAdapter(
         )
     }
 
-    @Transactional
     override fun deleteInterestedRestaurant(
         memberId: Long,
         restaurantId: Long,

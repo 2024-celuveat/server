@@ -32,7 +32,6 @@ class ReviewPersistenceAdapter(
         return reviewPersistenceMapper.toDomain(savedReview, savedImages)
     }
 
-    @Transactional
     override fun delete(review: Review) {
         val entity = reviewPersistenceMapper.toEntity(review)
         reviewJpaRepository.delete(entity)
