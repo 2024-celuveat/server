@@ -2,14 +2,18 @@ package com.celuveat.celeb.adapter.`in`.rest
 
 import com.celuveat.auth.application.port.`in`.ExtractMemberIdUseCase
 import com.celuveat.celeb.adapter.`in`.rest.response.BestCelebrityResponse
+import com.celuveat.celeb.adapter.`in`.rest.response.CelebrityWithInterestedResponse
 import com.celuveat.celeb.application.port.`in`.AddInterestedCelebrityUseCase
 import com.celuveat.celeb.application.port.`in`.DeleteInterestedCelebrityUseCase
 import com.celuveat.celeb.application.port.`in`.ReadBestCelebritiesUseCase
+import com.celuveat.celeb.application.port.`in`.ReadCelebrityUseCase
 import com.celuveat.celeb.application.port.`in`.ReadInterestedCelebritiesUseCase
 import com.celuveat.celeb.application.port.`in`.command.AddInterestedCelebrityCommand
 import com.celuveat.celeb.application.port.`in`.command.DeleteInterestedCelebrityCommand
+import com.celuveat.celeb.application.port.`in`.query.ReadCelebrityQuery
 import com.celuveat.celeb.application.port.`in`.result.BestCelebrityResult
 import com.celuveat.celeb.application.port.`in`.result.CelebrityResult
+import com.celuveat.celeb.application.port.`in`.result.CelebrityWithInterestedResult
 import com.celuveat.support.sut
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.navercorp.fixturemonkey.kotlin.giveMeBuilder
@@ -31,6 +35,7 @@ class CelebrityControllerTest(
     @MockkBean val addInterestedCelebrityUseCase: AddInterestedCelebrityUseCase,
     @MockkBean val deleteInterestedCelebrityUseCase: DeleteInterestedCelebrityUseCase,
     @MockkBean val readBestCelebritiesUseCase: ReadBestCelebritiesUseCase,
+    @MockkBean val readCelebrityUseCase: ReadCelebrityUseCase,
     // for AuthMemberArgumentResolver
     @MockkBean val extractMemberIdUseCase: ExtractMemberIdUseCase,
 ) : FunSpec({
@@ -105,6 +110,42 @@ class CelebrityControllerTest(
             mockMvc.get("/celebrities/best").andExpect {
                 status { isOk() }
                 content { json(mapper.writeValueAsString(response)) }
+            }.andDo {
+                print()
+            }
+        }
+    }
+
+    context("단일 셀럽을 조회 한다") {
+        val celebrityId = 1L
+        val celebrityResult = sut.giveMeBuilder<CelebrityResult>().sample()
+
+        test("회원 조회 성공") {
+            val memberId = 1L
+            val accessToken = "celuveatAccessToken"
+            val query = ReadCelebrityQuery(memberId, celebrityId)
+            val result = CelebrityWithInterestedResult(celebrityResult, true)
+            every { extractMemberIdUseCase.extract(accessToken) } returns memberId
+            every { readCelebrityUseCase.readCelebrity(query) } returns result
+
+            mockMvc.get("/celebrities/{celebrityId}", celebrityId) {
+                header("Authorization", "Bearer $accessToken")
+            }.andExpect {
+                status { isOk() }
+                content { json(mapper.writeValueAsString(CelebrityWithInterestedResponse.from(result))) }
+            }.andDo {
+                print()
+            }
+        }
+
+        test("비회원 조회 성공") {
+            val query = ReadCelebrityQuery(null, celebrityId)
+            val result = CelebrityWithInterestedResult(celebrityResult, false)
+            every { readCelebrityUseCase.readCelebrity(query) } returns result
+
+            mockMvc.get("/celebrities/{celebrityId}", celebrityId).andExpect {
+                status { isOk() }
+                content { json(mapper.writeValueAsString(CelebrityWithInterestedResponse.from(result))) }
             }.andDo {
                 print()
             }

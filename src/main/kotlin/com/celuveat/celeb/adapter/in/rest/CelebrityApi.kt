@@ -4,6 +4,7 @@ import com.celuveat.auth.adapter.`in`.rest.Auth
 import com.celuveat.auth.adapter.`in`.rest.AuthContext
 import com.celuveat.celeb.adapter.`in`.rest.response.BestCelebrityResponse
 import com.celuveat.celeb.adapter.`in`.rest.response.CelebrityResponse
+import com.celuveat.celeb.adapter.`in`.rest.response.CelebrityWithInterestedResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.enums.ParameterIn
@@ -56,4 +57,17 @@ interface CelebrityApi {
     fun readBestCelebrities(
         @Auth auth: AuthContext,
     ): List<BestCelebrityResponse>
+
+    @Operation(summary = "셀럽 정보 조회")
+    @GetMapping("/{celebrityId}")
+    fun readCelebrity(
+        @Auth auth: AuthContext,
+        @Parameter(
+            `in` = ParameterIn.PATH,
+            description = "셀럽 ID",
+            example = "1",
+            required = true,
+        )
+        @PathVariable celebrityId: Long,
+    ): CelebrityWithInterestedResponse
 }

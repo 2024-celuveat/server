@@ -122,8 +122,8 @@ class CelebrityQueryServiceTest : BehaviorSpec({
             val result = celebrityQueryService.readCelebrity(query)
 
             Then("셀럽과 관심 여부가 조회된다") {
-                result.first.id shouldBe celebrity.id
-                result.second shouldBe true
+                result.celebrity.id shouldBe celebrity.id
+                result.interested shouldBe true
             }
         }
 
@@ -134,8 +134,8 @@ class CelebrityQueryServiceTest : BehaviorSpec({
             val result = celebrityQueryService.readCelebrity(query)
 
             Then("셀럽만 조회된다") {
-                result.first.id shouldBe celebrity.id
-                result.second shouldBe false
+                result.celebrity.id shouldBe celebrity.id
+                result.interested shouldBe false
                 verify { readInterestedCelebritiesPort wasNot Called }
             }
         }

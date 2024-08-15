@@ -6,6 +6,7 @@ import com.celuveat.celeb.application.port.`in`.ReadInterestedCelebritiesUseCase
 import com.celuveat.celeb.application.port.`in`.query.ReadCelebrityQuery
 import com.celuveat.celeb.application.port.`in`.result.BestCelebrityResult
 import com.celuveat.celeb.application.port.`in`.result.CelebrityResult
+import com.celuveat.celeb.application.port.`in`.result.CelebrityWithInterestedResult
 import com.celuveat.celeb.application.port.`in`.result.SimpleCelebrityResult
 import com.celuveat.celeb.application.port.out.ReadCelebritiesPort
 import com.celuveat.celeb.application.port.out.ReadInterestedCelebritiesPort
@@ -63,11 +64,14 @@ class CelebrityQueryService(
         } ?: emptySet()
     }
 
-    override fun readCelebrity(query: ReadCelebrityQuery): Pair<CelebrityResult, Boolean> {
+    override fun readCelebrity(query: ReadCelebrityQuery): CelebrityWithInterestedResult {
         val celebrity = readCelebritiesPort.readById(query.celebrityId)
         val interested = query.memberId?.let {
             readInterestedCelebritiesPort.existsInterestedCelebrity(it, query.celebrityId)
         } ?: false
-        return CelebrityResult.from(celebrity) to interested
+        return CelebrityWithInterestedResult.of(
+            celebrity = celebrity,
+            isInterested = interested
+        )
     }
 }
