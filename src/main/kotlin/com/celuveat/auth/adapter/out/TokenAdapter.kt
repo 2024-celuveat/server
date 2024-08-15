@@ -13,7 +13,7 @@ import java.util.Date
 import javax.crypto.SecretKey
 
 @Adapter
-class TokenAdaptor(
+class TokenAdapter(
     tokenProperty: TokenProperty,
 ) : CreateTokenPort, ExtractClaimPort {
     private val secretKey: SecretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(tokenProperty.secretKey))
