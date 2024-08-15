@@ -1,6 +1,6 @@
 package com.celuveat.restaurant.application.port.`in`.query
 
-const val DEFAULT_INTERESTED_RESTAURANTS_SIZE = 10
+private const val DEFAULT_INTERESTED_RESTAURANTS_SIZE = 10
 
 data class ReadInterestedRestaurantsQuery(
     val memberId: Long,
