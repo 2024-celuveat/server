@@ -29,19 +29,26 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
+    // DatabaseSource
     runtimeOnly("com.h2database:h2")
     runtimeOnly("com.mysql:mysql-connector-j")
 
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-
-    // swagger
+    // Swagger
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
 
-    // JJWT
+    // JWT
     implementation("io.jsonwebtoken:jjwt-api:0.12.5")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.5")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.5")
+
+    //Kotlin JDSL
+    implementation("com.linecorp.kotlin-jdsl:jpql-dsl:3.5.1")
+    implementation("com.linecorp.kotlin-jdsl:jpql-render:3.5.1")
+    implementation("com.linecorp.kotlin-jdsl:spring-data-jpa-support:3.5.1")
+
+    // Test
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 
     // Ko-test
     testImplementation("io.kotest:kotest-runner-junit5:5.4.2")

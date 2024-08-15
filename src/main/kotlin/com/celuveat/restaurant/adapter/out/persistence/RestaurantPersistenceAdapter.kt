@@ -55,6 +55,15 @@ class RestaurantPersistenceAdapter(
         }
     }
 
+    override fun readRestaurantsByCondition(
+        category: String?,
+        region: String?,
+        page: Int,
+        size: Int
+    ): SliceResult<Restaurant> {
+        TODO("Not yet implemented")
+    }
+
     companion object {
         val LATEST_SORTER = Sort.by("createdAt").descending()
     }
