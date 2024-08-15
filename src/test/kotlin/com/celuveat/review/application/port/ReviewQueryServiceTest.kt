@@ -83,7 +83,7 @@ class ReviewQueryServiceTest : BehaviorSpec({
             every {
                 readHelpfulReviewPort.readHelpfulReviewByMemberAndReviews(
                     memberId,
-                    reviewResults.contents
+                    reviewResults.contents,
                 )
             } returns listOf(helpFulReview)
 
@@ -103,7 +103,6 @@ class ReviewQueryServiceTest : BehaviorSpec({
                 result.contents.filter { it.clickedHelpful }.size shouldBe 0
             }
         }
-
     }
 }) {
     override suspend fun afterEach(

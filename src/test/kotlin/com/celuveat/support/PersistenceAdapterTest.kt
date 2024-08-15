@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Import
     basePackages = ["com.celuveat"],
     useDefaultFilters = false,
     includeFilters = [ComponentScan.Filter(type = FilterType.ANNOTATION, classes = [Adapter::class, Mapper::class])],
-    excludeFilters = [ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = [TokenAdaptor::class])]
+    excludeFilters = [ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = [TokenAdaptor::class])],
 )
 @Import(JpaConfig::class)
 @DataJpaTest

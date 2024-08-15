@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 data class LoginResponse(
     @Schema(
         description = "JWT 토큰",
-        example = "accesstoken"
+        example = "accesstoken",
     )
     val accessToken: String,
 ) {
