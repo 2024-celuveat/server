@@ -2,6 +2,7 @@ package com.celuveat.celeb.adapter.`in`.rest.response
 
 import com.celuveat.celeb.application.port.`in`.result.BestCelebrityResult
 import com.celuveat.celeb.application.port.`in`.result.CelebrityResult
+import com.celuveat.celeb.application.port.`in`.result.CelebrityWithInterestedResult
 import com.celuveat.celeb.application.port.`in`.result.SimpleCelebrityResult
 import com.celuveat.celeb.application.port.`in`.result.YoutubeContentResult
 import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantPreviewResponse
@@ -149,6 +150,27 @@ data class BestCelebrityResponse(
             return BestCelebrityResponse(
                 celebrity = SimpleCelebrityResponse.from(result.celebrity),
                 restaurants = result.restaurants.map { RestaurantPreviewResponse.from(it) },
+            )
+        }
+    }
+}
+
+data class CelebrityWithInterestedResponse(
+    @Schema(
+        description = "연예인 정보",
+    )
+    val celebrity: CelebrityResponse,
+    @Schema(
+        description = "관심 여부",
+        example = "true",
+    )
+    val interested: Boolean,
+) {
+    companion object {
+        fun from(result: CelebrityWithInterestedResult): CelebrityWithInterestedResponse {
+            return CelebrityWithInterestedResponse(
+                celebrity = CelebrityResponse.from(result.celebrity),
+                interested = result.interested,
             )
         }
     }

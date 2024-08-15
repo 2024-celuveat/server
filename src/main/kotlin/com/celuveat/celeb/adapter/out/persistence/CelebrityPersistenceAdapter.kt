@@ -41,4 +41,11 @@ class CelebrityPersistenceAdapter(
             celebrityPersistenceMapper.toDomainWithoutYoutubeContent(it)
         }
     }
+
+    override fun readById(celebrityId: Long): Celebrity {
+        val celebrity = celebrityJpaRepository.getById(celebrityId)
+        val youtubeContents = celebrityYoutubeContentJpaRepository.findByCelebrity(celebrity)
+            .map { it.youtubeContent }
+        return celebrityPersistenceMapper.toDomain(celebrity, youtubeContents)
+    }
 }

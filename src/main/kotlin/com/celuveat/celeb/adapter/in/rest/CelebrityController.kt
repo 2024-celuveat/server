@@ -4,12 +4,15 @@ import com.celuveat.auth.adapter.`in`.rest.Auth
 import com.celuveat.auth.adapter.`in`.rest.AuthContext
 import com.celuveat.celeb.adapter.`in`.rest.response.BestCelebrityResponse
 import com.celuveat.celeb.adapter.`in`.rest.response.CelebrityResponse
+import com.celuveat.celeb.adapter.`in`.rest.response.CelebrityWithInterestedResponse
 import com.celuveat.celeb.application.port.`in`.AddInterestedCelebrityUseCase
 import com.celuveat.celeb.application.port.`in`.DeleteInterestedCelebrityUseCase
 import com.celuveat.celeb.application.port.`in`.ReadBestCelebritiesUseCase
+import com.celuveat.celeb.application.port.`in`.ReadCelebrityUseCase
 import com.celuveat.celeb.application.port.`in`.ReadInterestedCelebritiesUseCase
 import com.celuveat.celeb.application.port.`in`.command.AddInterestedCelebrityCommand
 import com.celuveat.celeb.application.port.`in`.command.DeleteInterestedCelebrityCommand
+import com.celuveat.celeb.application.port.`in`.query.ReadCelebrityQuery
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -24,6 +27,7 @@ class CelebrityController(
     private val readBestCelebritiesUseCase: ReadBestCelebritiesUseCase,
     private val addInterestedCelebrityUseCase: AddInterestedCelebrityUseCase,
     private val deleteInterestedCelebrityUseCase: DeleteInterestedCelebrityUseCase,
+    private val readCelebrityUseCase: ReadCelebrityUseCase,
 ) : CelebrityApi {
     @GetMapping("/interested")
     override fun readInterestedCelebrities(
@@ -61,5 +65,16 @@ class CelebrityController(
         val optionalMemberId = auth.optionalMemberId()
         val celebritiesResults = readBestCelebritiesUseCase.readBestCelebrities(optionalMemberId)
         return celebritiesResults.map { BestCelebrityResponse.from(it) }
+    }
+
+    @GetMapping("/{celebrityId}")
+    override fun readCelebrity(
+        @Auth auth: AuthContext,
+        @PathVariable celebrityId: Long,
+    ): CelebrityWithInterestedResponse {
+        val memberId = auth.optionalMemberId()
+        val query = ReadCelebrityQuery(memberId, celebrityId)
+        val celebrityResult = readCelebrityUseCase.readCelebrity(query)
+        return CelebrityWithInterestedResponse.from(celebrityResult)
     }
 }

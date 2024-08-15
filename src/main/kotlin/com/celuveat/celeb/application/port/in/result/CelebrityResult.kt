@@ -43,3 +43,20 @@ data class BestCelebrityResult(
     val celebrity: SimpleCelebrityResult,
     val restaurants: List<RestaurantPreviewResult>,
 )
+
+data class CelebrityWithInterestedResult(
+    val celebrity: CelebrityResult,
+    val interested: Boolean,
+) {
+    companion object {
+        fun of(
+            celebrity: Celebrity,
+            isInterested: Boolean,
+        ): CelebrityWithInterestedResult {
+            return CelebrityWithInterestedResult(
+                celebrity = CelebrityResult.from(celebrity),
+                interested = isInterested,
+            )
+        }
+    }
+}

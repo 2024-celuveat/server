@@ -6,4 +6,6 @@ interface ReadCelebritiesPort {
     fun readVisitedCelebritiesByRestaurants(restaurantIds: List<Long>): Map<Long, List<Celebrity>>
 
     fun readBestCelebrities(): List<Celebrity>
+
+    fun readById(celebrityId: Long): Celebrity
 }
