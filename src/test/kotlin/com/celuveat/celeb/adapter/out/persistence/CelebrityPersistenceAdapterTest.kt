@@ -15,6 +15,7 @@ import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantJpaRepos
 import com.celuveat.support.PersistenceAdapterTest
 import com.celuveat.support.sut
 import com.navercorp.fixturemonkey.kotlin.giveMeBuilder
+import com.navercorp.fixturemonkey.kotlin.giveMeOne
 import com.navercorp.fixturemonkey.kotlin.set
 import io.kotest.assertions.assertSoftly
 import io.kotest.core.spec.style.FunSpec
@@ -133,6 +134,30 @@ class CelebrityPersistenceAdapterTest(
         // then
         celebrities.size shouldBe 3
         celebrities.map { it.id } shouldContainExactly listOf(celebrityC.id, celebrityA.id, celebrityB.id)
+    }
+
+    test("셀럽을 조회 한다.") {
+        // given
+        val celebrity = celebrityJpaRepository.save(sut.giveMeOne<CelebrityJpaEntity>())
+        val contentA = sut.giveMeBuilder<YoutubeContentJpaEntity>()
+            .set(YoutubeContentJpaEntity::channelId, "@channelAId")
+            .sample()
+        val contentB = sut.giveMeBuilder<YoutubeContentJpaEntity>()
+            .set(YoutubeContentJpaEntity::channelId, "@channelBId")
+            .sample()
+        val savedContents = youtubeContentJpaRepository.saveAll(listOf(contentA, contentB))
+        celebrityYoutubeContentJpaRepository.saveAll(
+            listOf(
+                generateCelebrityYoutubeContent(celebrity, savedContents[0]),
+                generateCelebrityYoutubeContent(celebrity, savedContents[1]),
+            ),
+        )
+
+        // when
+        val findCelebrity = celebrityPersistenceAdapter.readCelebrity(celebrity.id)
+
+        // then
+        celebrity.id shouldBe findCelebrity.id
     }
 })
 
