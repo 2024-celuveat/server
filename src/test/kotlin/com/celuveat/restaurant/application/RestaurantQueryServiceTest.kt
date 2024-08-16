@@ -7,6 +7,7 @@ import com.celuveat.common.application.port.`in`.result.SliceResult
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityRecommendRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadInterestedRestaurantsQuery
+import com.celuveat.restaurant.application.port.`in`.query.ReadRestaurantsQuery
 import com.celuveat.restaurant.application.port.out.ReadInterestedRestaurantPort
 import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
 import com.celuveat.restaurant.domain.InterestedRestaurant
@@ -18,6 +19,7 @@ import com.navercorp.fixturemonkey.kotlin.setExp
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.core.test.TestCase
 import io.kotest.core.test.TestResult
+import io.kotest.inspectors.forAll
 import io.kotest.matchers.shouldBe
 import io.mockk.Called
 import io.mockk.clearAllMocks
@@ -202,6 +204,93 @@ class RestaurantQueryServiceTest : BehaviorSpec({
             Then("관심 등록 여부는 false로 응답한다") {
                 recommendRestaurants.size shouldBe 2
                 recommendRestaurants.map { it.liked } shouldBe listOf(false, false)
+                verify { readInterestedRestaurantPort wasNot Called }
+            }
+        }
+    }
+
+    Given("조건에 따라 음식점 조회 시") {
+        val restaurants = sut.giveMeBuilder<Restaurant>()
+            .sampleList(2)
+        val restaurantIds = restaurants.map { it.id }
+        val celebritiesByRestaurant = restaurants.associate {
+            it.id to sut.giveMeBuilder<Celebrity>()
+                .setExp(Celebrity::youtubeContents, generateYoutubeContents(size = 2))
+                .sampleList(1)
+        }
+
+        When("회원이 음식점을 조회하면") {
+            val memberId = 1L
+            val interestedRestaurants = restaurants.map {
+                sut.giveMeBuilder<InterestedRestaurant>()
+                    .setExp(InterestedRestaurant::restaurant, it)
+                    .sample()
+            }
+            val sliceResult = SliceResult.of(
+                contents = restaurants,
+                currentPage = 0,
+                hasNext = false,
+            )
+
+            every {
+                readRestaurantPort.readRestaurantsByCondition(
+                    category = "한식",
+                    region = "서울",
+                    page = 0,
+                    size = 5,
+                )
+            } returns sliceResult
+            every { readCelebritiesPort.readVisitedCelebritiesByRestaurants(restaurantIds) } returns celebritiesByRestaurant
+            every {
+                readInterestedRestaurantPort.readInterestedRestaurantsByIds(
+                    memberId = memberId,
+                    restaurantIds = restaurantIds
+                )
+            } returns interestedRestaurants
+
+            val readRestaurantsQuery = ReadRestaurantsQuery(
+                memberId = memberId,
+                category = "한식",
+                region = "서울",
+                page = 0,
+                size = 5,
+            )
+            val results = restaurantQueryService.readRestaurants(readRestaurantsQuery)
+
+            Then("관심 등록 여부가 포함되어 응답한다") {
+                results.contents.size shouldBe 2
+                results.contents.forAll { it.liked shouldBe true }
+                results.hasNext shouldBe false
+            }
+        }
+
+        When("비회원이 음식점을 조회하면") {
+            val sliceResult = SliceResult.of(
+                contents = restaurants,
+                currentPage = 0,
+                hasNext = false,
+            )
+            every {
+                readRestaurantPort.readRestaurantsByCondition(
+                    category = "한식",
+                    region = "서울",
+                    page = 0,
+                    size = 5,
+                )
+            } returns sliceResult
+            every { readCelebritiesPort.readVisitedCelebritiesByRestaurants(restaurantIds) } returns celebritiesByRestaurant
+
+            val readRestaurantsQuery = ReadRestaurantsQuery(
+                memberId = null,
+                category = "한식",
+                region = "서울",
+                page = 0,
+                size = 5,
+            )
+            val results = restaurantQueryService.readRestaurants(readRestaurantsQuery)
+            Then("관심 등록 여부는 false로 응답한다") {
+                results.contents.size shouldBe 2
+                results.contents.forAll { it.liked shouldBe false }
                 verify { readInterestedRestaurantPort wasNot Called }
             }
         }

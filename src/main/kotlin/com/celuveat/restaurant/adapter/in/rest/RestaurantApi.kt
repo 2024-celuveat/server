@@ -78,6 +78,7 @@ interface RestaurantApi {
     @Operation(summary = "음식점 조건 조회")
     @GetMapping
     fun readRestaurants(
+        @Auth auth: AuthContext,
         @Parameter(
             `in` = ParameterIn.QUERY,
             description = "지역",

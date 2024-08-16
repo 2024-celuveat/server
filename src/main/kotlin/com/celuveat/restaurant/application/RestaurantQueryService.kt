@@ -90,6 +90,15 @@ class RestaurantQueryService(
             page = query.page,
             size = query.size
         )
-        TODO()
+        val restaurantIds = restaurants.contents.map { it.id }
+        val interestedRestaurants = readInterestedRestaurants(query.memberId, restaurantIds)
+        val celebritiesByRestaurants = readCelebritiesPort.readVisitedCelebritiesByRestaurants(restaurantIds)
+        return restaurants.convertContent {
+            RestaurantPreviewResult.of(
+                restaurant = it,
+                liked = interestedRestaurants.contains(it),
+                visitedCelebrities = celebritiesByRestaurants[it.id]!!,
+            )
+        }
     }
 }
