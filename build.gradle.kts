@@ -41,7 +41,7 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.5")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.5")
 
-    //Kotlin JDSL
+    // Kotlin JDSL
     implementation("com.linecorp.kotlin-jdsl:jpql-dsl:3.5.1")
     implementation("com.linecorp.kotlin-jdsl:jpql-render:3.5.1")
     implementation("com.linecorp.kotlin-jdsl:spring-data-jpa-support:3.5.1")

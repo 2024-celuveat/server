@@ -88,7 +88,7 @@ class RestaurantQueryService(
             category = query.category,
             region = query.region,
             page = query.page,
-            size = query.size
+            size = query.size,
         )
         val restaurantIds = restaurants.contents.map { it.id }
         val interestedRestaurants = readInterestedRestaurants(query.memberId, restaurantIds)

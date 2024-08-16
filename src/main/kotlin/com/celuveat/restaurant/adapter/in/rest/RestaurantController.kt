@@ -115,7 +115,7 @@ class RestaurantController(
         @Auth auth: AuthContext,
         @RequestParam region: String?,
         @RequestParam category: String?,
-        @PageableDefault pageable: Pageable
+        @PageableDefault pageable: Pageable,
     ): SliceResponse<RestaurantPreviewResponse> {
         val query = ReadRestaurantsQuery(
             memberId = auth.optionalMemberId(),

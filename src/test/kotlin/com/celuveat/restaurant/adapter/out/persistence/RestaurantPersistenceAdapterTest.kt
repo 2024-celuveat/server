@@ -124,7 +124,7 @@ class RestaurantPersistenceAdapterTest(
             sut.giveMeBuilder<RestaurantJpaEntity>()
                 .setExp(RestaurantJpaEntity::category, "한식", 2)
                 .setExp(RestaurantJpaEntity::roadAddress, "서울", 1)
-                .sampleList(5)
+                .sampleList(5),
         )
 
         // when
@@ -146,7 +146,7 @@ class RestaurantPersistenceAdapterTest(
             sut.giveMeBuilder<RestaurantJpaEntity>()
                 .setExp(RestaurantJpaEntity::category, "한식", 1)
                 .setExp(RestaurantJpaEntity::roadAddress, "서울", 2)
-                .sampleList(4)
+                .sampleList(4),
         )
 
         // when

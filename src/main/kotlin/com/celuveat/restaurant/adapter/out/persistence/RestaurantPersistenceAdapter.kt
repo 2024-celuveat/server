@@ -60,7 +60,7 @@ class RestaurantPersistenceAdapter(
         category: String?,
         region: String?,
         page: Int,
-        size: Int
+        size: Int,
     ): SliceResult<Restaurant> {
         val pageRequest = PageRequest.of(page, size, LATEST_SORTER)
         val filter = RestaurantFilter(category, region)

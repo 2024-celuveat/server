@@ -12,7 +12,7 @@ class CustomRestaurantRepositoryImpl(
 ) : CustomRestaurantRepository {
     override fun findAllByFilter(
         filter: RestaurantFilter,
-        pageable: Pageable
+        pageable: Pageable,
     ): Slice<RestaurantJpaEntity> {
         val findSlice = executor.findSlice(pageable) {
             select(
