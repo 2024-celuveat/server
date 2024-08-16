@@ -9,10 +9,12 @@ import com.celuveat.restaurant.application.port.`in`.DeleteInterestedRestaurants
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityRecommendRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityVisitedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadInterestedRestaurantsUseCase
+import com.celuveat.restaurant.application.port.`in`.ReadRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.command.AddInterestedRestaurantCommand
 import com.celuveat.restaurant.application.port.`in`.command.DeleteInterestedRestaurantCommand
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadInterestedRestaurantsQuery
+import com.celuveat.restaurant.application.port.`in`.query.ReadRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.result.RestaurantPreviewResult
 import com.celuveat.support.sut
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -41,6 +43,7 @@ class RestaurantControllerTest(
     @MockkBean val deleteInterestedRestaurantsUseCase: DeleteInterestedRestaurantsUseCase,
     @MockkBean val readCelebrityVisitedRestaurantUseCase: ReadCelebrityVisitedRestaurantUseCase,
     @MockkBean val readCelebrityRecommendRestaurantsUseCase: ReadCelebrityRecommendRestaurantsUseCase,
+    @MockkBean val readRestaurantsUseCase: ReadRestaurantsUseCase,
     // for AuthMemberArgumentResolver
     @MockkBean val extractMemberIdUseCase: ExtractMemberIdUseCase,
 ) : FunSpec({
@@ -201,6 +204,49 @@ class RestaurantControllerTest(
             every { readCelebrityRecommendRestaurantsUseCase.readCelebrityRecommendRestaurants(any()) } returns results
 
             mockMvc.get("/restaurants/celebrity/recommend") {
+            }.andExpect {
+                status { isOk() }
+                content { json(mapper.writeValueAsString(response)) }
+            }.andDo {
+                print()
+            }
+        }
+    }
+
+    context("조건에 따라 음식점 목록을 조회 한다") {
+        val page = 0
+        val size = 3
+
+        test("회원 조회 성공") {
+            val memberId = 1L
+            val accessToken = "celuveatAccessToken"
+            val category = "한식"
+            val region = "성수"
+            val results = sut.giveMeBuilder<RestaurantPreviewResult>()
+                .setExp(RestaurantPreviewResult::liked, true)
+                .sampleList(3)
+            val sliceResult = SliceResult.of(
+                contents = results,
+                currentPage = page,
+                hasNext = false,
+            )
+            val query = ReadRestaurantsQuery(
+                memberId = memberId,
+                region = region,
+                category = category,
+                page = page,
+                size = size,
+            )
+            every { extractMemberIdUseCase.extract(accessToken) } returns memberId
+            every { readRestaurantsUseCase.readRestaurants(query) } returns sliceResult
+
+            val response = SliceResponse.from(sliceResult, RestaurantPreviewResponse::from)
+            mockMvc.get("/restaurants") {
+                header("Authorization", "Bearer $accessToken")
+                param("category", category)
+                param("region", region)
+                param("page", page.toString())
+                param("size", size.toString())
             }.andExpect {
                 status { isOk() }
                 content { json(mapper.writeValueAsString(response)) }

@@ -13,4 +13,11 @@ interface ReadRestaurantPort {
     fun readById(id: Long): Restaurant
 
     fun readCelebrityRecommendRestaurant(): List<Restaurant>
+
+    fun readRestaurantsByCondition(
+        category: String?,
+        region: String?,
+        page: Int,
+        size: Int,
+    ): SliceResult<Restaurant>
 }

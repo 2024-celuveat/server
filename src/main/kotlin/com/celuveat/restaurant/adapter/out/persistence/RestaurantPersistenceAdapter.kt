@@ -3,6 +3,7 @@ package com.celuveat.restaurant.adapter.out.persistence
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityRestaurantJpaRepository
 import com.celuveat.common.annotation.Adapter
 import com.celuveat.common.application.port.`in`.result.SliceResult
+import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantFilter
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantImageJpaRepository
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantJpaRepository
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantPersistenceMapper
@@ -53,6 +54,30 @@ class RestaurantPersistenceAdapter(
                 imagesByRestaurants[it.id]!!,
             )
         }
+    }
+
+    override fun readRestaurantsByCondition(
+        category: String?,
+        region: String?,
+        page: Int,
+        size: Int,
+    ): SliceResult<Restaurant> {
+        val pageRequest = PageRequest.of(page, size, LATEST_SORTER)
+        val filter = RestaurantFilter(category, region)
+        val restaurantSlice = restaurantJpaRepository.findAllByFilter(filter, pageRequest)
+        val restaurants = restaurantSlice.content.map { it }
+        val imagesByRestaurants = restaurantImageJpaRepository.findByRestaurantIn(restaurants)
+            .groupBy { it.restaurant.id }
+        return SliceResult.of(
+            contents = restaurantSlice.content.map {
+                restaurantPersistenceMapper.toDomain(
+                    it,
+                    imagesByRestaurants[it.id] ?: emptyList(),
+                )
+            },
+            currentPage = page,
+            hasNext = restaurantSlice.hasNext(),
+        )
     }
 
     companion object {

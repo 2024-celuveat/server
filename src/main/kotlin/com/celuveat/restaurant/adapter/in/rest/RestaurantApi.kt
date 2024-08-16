@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestParam
 
 @Tag(name = "음식점 API")
 interface RestaurantApi {
@@ -73,4 +74,25 @@ interface RestaurantApi {
     fun readCelebrityRecommendRestaurants(
         @Auth auth: AuthContext,
     ): List<RestaurantPreviewResponse>
+
+    @Operation(summary = "음식점 조건 조회")
+    @GetMapping
+    fun readRestaurants(
+        @Auth auth: AuthContext,
+        @Parameter(
+            `in` = ParameterIn.QUERY,
+            description = "지역",
+            example = "성수",
+            required = false,
+        )
+        @RequestParam region: String?,
+        @Parameter(
+            `in` = ParameterIn.QUERY,
+            description = "카테고리",
+            example = "한식",
+            required = false,
+        )
+        @RequestParam category: String?,
+        @PageableDefault(size = 10, page = 0) pageable: Pageable,
+    ): SliceResponse<RestaurantPreviewResponse>
 }

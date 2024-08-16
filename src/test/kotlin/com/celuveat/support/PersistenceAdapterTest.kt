@@ -4,6 +4,7 @@ import com.celuveat.auth.adapter.out.TokenAdapter
 import com.celuveat.common.adapter.out.persistence.JpaConfig
 import com.celuveat.common.annotation.Adapter
 import com.celuveat.common.annotation.Mapper
+import com.linecorp.kotlinjdsl.support.spring.data.jpa.autoconfigure.KotlinJdslAutoConfiguration
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
@@ -17,6 +18,6 @@ import org.springframework.context.annotation.Import
     includeFilters = [ComponentScan.Filter(type = FilterType.ANNOTATION, classes = [Adapter::class, Mapper::class])],
     excludeFilters = [ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = [TokenAdapter::class])],
 )
-@Import(JpaConfig::class)
+@Import(JpaConfig::class, KotlinJdslAutoConfiguration::class)
 @DataJpaTest
 annotation class PersistenceAdapterTest
