@@ -13,6 +13,7 @@ import com.celuveat.support.sut
 import com.navercorp.fixturemonkey.kotlin.giveMeBuilder
 import com.navercorp.fixturemonkey.kotlin.giveMeOne
 import com.navercorp.fixturemonkey.kotlin.set
+import com.navercorp.fixturemonkey.kotlin.setExp
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContainInOrder
 import io.kotest.matchers.shouldBe
@@ -115,5 +116,50 @@ class RestaurantPersistenceAdapterTest(
             restaurantA.id,
             restaurantB.id,
         )
+    }
+
+    test("조건에 따라 음식점을 검색한다.") {
+        // given
+        restaurantJpaRepository.saveAll(
+            sut.giveMeBuilder<RestaurantJpaEntity>()
+                .setExp(RestaurantJpaEntity::category, "한식", 2)
+                .setExp(RestaurantJpaEntity::roadAddress, "서울", 1)
+                .sampleList(5)
+        )
+
+        // when
+        val restaurants = restaurantPersistenceAdapter.readRestaurantsByCondition(
+            category = "한식",
+            region = "서울",
+            page = 0,
+            size = 2,
+        )
+
+        // then
+        restaurants.size shouldBe 1
+        restaurants.hasNext shouldBe false
+    }
+
+    test("존재하지 않는 조건은 생략하고 검색한다.") {
+        // given
+        restaurantJpaRepository.saveAll(
+            sut.giveMeBuilder<RestaurantJpaEntity>()
+                .setExp(RestaurantJpaEntity::category, "한식", 1)
+                .setExp(RestaurantJpaEntity::roadAddress, "서울", 2)
+                .sampleList(4)
+        )
+
+        // when
+        val restaurants = restaurantPersistenceAdapter.readRestaurantsByCondition(
+            category = null,
+            region = "서울",
+            page = 0,
+            size = 3,
+        )
+
+        // then
+        restaurants.size shouldBe 2
+        restaurants.contents.map { it.roadAddress } shouldContainInOrder listOf("서울", "서울")
+        restaurants.hasNext shouldBe false
     }
 })
