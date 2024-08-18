@@ -20,4 +20,6 @@ interface ReadRestaurantPort {
         page: Int,
         size: Int,
     ): SliceResult<Restaurant>
+
+    fun readLatestUpdatedRestaurants(page: Int, size: Int): SliceResult<Restaurant>
 }

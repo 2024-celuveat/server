@@ -162,4 +162,49 @@ class RestaurantPersistenceAdapterTest(
         restaurants.contents.map { it.roadAddress } shouldContainInOrder listOf("서울", "서울")
         restaurants.hasNext shouldBe false
     }
+
+    test("최근 업데이트된 음식점을 조회한다.") {
+        // given
+        val savedRestaurants = restaurantJpaRepository.saveAll(
+            listOf(
+                sut.giveMeBuilder<RestaurantJpaEntity>()
+                    .set(RestaurantJpaEntity::name, "1 음식점")
+                    .sample(),
+                sut.giveMeBuilder<RestaurantJpaEntity>()
+                    .set(RestaurantJpaEntity::name, "2 음식점")
+                    .sample(),
+                sut.giveMeBuilder<RestaurantJpaEntity>()
+                    .set(RestaurantJpaEntity::name, "3 음식점")
+                    .sample()
+            )
+        )
+        val savedCelebrity = celebrityJpaRepository.save(sut.giveMeOne())
+        celebrityRestaurantJpaRepository.saveAll(
+            savedRestaurants.map {
+                CelebrityRestaurantJpaEntity(
+                    celebrity = savedCelebrity,
+                    restaurant = it,
+                )
+            },
+        )
+
+        restaurantImageJpaRepository.saveAll(
+            savedRestaurants.map {
+                sut.giveMeBuilder<RestaurantImageJpaEntity>()
+                    .set(RestaurantImageJpaEntity::id, 0)
+                    .set(RestaurantImageJpaEntity::restaurant, it)
+                    .set(RestaurantImageJpaEntity::isThumbnail, true, 1)
+                    .sampleList(3)
+            }.flatten(),
+        )
+
+        // when
+        val latestRestaurants = restaurantPersistenceAdapter.readLatestUpdatedRestaurants(0, 3)
+
+        // then
+        latestRestaurants.size shouldBe 3
+        latestRestaurants.contents.map { it.name } shouldContainInOrder listOf(
+            "3 음식점", "2 음식점", "1 음식점"
+        )
+    }
 })

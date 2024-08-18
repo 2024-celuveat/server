@@ -80,6 +80,23 @@ class RestaurantPersistenceAdapter(
         )
     }
 
+    override fun readLatestUpdatedRestaurants(page: Int, size: Int): SliceResult<Restaurant> {
+        val pageRequest = PageRequest.of(page, size)
+        val restaurants = restaurantJpaRepository.findLatest(pageRequest)
+        val imagesByRestaurants = restaurantImageJpaRepository.findByRestaurantIn(restaurants.content)
+            .groupBy { it.restaurant.id }
+        return SliceResult.of(
+            contents = restaurants.content.map {
+                restaurantPersistenceMapper.toDomain(
+                    it,
+                    imagesByRestaurants[it.id]!!,
+                )
+            },
+            currentPage = page,
+            hasNext = restaurants.hasNext(),
+        )
+    }
+
     companion object {
         val LATEST_SORTER = Sort.by("createdAt").descending()
     }

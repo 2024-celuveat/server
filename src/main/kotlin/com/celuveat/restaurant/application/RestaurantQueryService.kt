@@ -5,10 +5,12 @@ import com.celuveat.common.application.port.`in`.result.SliceResult
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityRecommendRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityVisitedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadInterestedRestaurantsUseCase
+import com.celuveat.restaurant.application.port.`in`.ReadLatestUpdatedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityRecommendRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadInterestedRestaurantsQuery
+import com.celuveat.restaurant.application.port.`in`.query.ReadLatestUpdatedRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.result.RestaurantPreviewResult
 import com.celuveat.restaurant.application.port.out.ReadInterestedRestaurantPort
@@ -24,7 +26,8 @@ class RestaurantQueryService(
 ) : ReadInterestedRestaurantsUseCase,
     ReadCelebrityVisitedRestaurantUseCase,
     ReadCelebrityRecommendRestaurantsUseCase,
-    ReadRestaurantsUseCase {
+    ReadRestaurantsUseCase,
+    ReadLatestUpdatedRestaurantsUseCase {
     override fun readInterestedRestaurant(query: ReadInterestedRestaurantsQuery): SliceResult<RestaurantPreviewResult> {
         val interestedRestaurants = readInterestedRestaurantPort.readInterestedRestaurants(
             query.memberId,
@@ -73,16 +76,6 @@ class RestaurantQueryService(
         }
     }
 
-    private fun readInterestedRestaurants(
-        memberId: Long?,
-        restaurantIds: List<Long>,
-    ): Set<Restaurant> {
-        return memberId?.let {
-            readInterestedRestaurantPort.readInterestedRestaurantsByIds(it, restaurantIds)
-                .map { interested -> interested.restaurant }.toSet()
-        } ?: emptySet()
-    }
-
     override fun readRestaurants(query: ReadRestaurantsQuery): SliceResult<RestaurantPreviewResult> {
         val restaurants = readRestaurantPort.readRestaurantsByCondition(
             category = query.category,
@@ -100,5 +93,31 @@ class RestaurantQueryService(
                 visitedCelebrities = celebritiesByRestaurants[it.id]!!,
             )
         }
+    }
+
+    override fun readLatestUpdatedRestaurants(
+        query: ReadLatestUpdatedRestaurantsQuery
+    ): SliceResult<RestaurantPreviewResult> {
+        val restaurants = readRestaurantPort.readLatestUpdatedRestaurants(query.page, query.size)
+        val restaurantIds = restaurants.contents.map { it.id }
+        val celebritiesByRestaurants = readCelebritiesPort.readVisitedCelebritiesByRestaurants(restaurantIds)
+        val interestedRestaurants = readInterestedRestaurants(query.memberId, restaurantIds)
+        return restaurants.convertContent {
+            RestaurantPreviewResult.of(
+                restaurant = it,
+                liked = interestedRestaurants.contains(it),
+                visitedCelebrities = celebritiesByRestaurants[it.id]!!,
+            )
+        }
+    }
+
+    private fun readInterestedRestaurants(
+        memberId: Long?,
+        restaurantIds: List<Long>,
+    ): Set<Restaurant> {
+        return memberId?.let {
+            readInterestedRestaurantPort.readInterestedRestaurantsByIds(it, restaurantIds)
+                .map { interested -> interested.restaurant }.toSet()
+        } ?: emptySet()
     }
 }
