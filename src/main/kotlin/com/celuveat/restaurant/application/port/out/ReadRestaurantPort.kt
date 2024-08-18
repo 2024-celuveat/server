@@ -2,6 +2,7 @@ package com.celuveat.restaurant.application.port.out
 
 import com.celuveat.common.application.port.`in`.result.SliceResult
 import com.celuveat.restaurant.domain.Restaurant
+import java.time.LocalDate
 
 interface ReadRestaurantPort {
     fun readVisitedRestaurantByCelebrity(
@@ -21,5 +22,10 @@ interface ReadRestaurantPort {
         size: Int,
     ): SliceResult<Restaurant>
 
-    fun readLatestUpdatedRestaurants(page: Int, size: Int): SliceResult<Restaurant>
+    fun readByCreatedDateBetween(
+        startOfWeek: LocalDate,
+        endOfWeek: LocalDate,
+        page: Int,
+        size: Int
+    ): SliceResult<Restaurant>
 }

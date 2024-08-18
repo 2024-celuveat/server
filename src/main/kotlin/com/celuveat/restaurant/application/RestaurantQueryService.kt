@@ -5,18 +5,21 @@ import com.celuveat.common.application.port.`in`.result.SliceResult
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityRecommendRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityVisitedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadInterestedRestaurantsUseCase
-import com.celuveat.restaurant.application.port.`in`.ReadLatestUpdatedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadRestaurantsUseCase
+import com.celuveat.restaurant.application.port.`in`.ReadWeeklyUpdateRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityRecommendRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadInterestedRestaurantsQuery
-import com.celuveat.restaurant.application.port.`in`.query.ReadLatestUpdatedRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadRestaurantsQuery
+import com.celuveat.restaurant.application.port.`in`.query.ReadWeeklyUpdateRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.result.RestaurantPreviewResult
 import com.celuveat.restaurant.application.port.out.ReadInterestedRestaurantPort
 import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
 import com.celuveat.restaurant.domain.Restaurant
 import org.springframework.stereotype.Service
+import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.temporal.TemporalAdjusters
 
 @Service
 class RestaurantQueryService(
@@ -27,7 +30,7 @@ class RestaurantQueryService(
     ReadCelebrityVisitedRestaurantUseCase,
     ReadCelebrityRecommendRestaurantsUseCase,
     ReadRestaurantsUseCase,
-    ReadLatestUpdatedRestaurantsUseCase {
+    ReadWeeklyUpdateRestaurantsUseCase {
     override fun readInterestedRestaurant(query: ReadInterestedRestaurantsQuery): SliceResult<RestaurantPreviewResult> {
         val interestedRestaurants = readInterestedRestaurantPort.readInterestedRestaurants(
             query.memberId,
@@ -95,10 +98,12 @@ class RestaurantQueryService(
         }
     }
 
-    override fun readLatestUpdatedRestaurants(
-        query: ReadLatestUpdatedRestaurantsQuery
+    override fun readWeeklyUpdateRestaurants(
+        query: ReadWeeklyUpdateRestaurantsQuery
     ): SliceResult<RestaurantPreviewResult> {
-        val restaurants = readRestaurantPort.readLatestUpdatedRestaurants(query.page, query.size)
+        val startOfWeek: LocalDate = query.baseDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+        val endOfWeek: LocalDate = query.baseDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY))
+        val restaurants = readRestaurantPort.readByCreatedDateBetween(startOfWeek, endOfWeek, query.page, query.size)
         val restaurantIds = restaurants.contents.map { it.id }
         val celebritiesByRestaurants = readCelebritiesPort.readVisitedCelebritiesByRestaurants(restaurantIds)
         val interestedRestaurants = readInterestedRestaurants(query.memberId, restaurantIds)

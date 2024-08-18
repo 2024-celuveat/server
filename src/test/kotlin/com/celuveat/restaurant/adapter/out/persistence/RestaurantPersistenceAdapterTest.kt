@@ -17,6 +17,9 @@ import com.navercorp.fixturemonkey.kotlin.setExp
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContainInOrder
 import io.kotest.matchers.shouldBe
+import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.temporal.TemporalAdjusters
 
 @PersistenceAdapterTest
 class RestaurantPersistenceAdapterTest(
@@ -187,6 +190,9 @@ class RestaurantPersistenceAdapterTest(
                 )
             },
         )
+        val baseDate = LocalDate.now()
+        val startOfWeek: LocalDate = baseDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+        val endOfWeek: LocalDate = baseDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY))
 
         restaurantImageJpaRepository.saveAll(
             savedRestaurants.map {
@@ -199,11 +205,16 @@ class RestaurantPersistenceAdapterTest(
         )
 
         // when
-        val latestRestaurants = restaurantPersistenceAdapter.readLatestUpdatedRestaurants(0, 3)
+        val weeklyUpdatedRestaurants = restaurantPersistenceAdapter.readByCreatedDateBetween(
+            startOfWeek,
+            endOfWeek,
+            0,
+            3
+        )
 
         // then
-        latestRestaurants.size shouldBe 3
-        latestRestaurants.contents.map { it.name } shouldContainInOrder listOf(
+        weeklyUpdatedRestaurants.size shouldBe 3
+        weeklyUpdatedRestaurants.contents.map { it.name } shouldContainInOrder listOf(
             "3 음식점", "2 음식점", "1 음식점"
         )
     }
