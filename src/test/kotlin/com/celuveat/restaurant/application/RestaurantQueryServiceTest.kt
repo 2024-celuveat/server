@@ -314,7 +314,7 @@ class RestaurantQueryServiceTest : BehaviorSpec({
         )
         When("회원이 최근 업데이트된 음식점 조회하면") {
             val memberId = 1L
-            every { readRestaurantPort.readByCreatedDateBetween(any(), any(), any(), any()) } returns restaurants
+            every { readRestaurantPort.readByCreatedAtBetween(any(), any(), any(), any()) } returns restaurants
             every { readCelebritiesPort.readVisitedCelebritiesByRestaurants(restaurantIds) } returns celebritiesByRestaurants
             every {
                 readInterestedRestaurantPort.readInterestedRestaurantsByIds(
@@ -341,7 +341,7 @@ class RestaurantQueryServiceTest : BehaviorSpec({
         }
 
         When("비회원이 최근 업데이트된 음식점 조회하면") {
-            every { readRestaurantPort.readByCreatedDateBetween(any(), any(), any(), any()) } returns restaurants
+            every { readRestaurantPort.readByCreatedAtBetween(any(), any(), any(), any()) } returns restaurants
             every { readCelebritiesPort.readVisitedCelebritiesByRestaurants(restaurantIds) } returns celebritiesByRestaurants
 
             val latestRestaurants = restaurantQueryService.readWeeklyUpdateRestaurants(

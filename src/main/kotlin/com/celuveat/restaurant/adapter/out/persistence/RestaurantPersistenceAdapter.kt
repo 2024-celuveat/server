@@ -82,14 +82,14 @@ class RestaurantPersistenceAdapter(
         )
     }
 
-    override fun readByCreatedDateBetween(
+    override fun readByCreatedAtBetween(
         startOfWeek: LocalDate,
         endOfWeek: LocalDate,
         page: Int,
         size: Int,
     ): SliceResult<Restaurant> {
         val pageRequest = PageRequest.of(page, size, LATEST_SORTER)
-        val restaurants = restaurantJpaRepository.findByCreatedDateBetween(
+        val restaurants = restaurantJpaRepository.findByCreatedAtBetween(
             startOfWeek.atStartOfDay(),
             endOfWeek.atTime(LocalTime.MAX),
             pageRequest,

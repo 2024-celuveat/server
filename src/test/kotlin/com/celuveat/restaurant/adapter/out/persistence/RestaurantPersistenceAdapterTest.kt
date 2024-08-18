@@ -205,7 +205,7 @@ class RestaurantPersistenceAdapterTest(
         )
 
         // when
-        val weeklyUpdatedRestaurants = restaurantPersistenceAdapter.readByCreatedDateBetween(
+        val weeklyUpdatedRestaurants = restaurantPersistenceAdapter.readByCreatedAtBetween(
             startOfWeek,
             endOfWeek,
             0,

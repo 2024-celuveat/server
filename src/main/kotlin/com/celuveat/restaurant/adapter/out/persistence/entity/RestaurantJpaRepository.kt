@@ -14,7 +14,7 @@ interface RestaurantJpaRepository : JpaRepository<RestaurantJpaEntity, Long>, Cu
     }
 
     @Query("SELECT r FROM RestaurantJpaEntity r WHERE r.createdAt >= :startOfWeek AND r.createdAt <= :endOfWeek ORDER BY r.createdAt DESC")
-    fun findByCreatedDateBetween(
+    fun findByCreatedAtBetween(
         startOfWeek: LocalDateTime,
         endOfWeek: LocalDateTime,
         pageable: Pageable,

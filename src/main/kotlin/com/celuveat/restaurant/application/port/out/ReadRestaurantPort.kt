@@ -22,7 +22,7 @@ interface ReadRestaurantPort {
         size: Int,
     ): SliceResult<Restaurant>
 
-    fun readByCreatedDateBetween(
+    fun readByCreatedAtBetween(
         startOfWeek: LocalDate,
         endOfWeek: LocalDate,
         page: Int,
