@@ -9,5 +9,4 @@ data class ReadWeeklyUpdateRestaurantsQuery(
     val page: Int = 0,
     val size: Int = DEFAULT_LATEST_UPDATED_RESTAURANTS_SIZE,
     val baseDate: LocalDate = LocalDate.now(),
-) {
-}
+)

@@ -26,6 +26,6 @@ interface ReadRestaurantPort {
         startOfWeek: LocalDate,
         endOfWeek: LocalDate,
         page: Int,
-        size: Int
+        size: Int,
     ): SliceResult<Restaurant>
 }

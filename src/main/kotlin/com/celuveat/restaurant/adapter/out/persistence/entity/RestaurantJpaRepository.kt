@@ -17,6 +17,6 @@ interface RestaurantJpaRepository : JpaRepository<RestaurantJpaEntity, Long>, Cu
     fun findByCreatedDateBetween(
         startOfWeek: LocalDateTime,
         endOfWeek: LocalDateTime,
-        pageable: Pageable
+        pageable: Pageable,
     ): Slice<RestaurantJpaEntity>
 }

@@ -137,14 +137,14 @@ class RestaurantController(
     @GetMapping("/weekly")
     override fun readWeeklyUpdatedRestaurants(
         auth: AuthContext,
-        pageable: Pageable
+        pageable: Pageable,
     ): SliceResponse<RestaurantPreviewResponse> {
         val result = readWeeklyUpdateRestaurantsUseCase.readWeeklyUpdateRestaurants(
             ReadWeeklyUpdateRestaurantsQuery(
                 auth.memberId(),
                 page = pageable.pageNumber,
                 size = pageable.pageSize,
-            )
+            ),
         )
         return SliceResponse.from(
             sliceResult = result,

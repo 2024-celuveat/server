@@ -8,6 +8,5 @@ import com.celuveat.restaurant.application.port.`in`.result.RestaurantPreviewRes
  * 최근 업데이트된 맛집
  */
 interface ReadWeeklyUpdateRestaurantsUseCase {
-
     fun readWeeklyUpdateRestaurants(query: ReadWeeklyUpdateRestaurantsQuery): SliceResult<RestaurantPreviewResult>
 }

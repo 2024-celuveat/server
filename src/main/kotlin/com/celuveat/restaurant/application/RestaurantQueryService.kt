@@ -98,9 +98,7 @@ class RestaurantQueryService(
         }
     }
 
-    override fun readWeeklyUpdateRestaurants(
-        query: ReadWeeklyUpdateRestaurantsQuery
-    ): SliceResult<RestaurantPreviewResult> {
+    override fun readWeeklyUpdateRestaurants(query: ReadWeeklyUpdateRestaurantsQuery): SliceResult<RestaurantPreviewResult> {
         val startOfWeek: LocalDate = query.baseDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
         val endOfWeek: LocalDate = query.baseDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY))
         val restaurants = readRestaurantPort.readByCreatedDateBetween(startOfWeek, endOfWeek, query.page, query.size)

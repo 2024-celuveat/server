@@ -86,13 +86,13 @@ class RestaurantPersistenceAdapter(
         startOfWeek: LocalDate,
         endOfWeek: LocalDate,
         page: Int,
-        size: Int
+        size: Int,
     ): SliceResult<Restaurant> {
         val pageRequest = PageRequest.of(page, size, LATEST_SORTER)
         val restaurants = restaurantJpaRepository.findByCreatedDateBetween(
             startOfWeek.atStartOfDay(),
             endOfWeek.atTime(LocalTime.MAX),
-            pageRequest
+            pageRequest,
         )
         val imagesByRestaurants = restaurantImageJpaRepository.findByRestaurantIn(restaurants.content)
             .groupBy { it.restaurant.id }

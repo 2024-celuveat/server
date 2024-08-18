@@ -178,8 +178,8 @@ class RestaurantPersistenceAdapterTest(
                     .sample(),
                 sut.giveMeBuilder<RestaurantJpaEntity>()
                     .set(RestaurantJpaEntity::name, "3 음식점")
-                    .sample()
-            )
+                    .sample(),
+            ),
         )
         val savedCelebrity = celebrityJpaRepository.save(sut.giveMeOne())
         celebrityRestaurantJpaRepository.saveAll(
@@ -209,13 +209,13 @@ class RestaurantPersistenceAdapterTest(
             startOfWeek,
             endOfWeek,
             0,
-            3
+            3,
         )
 
         // then
         weeklyUpdatedRestaurants.size shouldBe 3
         weeklyUpdatedRestaurants.contents.map { it.name } shouldContainInOrder listOf(
-            "3 음식점", "2 음식점", "1 음식점"
+            "3 음식점", "2 음식점", "1 음식점",
         )
     }
 })

@@ -328,7 +328,7 @@ class RestaurantQueryServiceTest : BehaviorSpec({
             ) // 첫 번째 음식점만 관심 등록
 
             val latestRestaurants = restaurantQueryService.readWeeklyUpdateRestaurants(
-                ReadWeeklyUpdateRestaurantsQuery(memberId, 0, 10)
+                ReadWeeklyUpdateRestaurantsQuery(memberId, 0, 10),
             ).contents
 
             Then("관심 등록 여부가 포함되어 응답한다") {
@@ -345,7 +345,7 @@ class RestaurantQueryServiceTest : BehaviorSpec({
             every { readCelebritiesPort.readVisitedCelebritiesByRestaurants(restaurantIds) } returns celebritiesByRestaurants
 
             val latestRestaurants = restaurantQueryService.readWeeklyUpdateRestaurants(
-                ReadWeeklyUpdateRestaurantsQuery(memberId = null, page = 0, size = 10)
+                ReadWeeklyUpdateRestaurantsQuery(memberId = null, page = 0, size = 10),
             ).contents
 
             Then("관심 등록 여부는 false로 응답한다") {
