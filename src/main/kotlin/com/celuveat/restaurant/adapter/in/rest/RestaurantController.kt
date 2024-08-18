@@ -10,12 +10,14 @@ import com.celuveat.restaurant.application.port.`in`.ReadCelebrityRecommendResta
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityVisitedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadRestaurantsUseCase
+import com.celuveat.restaurant.application.port.`in`.ReadWeeklyUpdateRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.command.AddInterestedRestaurantCommand
 import com.celuveat.restaurant.application.port.`in`.command.DeleteInterestedRestaurantCommand
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityRecommendRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadInterestedRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadRestaurantsQuery
+import com.celuveat.restaurant.application.port.`in`.query.ReadWeeklyUpdateRestaurantsQuery
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -35,6 +37,7 @@ class RestaurantController(
     private val readCelebrityVisitedRestaurantUseCase: ReadCelebrityVisitedRestaurantUseCase,
     private val readCelebrityRecommendRestaurantsUseCase: ReadCelebrityRecommendRestaurantsUseCase,
     private val readRestaurantsUseCase: ReadRestaurantsUseCase,
+    private val readWeeklyUpdateRestaurantsUseCase: ReadWeeklyUpdateRestaurantsUseCase,
 ) : RestaurantApi {
     @GetMapping("/interested")
     override fun getInterestedRestaurants(
@@ -125,6 +128,24 @@ class RestaurantController(
             size = pageable.pageSize,
         )
         val result = readRestaurantsUseCase.readRestaurants(query)
+        return SliceResponse.from(
+            sliceResult = result,
+            converter = RestaurantPreviewResponse::from,
+        )
+    }
+
+    @GetMapping("/weekly")
+    override fun readWeeklyUpdatedRestaurants(
+        auth: AuthContext,
+        pageable: Pageable
+    ): SliceResponse<RestaurantPreviewResponse> {
+        val result = readWeeklyUpdateRestaurantsUseCase.readWeeklyUpdateRestaurants(
+            ReadWeeklyUpdateRestaurantsQuery(
+                auth.memberId(),
+                page = pageable.pageNumber,
+                size = pageable.pageSize,
+            )
+        )
         return SliceResponse.from(
             sliceResult = result,
             converter = RestaurantPreviewResponse::from,
