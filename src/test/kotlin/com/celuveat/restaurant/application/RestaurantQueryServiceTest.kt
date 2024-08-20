@@ -8,6 +8,7 @@ import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityRecommen
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadInterestedRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadRestaurantsQuery
+import com.celuveat.restaurant.application.port.`in`.query.ReadWeeklyUpdateRestaurantsQuery
 import com.celuveat.restaurant.application.port.out.ReadInterestedRestaurantPort
 import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
 import com.celuveat.restaurant.domain.InterestedRestaurant
@@ -291,6 +292,65 @@ class RestaurantQueryServiceTest : BehaviorSpec({
             Then("관심 등록 여부는 false로 응답한다") {
                 results.contents.size shouldBe 2
                 results.contents.forAll { it.liked shouldBe false }
+                verify { readInterestedRestaurantPort wasNot Called }
+            }
+        }
+    }
+
+    Given("최근 업데이트된 음식점 조회 시") {
+        val restaurants = SliceResult.of(
+            contents = sut.giveMeBuilder<Restaurant>().sampleList(2),
+            currentPage = 0,
+            hasNext = false,
+        )
+        val restaurantIds = restaurants.contents.map { it.id }
+        val celebritiesByRestaurants = mapOf(
+            restaurantIds[0] to sut.giveMeBuilder<Celebrity>()
+                .setExp(Celebrity::youtubeContents, generateYoutubeContents(size = 2))
+                .sampleList(2),
+            restaurantIds[1] to sut.giveMeBuilder<Celebrity>()
+                .setExp(Celebrity::youtubeContents, generateYoutubeContents(size = 1))
+                .sampleList(1),
+        )
+        When("회원이 최근 업데이트된 음식점 조회하면") {
+            val memberId = 1L
+            every { readRestaurantPort.readByCreatedAtBetween(any(), any(), any(), any()) } returns restaurants
+            every { readCelebritiesPort.readVisitedCelebritiesByRestaurants(restaurantIds) } returns celebritiesByRestaurants
+            every {
+                readInterestedRestaurantPort.readInterestedRestaurantsByIds(
+                    memberId,
+                    restaurantIds,
+                )
+            } returns listOf(
+                sut.giveMeBuilder<InterestedRestaurant>()
+                    .setExp(InterestedRestaurant::restaurant, restaurants.contents[0])
+                    .sample(),
+            ) // 첫 번째 음식점만 관심 등록
+
+            val latestRestaurants = restaurantQueryService.readWeeklyUpdateRestaurants(
+                ReadWeeklyUpdateRestaurantsQuery(memberId, 0, 10),
+            ).contents
+
+            Then("관심 등록 여부가 포함되어 응답한다") {
+                latestRestaurants.size shouldBe 2
+                latestRestaurants[0].liked shouldBe true
+                latestRestaurants[0].visitedCelebrities.size shouldBe 2
+                latestRestaurants[1].liked shouldBe false
+                latestRestaurants[1].visitedCelebrities.size shouldBe 1
+            }
+        }
+
+        When("비회원이 최근 업데이트된 음식점 조회하면") {
+            every { readRestaurantPort.readByCreatedAtBetween(any(), any(), any(), any()) } returns restaurants
+            every { readCelebritiesPort.readVisitedCelebritiesByRestaurants(restaurantIds) } returns celebritiesByRestaurants
+
+            val latestRestaurants = restaurantQueryService.readWeeklyUpdateRestaurants(
+                ReadWeeklyUpdateRestaurantsQuery(memberId = null, page = 0, size = 10),
+            ).contents
+
+            Then("관심 등록 여부는 false로 응답한다") {
+                latestRestaurants.size shouldBe 2
+                latestRestaurants.map { it.liked } shouldBe listOf(false, false)
                 verify { readInterestedRestaurantPort wasNot Called }
             }
         }

@@ -11,6 +11,8 @@ import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
 import com.celuveat.restaurant.domain.Restaurant
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
+import java.time.LocalDate
+import java.time.LocalTime
 
 @Adapter
 class RestaurantPersistenceAdapter(
@@ -77,6 +79,32 @@ class RestaurantPersistenceAdapter(
             },
             currentPage = page,
             hasNext = restaurantSlice.hasNext(),
+        )
+    }
+
+    override fun readByCreatedAtBetween(
+        startOfWeek: LocalDate,
+        endOfWeek: LocalDate,
+        page: Int,
+        size: Int,
+    ): SliceResult<Restaurant> {
+        val pageRequest = PageRequest.of(page, size, LATEST_SORTER)
+        val restaurants = restaurantJpaRepository.findByCreatedAtBetween(
+            startOfWeek.atStartOfDay(),
+            endOfWeek.atTime(LocalTime.MAX),
+            pageRequest,
+        )
+        val imagesByRestaurants = restaurantImageJpaRepository.findByRestaurantIn(restaurants.content)
+            .groupBy { it.restaurant.id }
+        return SliceResult.of(
+            contents = restaurants.content.map {
+                restaurantPersistenceMapper.toDomain(
+                    it,
+                    imagesByRestaurants[it.id]!!,
+                )
+            },
+            currentPage = page,
+            hasNext = restaurants.hasNext(),
         )
     }
 

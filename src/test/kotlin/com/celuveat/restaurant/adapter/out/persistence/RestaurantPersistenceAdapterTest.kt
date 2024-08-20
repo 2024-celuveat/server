@@ -17,6 +17,9 @@ import com.navercorp.fixturemonkey.kotlin.setExp
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContainInOrder
 import io.kotest.matchers.shouldBe
+import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.temporal.TemporalAdjusters
 
 @PersistenceAdapterTest
 class RestaurantPersistenceAdapterTest(
@@ -161,5 +164,58 @@ class RestaurantPersistenceAdapterTest(
         restaurants.size shouldBe 2
         restaurants.contents.map { it.roadAddress } shouldContainInOrder listOf("서울", "서울")
         restaurants.hasNext shouldBe false
+    }
+
+    test("최근 업데이트된 음식점을 조회한다.") {
+        // given
+        val savedRestaurants = restaurantJpaRepository.saveAll(
+            listOf(
+                sut.giveMeBuilder<RestaurantJpaEntity>()
+                    .set(RestaurantJpaEntity::name, "1 음식점")
+                    .sample(),
+                sut.giveMeBuilder<RestaurantJpaEntity>()
+                    .set(RestaurantJpaEntity::name, "2 음식점")
+                    .sample(),
+                sut.giveMeBuilder<RestaurantJpaEntity>()
+                    .set(RestaurantJpaEntity::name, "3 음식점")
+                    .sample(),
+            ),
+        )
+        val savedCelebrity = celebrityJpaRepository.save(sut.giveMeOne())
+        celebrityRestaurantJpaRepository.saveAll(
+            savedRestaurants.map {
+                CelebrityRestaurantJpaEntity(
+                    celebrity = savedCelebrity,
+                    restaurant = it,
+                )
+            },
+        )
+        val baseDate = LocalDate.now()
+        val startOfWeek: LocalDate = baseDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+        val endOfWeek: LocalDate = baseDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY))
+
+        restaurantImageJpaRepository.saveAll(
+            savedRestaurants.map {
+                sut.giveMeBuilder<RestaurantImageJpaEntity>()
+                    .set(RestaurantImageJpaEntity::id, 0)
+                    .set(RestaurantImageJpaEntity::restaurant, it)
+                    .set(RestaurantImageJpaEntity::isThumbnail, true, 1)
+                    .sampleList(3)
+            }.flatten(),
+        )
+
+        // when
+        val weeklyUpdatedRestaurants = restaurantPersistenceAdapter.readByCreatedAtBetween(
+            startOfWeek,
+            endOfWeek,
+            0,
+            3,
+        )
+
+        // then
+        weeklyUpdatedRestaurants.size shouldBe 3
+        weeklyUpdatedRestaurants.contents.map { it.name } shouldContainInOrder listOf(
+            "3 음식점", "2 음식점", "1 음식점",
+        )
     }
 })
