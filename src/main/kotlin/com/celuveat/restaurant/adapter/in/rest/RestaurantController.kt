@@ -141,7 +141,7 @@ class RestaurantController(
     ): SliceResponse<RestaurantPreviewResponse> {
         val result = readWeeklyUpdateRestaurantsUseCase.readWeeklyUpdateRestaurants(
             ReadWeeklyUpdateRestaurantsQuery(
-                auth.memberId(),
+                auth.optionalMemberId(),
                 page = pageable.pageNumber,
                 size = pageable.pageSize,
             ),
