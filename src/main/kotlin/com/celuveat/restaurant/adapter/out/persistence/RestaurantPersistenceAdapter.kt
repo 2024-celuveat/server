@@ -9,10 +9,10 @@ import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantJpaRepos
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantPersistenceMapper
 import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
 import com.celuveat.restaurant.domain.Restaurant
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Sort
 import java.time.LocalDate
 import java.time.LocalTime
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 
 @Adapter
 class RestaurantPersistenceAdapter(
@@ -65,7 +65,7 @@ class RestaurantPersistenceAdapter(
         size: Int,
     ): SliceResult<Restaurant> {
         val pageRequest = PageRequest.of(page, size, LATEST_SORTER)
-        val filter = RestaurantFilter(category, region)
+        val filter = RestaurantFilter(category, region, null, null, null, null)
         val restaurantSlice = restaurantJpaRepository.findAllByFilter(filter, pageRequest)
         val restaurants = restaurantSlice.content.map { it }
         val imagesByRestaurants = restaurantImageJpaRepository.findByRestaurantIn(restaurants)

@@ -10,11 +10,13 @@ import com.celuveat.restaurant.application.port.`in`.ReadCelebrityRecommendResta
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityVisitedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadRestaurantsUseCase
+import com.celuveat.restaurant.application.port.`in`.ReadWeeklyUpdateRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.command.AddInterestedRestaurantCommand
 import com.celuveat.restaurant.application.port.`in`.command.DeleteInterestedRestaurantCommand
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadInterestedRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadRestaurantsQuery
+import com.celuveat.restaurant.application.port.`in`.query.ReadWeeklyUpdateRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.result.RestaurantPreviewResult
 import com.celuveat.support.sut
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -44,6 +46,7 @@ class RestaurantControllerTest(
     @MockkBean val readCelebrityVisitedRestaurantUseCase: ReadCelebrityVisitedRestaurantUseCase,
     @MockkBean val readCelebrityRecommendRestaurantsUseCase: ReadCelebrityRecommendRestaurantsUseCase,
     @MockkBean val readRestaurantsUseCase: ReadRestaurantsUseCase,
+    @MockkBean val readWeeklyUpdateRestaurantsUseCase: ReadWeeklyUpdateRestaurantsUseCase,
     // for AuthMemberArgumentResolver
     @MockkBean val extractMemberIdUseCase: ExtractMemberIdUseCase,
 ) : FunSpec({
@@ -245,6 +248,43 @@ class RestaurantControllerTest(
                 header("Authorization", "Bearer $accessToken")
                 param("category", category)
                 param("region", region)
+                param("page", page.toString())
+                param("size", size.toString())
+            }.andExpect {
+                status { isOk() }
+                content { json(mapper.writeValueAsString(response)) }
+            }.andDo {
+                print()
+            }
+        }
+    }
+
+    context("이번주에 업로드된 음식점 목록을 조회 한다") {
+        val page = 0
+        val size = 3
+
+        test("회원 조회 성공") {
+            val memberId = 1L
+            val accessToken = "celuveatAccessToken"
+            val results = sut.giveMeBuilder<RestaurantPreviewResult>()
+                .setExp(RestaurantPreviewResult::liked, true)
+                .sampleList(3)
+            val sliceResult = SliceResult.of(
+                contents = results,
+                currentPage = page,
+                hasNext = false,
+            )
+            val query = ReadWeeklyUpdateRestaurantsQuery(
+                memberId = memberId,
+                page = page,
+                size = size,
+            )
+            every { extractMemberIdUseCase.extract(accessToken) } returns memberId
+            every { readWeeklyUpdateRestaurantsUseCase.readWeeklyUpdateRestaurants(query) } returns sliceResult
+
+            val response = SliceResponse.from(sliceResult, RestaurantPreviewResponse::from)
+            mockMvc.get("/restaurants/weekly") {
+                header("Authorization", "Bearer $accessToken")
                 param("page", page.toString())
                 param("size", size.toString())
             }.andExpect {
