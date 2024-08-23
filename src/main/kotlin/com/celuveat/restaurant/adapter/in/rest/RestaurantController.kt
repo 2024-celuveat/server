@@ -117,7 +117,7 @@ class RestaurantController(
     override fun readRestaurants(
         @Auth auth: AuthContext,
         @ModelAttribute request: ReadRestaurantsRequest,
-        @PageableDefault pageable: Pageable,
+        @PageableDefault(size = 10, page = 0) pageable: Pageable,
     ): SliceResponse<RestaurantPreviewResponse> {
         val query = request.toQuery(
             memberId = auth.optionalMemberId(),
@@ -133,8 +133,8 @@ class RestaurantController(
 
     @GetMapping("/weekly")
     override fun readWeeklyUpdatedRestaurants(
-        auth: AuthContext,
-        pageable: Pageable,
+        @Auth auth: AuthContext,
+        @PageableDefault(size = 10, page = 0) pageable: Pageable,
     ): SliceResponse<RestaurantPreviewResponse> {
         val result = readWeeklyUpdateRestaurantsUseCase.readWeeklyUpdateRestaurants(
             ReadWeeklyUpdateRestaurantsQuery(
