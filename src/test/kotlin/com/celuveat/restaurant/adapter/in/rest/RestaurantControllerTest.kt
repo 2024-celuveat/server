@@ -3,6 +3,7 @@ package com.celuveat.restaurant.adapter.`in`.rest
 import com.celuveat.auth.application.port.`in`.ExtractMemberIdUseCase
 import com.celuveat.common.adapter.`in`.rest.response.SliceResponse
 import com.celuveat.common.application.port.`in`.result.SliceResult
+import com.celuveat.common.utils.geometry.SquarePolygon
 import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantPreviewResponse
 import com.celuveat.restaurant.application.port.`in`.AddInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.DeleteInterestedRestaurantsUseCase
@@ -237,6 +238,7 @@ class RestaurantControllerTest(
                 memberId = memberId,
                 region = region,
                 category = category,
+                searchArea = null,
                 page = page,
                 size = size,
             )
@@ -248,6 +250,54 @@ class RestaurantControllerTest(
                 header("Authorization", "Bearer $accessToken")
                 param("category", category)
                 param("region", region)
+                param("page", page.toString())
+                param("size", size.toString())
+            }.andExpect {
+                status { isOk() }
+                content { json(mapper.writeValueAsString(response)) }
+            }.andDo {
+                print()
+            }
+        }
+
+        test("지역 포함 조회 성공") {
+            val memberId = 1L
+            val accessToken = "celuveatAccessToken"
+            val category = "한식"
+            val region = "성수"
+            val results = sut.giveMeBuilder<RestaurantPreviewResult>()
+                .setExp(RestaurantPreviewResult::liked, true)
+                .sampleList(3)
+            val sliceResult = SliceResult.of(
+                contents = results,
+                currentPage = page,
+                hasNext = false,
+            )
+            val query = ReadRestaurantsQuery(
+                memberId = memberId,
+                region = region,
+                category = category,
+                searchArea = SquarePolygon.ofNullable(
+                    lowLongitude = 127.0,
+                    highLongitude = 128.0,
+                    lowLatitude = 35.0,
+                    highLatitude = 36.0,
+                ),
+                page = page,
+                size = size,
+            )
+            every { extractMemberIdUseCase.extract(accessToken) } returns memberId
+            every { readRestaurantsUseCase.readRestaurants(query) } returns sliceResult
+
+            val response = SliceResponse.from(sliceResult, RestaurantPreviewResponse::from)
+            mockMvc.get("/restaurants") {
+                header("Authorization", "Bearer $accessToken")
+                param("category", category)
+                param("region", region)
+                param("lowLongitude", "127.0")
+                param("highLongitude", "128.0")
+                param("lowLatitude", "35.0")
+                param("highLatitude", "36.0")
                 param("page", page.toString())
                 param("size", size.toString())
             }.andExpect {
