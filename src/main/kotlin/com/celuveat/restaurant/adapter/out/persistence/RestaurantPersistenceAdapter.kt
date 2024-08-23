@@ -3,6 +3,7 @@ package com.celuveat.restaurant.adapter.out.persistence
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityRestaurantJpaRepository
 import com.celuveat.common.annotation.Adapter
 import com.celuveat.common.application.port.`in`.result.SliceResult
+import com.celuveat.common.utils.geometry.SquarePolygon
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantFilter
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantImageJpaRepository
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantJpaRepository
@@ -61,11 +62,12 @@ class RestaurantPersistenceAdapter(
     override fun readRestaurantsByCondition(
         category: String?,
         region: String?,
+        searchArea: SquarePolygon?,
         page: Int,
         size: Int,
     ): SliceResult<Restaurant> {
         val pageRequest = PageRequest.of(page, size, LATEST_SORTER)
-        val filter = RestaurantFilter(category, region, null, null, null, null)
+        val filter = RestaurantFilter(category, region, searchArea)
         val restaurantSlice = restaurantJpaRepository.findAllByFilter(filter, pageRequest)
         val restaurants = restaurantSlice.content.map { it }
         val imagesByRestaurants = restaurantImageJpaRepository.findByRestaurantIn(restaurants)

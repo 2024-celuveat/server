@@ -237,6 +237,7 @@ class RestaurantQueryServiceTest : BehaviorSpec({
                 readRestaurantPort.readRestaurantsByCondition(
                     category = "한식",
                     region = "서울",
+                    searchArea = null,
                     page = 0,
                     size = 5,
                 )
@@ -253,6 +254,7 @@ class RestaurantQueryServiceTest : BehaviorSpec({
                 memberId = memberId,
                 category = "한식",
                 region = "서울",
+                searchArea = null,
                 page = 0,
                 size = 5,
             )
@@ -275,6 +277,7 @@ class RestaurantQueryServiceTest : BehaviorSpec({
                 readRestaurantPort.readRestaurantsByCondition(
                     category = "한식",
                     region = "서울",
+                    searchArea = null,
                     page = 0,
                     size = 5,
                 )
@@ -285,6 +288,7 @@ class RestaurantQueryServiceTest : BehaviorSpec({
                 memberId = null,
                 category = "한식",
                 region = "서울",
+                searchArea = null,
                 page = 0,
                 size = 5,
             )
