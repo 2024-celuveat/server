@@ -368,7 +368,7 @@ class RestaurantQueryServiceTest : BehaviorSpec({
 
         When("회원이 주변 음식점을 조회하면") {
             val memberId = 1L
-            every { readRestaurantPort.readByCoordinatesIn(any(), any(), any(), any()) } returns restaurants
+            every { readRestaurantPort.readNearby(any()) } returns restaurants
             every { readCelebritiesPort.readVisitedCelebritiesByRestaurants(restaurantIds) } returns mapOf(
                 restaurantIds[0] to sut.giveMeBuilder<Celebrity>()
                     .setExp(Celebrity::youtubeContents, generateYoutubeContents(size = 2))
@@ -396,8 +396,7 @@ class RestaurantQueryServiceTest : BehaviorSpec({
 
             val readNearbyRestaurantsQuery = ReadNearbyRestaurantsQuery(
                 memberId = memberId,
-                latitude = 37.5666102,
-                longitude = 126.9783881,
+                restaurantId = 1L,
             )
             val nearbyRestaurants = restaurantQueryService.readNearbyRestaurants(readNearbyRestaurantsQuery)
 

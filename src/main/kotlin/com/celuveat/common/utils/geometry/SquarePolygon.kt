@@ -1,8 +1,5 @@
 package com.celuveat.common.utils.geometry
 
-import com.celuveat.common.utils.throwWhen
-import kotlin.math.cos
-
 class SquarePolygon private constructor(
     val lowLongitude: Double,
     val highLongitude: Double,
@@ -20,25 +17,6 @@ class SquarePolygon private constructor(
             SquarePolygon(lowLongitude!!, highLongitude!!, lowLatitude!!, highLatitude!!)
         } else {
             null
-        }
-
-        fun fromCenter(centerLatitude: Double, centerLongitude: Double, squareLength: Double = 2.0): SquarePolygon {
-            throwWhen(squareLength < 1) { IllegalArgumentException("SquareLength must be greater than 1") }
-
-            // 위도와 경도를 라디안으로 변환
-            val latRad = Math.toRadians(centerLatitude)
-
-            // 위도와 경도 이동 거리 계산 (1km 이동에 대한 라디안 차이)
-            val deltaLat = (squareLength / 2) / 6371.0
-            val deltaLon = (squareLength / 2) / (6371.0 * cos(latRad))
-
-            // 경계 좌표 계산
-            val lowLatitude = centerLatitude - Math.toDegrees(deltaLat)
-            val highLatitude = centerLatitude + Math.toDegrees(deltaLat)
-            val lowLongitude = centerLongitude - Math.toDegrees(deltaLon)
-            val highLongitude = centerLongitude + Math.toDegrees(deltaLon)
-
-            return SquarePolygon(lowLongitude, highLongitude, lowLatitude, highLatitude)
         }
     }
 

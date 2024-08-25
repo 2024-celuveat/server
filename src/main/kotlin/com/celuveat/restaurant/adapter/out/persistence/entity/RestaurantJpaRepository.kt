@@ -22,17 +22,16 @@ interface RestaurantJpaRepository : JpaRepository<RestaurantJpaEntity, Long>, Cu
 
     @Query(
         """
-    SELECT r 
-    FROM RestaurantJpaEntity r
-    WHERE r.latitude BETWEEN :lowLatitude AND :highLatitude
-    AND r.longitude BETWEEN :lowLongitude AND :highLongitude
-    ORDER BY r.createdAt DESC
-    """
+    SELECT r.*, 
+           (6371 * acos(cos(radians(:latitude)) * cos(radians(r.latitude)) * cos(radians(r.longitude) - radians(:longitude)) + sin(radians(:latitude)) * sin(radians(r.latitude)))) AS distance
+    FROM restaurant r
+    ORDER BY distance
+    LIMIT 5 OFFSET 1 -- 1 is the itself location
+    """,
+        nativeQuery = true
     )
-    fun findAllBetweenLongitudeAndLatitude(
-        lowLatitude: Double,
-        highLatitude: Double,
-        lowLongitude: Double,
-        highLongitude: Double
+    fun findTop5ByCoordinates(
+        latitude: Double,
+        longitude: Double
     ): List<RestaurantJpaEntity>
 }

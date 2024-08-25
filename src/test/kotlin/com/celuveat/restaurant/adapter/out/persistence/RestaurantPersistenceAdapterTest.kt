@@ -4,7 +4,6 @@ import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityJpaEntity
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityJpaRepository
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityRestaurantJpaEntity
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityRestaurantJpaRepository
-import com.celuveat.common.utils.geometry.SquarePolygon
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantImageJpaEntity
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantImageJpaRepository
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantJpaEntity
@@ -17,6 +16,7 @@ import com.navercorp.fixturemonkey.kotlin.set
 import com.navercorp.fixturemonkey.kotlin.setExp
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContainInOrder
+import io.kotest.matchers.collections.shouldNotContain
 import io.kotest.matchers.shouldBe
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -222,7 +222,7 @@ class RestaurantPersistenceAdapterTest(
         )
     }
 
-    test("좌표 내부의 음식점을 조회한다.") {
+    test("음식점을 기준으로 주변 음식점을 조회한다.") {
         // given
         val savedRestaurants = restaurantJpaRepository.saveAll(
             listOf(
@@ -236,6 +236,22 @@ class RestaurantPersistenceAdapterTest(
                     .sample(),
                 sut.giveMeBuilder<RestaurantJpaEntity>()
                     .set(RestaurantJpaEntity::latitude, 38.7)
+                    .set(RestaurantJpaEntity::longitude, 128.2)
+                    .sample(),
+                sut.giveMeBuilder<RestaurantJpaEntity>()
+                    .set(RestaurantJpaEntity::latitude, 38.7)
+                    .set(RestaurantJpaEntity::longitude, 128.3)
+                    .sample(),
+                sut.giveMeBuilder<RestaurantJpaEntity>()
+                    .set(RestaurantJpaEntity::latitude, 38.7)
+                    .set(RestaurantJpaEntity::longitude, 128.3)
+                    .sample(),
+                sut.giveMeBuilder<RestaurantJpaEntity>()
+                    .set(RestaurantJpaEntity::latitude, 38.7)
+                    .set(RestaurantJpaEntity::longitude, 128.2)
+                    .sample(),
+                sut.giveMeBuilder<RestaurantJpaEntity>()
+                    .set(RestaurantJpaEntity::latitude, 70.7)
                     .set(RestaurantJpaEntity::longitude, 128.2)
                     .sample(),
             ),
@@ -252,20 +268,10 @@ class RestaurantPersistenceAdapterTest(
 
 
         // when
-        val searchArea = SquarePolygon.ofNullable(
-            lowLongitude = 126.0,
-            highLongitude = 128.0,
-            lowLatitude = 37.0,
-            highLatitude = 38.0,
-        )!!
-        val restaurants = restaurantPersistenceAdapter.readByCoordinatesIn(
-            lowLatitude = searchArea.lowLatitude,
-            highLatitude = searchArea.highLatitude,
-            lowLongitude = searchArea.lowLongitude,
-            highLongitude = searchArea.highLongitude,
-        )
+        val restaurants = restaurantPersistenceAdapter.readNearby(savedRestaurants[0].id)
 
         // then
-        restaurants.size shouldBe 2
+        restaurants.size shouldBe 5
+        restaurants.map { it.id } shouldNotContain savedRestaurants[0].id
     }
 })

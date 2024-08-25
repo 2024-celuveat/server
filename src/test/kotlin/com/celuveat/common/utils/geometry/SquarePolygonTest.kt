@@ -24,14 +24,4 @@ class SquarePolygonTest : StringSpec({
         )
         squarePolygon shouldBe null
     }
-
-    "중심 좌표를 기준으로 정사각형 생성" {
-        val squarePolygon = SquarePolygon.fromCenter(
-            centerLatitude = 37.5666102,
-            centerLongitude = 126.9783881,
-            squareLength = 2.0
-        )
-
-        squarePolygon shouldNotBe null
-    }
 })

@@ -31,10 +31,5 @@ interface ReadRestaurantPort {
         size: Int,
     ): SliceResult<Restaurant>
 
-    fun readByCoordinatesIn(
-        lowLatitude: Double,
-        highLatitude: Double,
-        lowLongitude: Double,
-        highLongitude: Double,
-    ): List<Restaurant>
+    fun readNearby(id: Long): List<Restaurant>
 }

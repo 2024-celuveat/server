@@ -110,17 +110,11 @@ class RestaurantPersistenceAdapter(
         )
     }
 
-    override fun readByCoordinatesIn(
-        lowLatitude: Double,
-        highLatitude: Double,
-        lowLongitude: Double,
-        highLongitude: Double,
-    ): List<Restaurant> {
-        val restaurants = restaurantJpaRepository.findAllBetweenLongitudeAndLatitude(
-            lowLatitude,
-            highLatitude,
-            lowLongitude,
-            highLongitude,
+    override fun readNearby(id: Long): List<Restaurant> {
+        val centralRestaurant = restaurantJpaRepository.getById(id)
+        val restaurants = restaurantJpaRepository.findTop5ByCoordinates(
+            latitude = centralRestaurant.latitude,
+            longitude = centralRestaurant.longitude,
         )
         val imagesByRestaurants = restaurantImageJpaRepository.findByRestaurantIn(restaurants)
             .groupBy { it.restaurant.id }
