@@ -16,10 +16,10 @@ import com.celuveat.restaurant.application.port.`in`.result.RestaurantPreviewRes
 import com.celuveat.restaurant.application.port.out.ReadInterestedRestaurantPort
 import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
 import com.celuveat.restaurant.domain.Restaurant
-import org.springframework.stereotype.Service
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.temporal.TemporalAdjusters
+import org.springframework.stereotype.Service
 
 @Service
 class RestaurantQueryService(
@@ -83,6 +83,7 @@ class RestaurantQueryService(
         val restaurants = readRestaurantPort.readRestaurantsByCondition(
             category = query.category,
             region = query.region,
+            searchArea = query.searchArea,
             page = query.page,
             size = query.size,
         )

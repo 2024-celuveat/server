@@ -134,6 +134,7 @@ class RestaurantPersistenceAdapterTest(
         val restaurants = restaurantPersistenceAdapter.readRestaurantsByCondition(
             category = "한식",
             region = "서울",
+            searchArea = null,
             page = 0,
             size = 2,
         )
@@ -156,6 +157,7 @@ class RestaurantPersistenceAdapterTest(
         val restaurants = restaurantPersistenceAdapter.readRestaurantsByCondition(
             category = null,
             region = "서울",
+            searchArea = null,
             page = 0,
             size = 3,
         )

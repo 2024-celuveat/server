@@ -3,6 +3,7 @@ package com.celuveat.restaurant.adapter.`in`.rest
 import com.celuveat.auth.adapter.`in`.rest.Auth
 import com.celuveat.auth.adapter.`in`.rest.AuthContext
 import com.celuveat.common.adapter.`in`.rest.response.SliceResponse
+import com.celuveat.restaurant.adapter.`in`.rest.request.ReadRestaurantsRequest
 import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantPreviewResponse
 import com.celuveat.restaurant.application.port.`in`.AddInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.DeleteInterestedRestaurantsUseCase
@@ -16,16 +17,15 @@ import com.celuveat.restaurant.application.port.`in`.command.DeleteInterestedRes
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityRecommendRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadInterestedRestaurantsQuery
-import com.celuveat.restaurant.application.port.`in`.query.ReadRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadWeeklyUpdateRestaurantsQuery
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RequestMapping("/restaurants")
@@ -116,14 +116,11 @@ class RestaurantController(
     @GetMapping
     override fun readRestaurants(
         @Auth auth: AuthContext,
-        @RequestParam region: String?,
-        @RequestParam category: String?,
-        @PageableDefault pageable: Pageable,
+        @ModelAttribute request: ReadRestaurantsRequest,
+        @PageableDefault(size = 10, page = 0) pageable: Pageable,
     ): SliceResponse<RestaurantPreviewResponse> {
-        val query = ReadRestaurantsQuery(
+        val query = request.toQuery(
             memberId = auth.optionalMemberId(),
-            region = region,
-            category = category,
             page = pageable.pageNumber,
             size = pageable.pageSize,
         )
@@ -136,8 +133,8 @@ class RestaurantController(
 
     @GetMapping("/weekly")
     override fun readWeeklyUpdatedRestaurants(
-        auth: AuthContext,
-        pageable: Pageable,
+        @Auth auth: AuthContext,
+        @PageableDefault(size = 10, page = 0) pageable: Pageable,
     ): SliceResponse<RestaurantPreviewResponse> {
         val result = readWeeklyUpdateRestaurantsUseCase.readWeeklyUpdateRestaurants(
             ReadWeeklyUpdateRestaurantsQuery(

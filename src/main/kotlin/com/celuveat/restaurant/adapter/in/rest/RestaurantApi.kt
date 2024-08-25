@@ -3,6 +3,7 @@ package com.celuveat.restaurant.adapter.`in`.rest
 import com.celuveat.auth.adapter.`in`.rest.Auth
 import com.celuveat.auth.adapter.`in`.rest.AuthContext
 import com.celuveat.common.adapter.`in`.rest.response.SliceResponse
+import com.celuveat.restaurant.adapter.`in`.rest.request.ReadRestaurantsRequest
 import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantPreviewResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -13,9 +14,9 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestParam
 
 @Tag(name = "음식점 API")
 interface RestaurantApi {
@@ -79,20 +80,7 @@ interface RestaurantApi {
     @GetMapping
     fun readRestaurants(
         @Auth auth: AuthContext,
-        @Parameter(
-            `in` = ParameterIn.QUERY,
-            description = "지역",
-            example = "성수",
-            required = false,
-        )
-        @RequestParam region: String?,
-        @Parameter(
-            `in` = ParameterIn.QUERY,
-            description = "카테고리",
-            example = "한식",
-            required = false,
-        )
-        @RequestParam category: String?,
+        @ModelAttribute request: ReadRestaurantsRequest,
         @PageableDefault(size = 10, page = 0) pageable: Pageable,
     ): SliceResponse<RestaurantPreviewResponse>
 

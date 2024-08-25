@@ -22,6 +22,10 @@ class CustomRestaurantRepositoryImpl(
             ).whereAnd(
                 filter.category?.let { path(RestaurantJpaEntity::category).eq(it) },
                 filter.region?.let { path(RestaurantJpaEntity::roadAddress).like("%$it%") },
+                filter.searchArea?.let {
+                    path(RestaurantJpaEntity::longitude).between(it.lowLongitude, it.highLongitude)
+                    path(RestaurantJpaEntity::latitude).between(it.lowLatitude, it.highLatitude)
+                },
             )
         }
         val restaurants = findSlice.content.filterNotNull()
