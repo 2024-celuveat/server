@@ -44,7 +44,7 @@ class CelebrityQueryService(
                 restaurants = restaurantsByCelebrity[celebrity.id]!!.map { restaurant ->
                     RestaurantPreviewResult.of(
                         restaurant = restaurant,
-                        liked = interestedRestaurants.contains(restaurant),
+                        liked = interestedRestaurants.contains(restaurant.id),
                     )
                 },
             )
@@ -54,13 +54,13 @@ class CelebrityQueryService(
     private fun readInterestedRestaurants(
         memberId: Long?,
         restaurantsByCelebrity: Map<Long, List<Restaurant>>,
-    ): Set<Restaurant> {
+    ): Set<Long> {
         return memberId?.let {
             val restaurantIds = restaurantsByCelebrity.values.flatten().map { readRestaurant -> readRestaurant.id }
             readInterestedRestaurantPort.readInterestedRestaurantsByIds(
                 memberId = it,
                 restaurantIds = restaurantIds,
-            ).map { interested -> interested.restaurant }.toSet()
+            ).map { interested -> interested.restaurant.id }.toSet()
         } ?: emptySet()
     }
 
