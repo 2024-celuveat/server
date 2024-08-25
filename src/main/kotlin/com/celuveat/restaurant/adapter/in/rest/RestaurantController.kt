@@ -17,7 +17,9 @@ import com.celuveat.restaurant.application.port.`in`.command.DeleteInterestedRes
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityRecommendRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadInterestedRestaurantsQuery
+import com.celuveat.restaurant.application.port.`in`.query.ReadNearbyRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadWeeklyUpdateRestaurantsQuery
+import com.celuveat.restaurant.application.port.`in`.result.ReadNearbyRestaurantsUseCase
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -38,6 +40,7 @@ class RestaurantController(
     private val readCelebrityRecommendRestaurantsUseCase: ReadCelebrityRecommendRestaurantsUseCase,
     private val readRestaurantsUseCase: ReadRestaurantsUseCase,
     private val readWeeklyUpdateRestaurantsUseCase: ReadWeeklyUpdateRestaurantsUseCase,
+    private val readNearbyRestaurantsUseCase: ReadNearbyRestaurantsUseCase,
 ) : RestaurantApi {
     @GetMapping("/interested")
     override fun getInterestedRestaurants(
@@ -147,5 +150,19 @@ class RestaurantController(
             sliceResult = result,
             converter = RestaurantPreviewResponse::from,
         )
+    }
+
+    @GetMapping("/nearby/{restaurantId}")
+    override fun readNearByRestaurants(
+        @Auth auth: AuthContext,
+        @PathVariable restaurantId: Long,
+    ): List<RestaurantPreviewResponse> {
+        val result = readNearbyRestaurantsUseCase.readNearbyRestaurants(
+            ReadNearbyRestaurantsQuery(
+                memberId = auth.optionalMemberId(),
+                restaurantId = restaurantId,
+            ),
+        )
+        return result.map(RestaurantPreviewResponse::from)
     }
 }
