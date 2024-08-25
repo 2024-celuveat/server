@@ -2,6 +2,7 @@ package com.celuveat.restaurant.application
 
 import com.celuveat.celeb.application.port.out.ReadCelebritiesPort
 import com.celuveat.common.application.port.`in`.result.SliceResult
+import com.celuveat.common.utils.geometry.SquarePolygon
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityRecommendRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityVisitedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadInterestedRestaurantsUseCase
@@ -129,6 +130,10 @@ class RestaurantQueryService(
     }
 
     override fun readNearbyRestaurants(query: ReadNearbyRestaurantsQuery): List<RestaurantPreviewResult> {
+        val searchArea = SquarePolygon.fromCenter(
+            centerLatitude = query.latitude,
+            centerLongitude = query.longitude,
+        )
         TODO()
     }
 }

@@ -4,6 +4,7 @@ import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityJpaEntity
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityJpaRepository
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityRestaurantJpaEntity
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityRestaurantJpaRepository
+import com.celuveat.common.utils.geometry.SquarePolygon
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantImageJpaEntity
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantImageJpaRepository
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantJpaEntity
@@ -219,5 +220,47 @@ class RestaurantPersistenceAdapterTest(
         weeklyUpdatedRestaurants.contents.map { it.name } shouldContainInOrder listOf(
             "3 음식점", "2 음식점", "1 음식점",
         )
+    }
+
+    test("좌표 내부의 음식점을 조회한다.") {
+        // given
+        val savedRestaurants = restaurantJpaRepository.saveAll(
+            listOf(
+                sut.giveMeBuilder<RestaurantJpaEntity>()
+                    .set(RestaurantJpaEntity::latitude, 37.5)
+                    .set(RestaurantJpaEntity::longitude, 127.0)
+                    .sample(),
+                sut.giveMeBuilder<RestaurantJpaEntity>()
+                    .set(RestaurantJpaEntity::latitude, 37.6)
+                    .set(RestaurantJpaEntity::longitude, 127.1)
+                    .sample(),
+                sut.giveMeBuilder<RestaurantJpaEntity>()
+                    .set(RestaurantJpaEntity::latitude, 38.7)
+                    .set(RestaurantJpaEntity::longitude, 128.2)
+                    .sample(),
+            ),
+        )
+        restaurantImageJpaRepository.saveAll(
+            savedRestaurants.map {
+                sut.giveMeBuilder<RestaurantImageJpaEntity>()
+                    .set(RestaurantImageJpaEntity::id, 0)
+                    .set(RestaurantImageJpaEntity::restaurant, it)
+                    .set(RestaurantImageJpaEntity::isThumbnail, true, 1)
+                    .sampleList(3)
+            }.flatten(),
+        )
+
+
+        // when
+        val searchArea = SquarePolygon.ofNullable(
+            lowLongitude = 126.0,
+            highLongitude = 128.0,
+            lowLatitude = 37.0,
+            highLatitude = 38.0,
+        )
+        val restaurants = restaurantPersistenceAdapter.readBySearchArea(searchArea!!)
+
+        // then
+        restaurants.size shouldBe 2
     }
 })

@@ -110,6 +110,23 @@ class RestaurantPersistenceAdapter(
         )
     }
 
+    override fun readBySearchArea(searchArea: SquarePolygon): List<Restaurant> {
+        val restaurants = restaurantJpaRepository.findAllBetweenLongitudeAndLatitude(
+            searchArea.lowLatitude,
+            searchArea.highLatitude,
+            searchArea.lowLongitude,
+            searchArea.highLongitude,
+        )
+        val imagesByRestaurants = restaurantImageJpaRepository.findByRestaurantIn(restaurants)
+            .groupBy { it.restaurant.id }
+        return restaurants.map {
+            restaurantPersistenceMapper.toDomain(
+                it,
+                imagesByRestaurants[it.id]!!,
+            )
+        }
+    }
+
     companion object {
         val LATEST_SORTER = Sort.by("createdAt").descending()
     }

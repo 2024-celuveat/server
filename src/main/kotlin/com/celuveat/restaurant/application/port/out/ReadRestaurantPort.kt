@@ -30,4 +30,6 @@ interface ReadRestaurantPort {
         page: Int,
         size: Int,
     ): SliceResult<Restaurant>
+
+    fun readBySearchArea(searchArea: SquarePolygon): List<Restaurant>
 }
