@@ -30,4 +30,6 @@ interface ReadRestaurantPort {
         page: Int,
         size: Int,
     ): SliceResult<Restaurant>
+
+    fun readNearby(id: Long): List<Restaurant>
 }

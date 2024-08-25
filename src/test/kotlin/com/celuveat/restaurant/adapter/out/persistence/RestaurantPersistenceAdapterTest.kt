@@ -16,6 +16,7 @@ import com.navercorp.fixturemonkey.kotlin.set
 import com.navercorp.fixturemonkey.kotlin.setExp
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContainInOrder
+import io.kotest.matchers.collections.shouldNotContain
 import io.kotest.matchers.shouldBe
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -219,5 +220,58 @@ class RestaurantPersistenceAdapterTest(
         weeklyUpdatedRestaurants.contents.map { it.name } shouldContainInOrder listOf(
             "3 음식점", "2 음식점", "1 음식점",
         )
+    }
+
+    test("음식점을 기준으로 주변 음식점을 조회한다.") {
+        // given
+        val savedRestaurants = restaurantJpaRepository.saveAll(
+            listOf(
+                sut.giveMeBuilder<RestaurantJpaEntity>()
+                    .set(RestaurantJpaEntity::latitude, 37.5)
+                    .set(RestaurantJpaEntity::longitude, 127.0)
+                    .sample(),
+                sut.giveMeBuilder<RestaurantJpaEntity>()
+                    .set(RestaurantJpaEntity::latitude, 37.6)
+                    .set(RestaurantJpaEntity::longitude, 127.1)
+                    .sample(),
+                sut.giveMeBuilder<RestaurantJpaEntity>()
+                    .set(RestaurantJpaEntity::latitude, 38.7)
+                    .set(RestaurantJpaEntity::longitude, 128.2)
+                    .sample(),
+                sut.giveMeBuilder<RestaurantJpaEntity>()
+                    .set(RestaurantJpaEntity::latitude, 38.7)
+                    .set(RestaurantJpaEntity::longitude, 128.3)
+                    .sample(),
+                sut.giveMeBuilder<RestaurantJpaEntity>()
+                    .set(RestaurantJpaEntity::latitude, 38.7)
+                    .set(RestaurantJpaEntity::longitude, 128.3)
+                    .sample(),
+                sut.giveMeBuilder<RestaurantJpaEntity>()
+                    .set(RestaurantJpaEntity::latitude, 38.7)
+                    .set(RestaurantJpaEntity::longitude, 128.2)
+                    .sample(),
+                sut.giveMeBuilder<RestaurantJpaEntity>()
+                    .set(RestaurantJpaEntity::latitude, 70.7)
+                    .set(RestaurantJpaEntity::longitude, 128.2)
+                    .sample(),
+            ),
+        )
+        restaurantImageJpaRepository.saveAll(
+            savedRestaurants.map {
+                sut.giveMeBuilder<RestaurantImageJpaEntity>()
+                    .set(RestaurantImageJpaEntity::id, 0)
+                    .set(RestaurantImageJpaEntity::restaurant, it)
+                    .set(RestaurantImageJpaEntity::isThumbnail, true, 1)
+                    .sampleList(3)
+            }.flatten(),
+        )
+
+
+        // when
+        val restaurants = restaurantPersistenceAdapter.readNearby(savedRestaurants[0].id)
+
+        // then
+        restaurants.size shouldBe 5
+        restaurants.map { it.id } shouldNotContain savedRestaurants[0].id
     }
 })

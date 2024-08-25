@@ -90,4 +90,11 @@ interface RestaurantApi {
         @Auth auth: AuthContext,
         @PageableDefault(size = 10, page = 0) pageable: Pageable,
     ): SliceResponse<RestaurantPreviewResponse>
+
+    @Operation(summary = "주변 음식점 조회")
+    @GetMapping("/nearby/{restaurantId}")
+    fun readNearByRestaurants(
+        @Auth auth: AuthContext,
+        @PathVariable restaurantId: Long,
+    ): List<RestaurantPreviewResponse>
 }

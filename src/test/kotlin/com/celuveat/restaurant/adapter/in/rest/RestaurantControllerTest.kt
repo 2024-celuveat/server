@@ -16,8 +16,10 @@ import com.celuveat.restaurant.application.port.`in`.command.AddInterestedRestau
 import com.celuveat.restaurant.application.port.`in`.command.DeleteInterestedRestaurantCommand
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadInterestedRestaurantsQuery
+import com.celuveat.restaurant.application.port.`in`.query.ReadNearbyRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadWeeklyUpdateRestaurantsQuery
+import com.celuveat.restaurant.application.port.`in`.result.ReadNearbyRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.result.RestaurantPreviewResult
 import com.celuveat.support.sut
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -48,6 +50,7 @@ class RestaurantControllerTest(
     @MockkBean val readCelebrityRecommendRestaurantsUseCase: ReadCelebrityRecommendRestaurantsUseCase,
     @MockkBean val readRestaurantsUseCase: ReadRestaurantsUseCase,
     @MockkBean val readWeeklyUpdateRestaurantsUseCase: ReadWeeklyUpdateRestaurantsUseCase,
+    @MockkBean val readNearbyRestaurantsUseCase: ReadNearbyRestaurantsUseCase,
     // for AuthMemberArgumentResolver
     @MockkBean val extractMemberIdUseCase: ExtractMemberIdUseCase,
 ) : FunSpec({
@@ -337,6 +340,30 @@ class RestaurantControllerTest(
                 header("Authorization", "Bearer $accessToken")
                 param("page", page.toString())
                 param("size", size.toString())
+            }.andExpect {
+                status { isOk() }
+                content { json(mapper.writeValueAsString(response)) }
+            }.andDo {
+                print()
+            }
+        }
+    }
+
+    context("주변 음식점을 조회 한다") {
+        val memberId = 1L
+        val accessToken = "celuveatAccessToken"
+        test("조회 성공") {
+            val results = sut.giveMeBuilder<RestaurantPreviewResult>().sampleList(3)
+            val response = results.map(RestaurantPreviewResponse::from)
+            val query = ReadNearbyRestaurantsQuery(
+                memberId = 1L,
+                restaurantId = 1L,
+            )
+            every { extractMemberIdUseCase.extract(accessToken) } returns memberId
+            every { readNearbyRestaurantsUseCase.readNearbyRestaurants(query) } returns results
+
+            mockMvc.get("/restaurants/nearby/{restaurantId}", 1L) {
+                header("Authorization", "Bearer $accessToken")
             }.andExpect {
                 status { isOk() }
                 content { json(mapper.writeValueAsString(response)) }

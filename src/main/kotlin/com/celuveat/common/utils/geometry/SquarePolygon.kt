@@ -1,25 +1,11 @@
 package com.celuveat.common.utils.geometry
 
 class SquarePolygon private constructor(
-    private val _lowLongitude: Double?,
-    private val _highLongitude: Double?,
-    private val _lowLatitude: Double?,
-    private val _highLatitude: Double?,
+    val lowLongitude: Double,
+    val highLongitude: Double,
+    val lowLatitude: Double,
+    val highLatitude: Double,
 ) {
-    private val isAvailableBox: Boolean =
-        listOf(_lowLongitude, _highLongitude, _lowLatitude, _highLatitude).all { it != null }
-
-    val lowLongitude: Double
-        get() = if (isAvailableBox) _lowLongitude!! else throw IllegalStateException()
-
-    val highLongitude: Double
-        get() = if (isAvailableBox) _highLongitude!! else throw IllegalStateException()
-
-    val lowLatitude: Double
-        get() = if (isAvailableBox) _lowLatitude!! else throw IllegalStateException()
-
-    val highLatitude: Double
-        get() = if (isAvailableBox) _highLatitude!! else throw IllegalStateException()
 
     companion object {
         fun ofNullable(
@@ -28,7 +14,7 @@ class SquarePolygon private constructor(
             lowLatitude: Double?,
             highLatitude: Double?,
         ): SquarePolygon? = if (listOf(lowLongitude, highLongitude, lowLatitude, highLatitude).all { it != null }) {
-            SquarePolygon(lowLongitude, highLongitude, lowLatitude, highLatitude)
+            SquarePolygon(lowLongitude!!, highLongitude!!, lowLatitude!!, highLatitude!!)
         } else {
             null
         }
@@ -40,22 +26,19 @@ class SquarePolygon private constructor(
 
         other as SquarePolygon
 
-        if (_lowLongitude != other._lowLongitude) return false
-        if (_highLongitude != other._highLongitude) return false
-        if (_lowLatitude != other._lowLatitude) return false
-        if (_highLatitude != other._highLatitude) return false
-        if (isAvailableBox != other.isAvailableBox) return false
+        if (lowLongitude != other.lowLongitude) return false
+        if (highLongitude != other.highLongitude) return false
+        if (lowLatitude != other.lowLatitude) return false
+        if (highLatitude != other.highLatitude) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        var result = _lowLongitude?.hashCode() ?: 0
-        result = 31 * result + (_highLongitude?.hashCode() ?: 0)
-        result = 31 * result + (_lowLatitude?.hashCode() ?: 0)
-        result = 31 * result + (_highLatitude?.hashCode() ?: 0)
-        result = 31 * result + isAvailableBox.hashCode()
+        var result = lowLongitude.hashCode()
+        result = 31 * result + highLongitude.hashCode()
+        result = 31 * result + lowLatitude.hashCode()
+        result = 31 * result + highLatitude.hashCode()
         return result
     }
-
 }
