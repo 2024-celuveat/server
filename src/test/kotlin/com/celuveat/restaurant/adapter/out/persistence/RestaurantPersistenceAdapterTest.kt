@@ -257,8 +257,13 @@ class RestaurantPersistenceAdapterTest(
             highLongitude = 128.0,
             lowLatitude = 37.0,
             highLatitude = 38.0,
+        )!!
+        val restaurants = restaurantPersistenceAdapter.readByCoordinatesIn(
+            lowLatitude = searchArea.lowLatitude,
+            highLatitude = searchArea.highLatitude,
+            lowLongitude = searchArea.lowLongitude,
+            highLongitude = searchArea.highLongitude,
         )
-        val restaurants = restaurantPersistenceAdapter.readBySearchArea(searchArea!!)
 
         // then
         restaurants.size shouldBe 2

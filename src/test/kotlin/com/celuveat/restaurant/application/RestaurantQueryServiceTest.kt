@@ -368,7 +368,7 @@ class RestaurantQueryServiceTest : BehaviorSpec({
 
         When("회원이 주변 음식점을 조회하면") {
             val memberId = 1L
-            every { readRestaurantPort.readBySearchArea(any()) } returns restaurants
+            every { readRestaurantPort.readByCoordinatesIn(any(), any(), any(), any()) } returns restaurants
             every { readCelebritiesPort.readVisitedCelebritiesByRestaurants(restaurantIds) } returns mapOf(
                 restaurantIds[0] to sut.giveMeBuilder<Celebrity>()
                     .setExp(Celebrity::youtubeContents, generateYoutubeContents(size = 2))

@@ -110,12 +110,17 @@ class RestaurantPersistenceAdapter(
         )
     }
 
-    override fun readBySearchArea(searchArea: SquarePolygon): List<Restaurant> {
+    override fun readByCoordinatesIn(
+        lowLatitude: Double,
+        highLatitude: Double,
+        lowLongitude: Double,
+        highLongitude: Double,
+    ): List<Restaurant> {
         val restaurants = restaurantJpaRepository.findAllBetweenLongitudeAndLatitude(
-            searchArea.lowLatitude,
-            searchArea.highLatitude,
-            searchArea.lowLongitude,
-            searchArea.highLongitude,
+            lowLatitude,
+            highLatitude,
+            lowLongitude,
+            highLongitude,
         )
         val imagesByRestaurants = restaurantImageJpaRepository.findByRestaurantIn(restaurants)
             .groupBy { it.restaurant.id }

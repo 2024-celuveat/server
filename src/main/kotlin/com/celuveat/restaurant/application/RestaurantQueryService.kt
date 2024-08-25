@@ -123,7 +123,12 @@ class RestaurantQueryService(
             centerLatitude = query.latitude,
             centerLongitude = query.longitude,
         )
-        val restaurants = readRestaurantPort.readBySearchArea(searchArea = searchArea)
+        val restaurants = readRestaurantPort.readByCoordinatesIn(
+            lowLatitude = searchArea.lowLatitude,
+            highLatitude = searchArea.highLatitude,
+            lowLongitude = searchArea.lowLongitude,
+            highLongitude = searchArea.highLongitude,
+        )
         val restaurantIds = restaurants.map { it.id }
         val interestedRestaurants = readInterestedRestaurants(query.memberId, restaurantIds)
         val celebritiesByRestaurants = readCelebritiesPort.readVisitedCelebritiesByRestaurants(restaurantIds)
