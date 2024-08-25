@@ -7,6 +7,7 @@ import com.celuveat.common.application.port.`in`.result.SliceResult
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityRecommendRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadInterestedRestaurantsQuery
+import com.celuveat.restaurant.application.port.`in`.query.ReadNearbyRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadWeeklyUpdateRestaurantsQuery
 import com.celuveat.restaurant.application.port.out.ReadInterestedRestaurantPort
@@ -15,6 +16,7 @@ import com.celuveat.restaurant.domain.InterestedRestaurant
 import com.celuveat.restaurant.domain.Restaurant
 import com.celuveat.support.channelIdSpec
 import com.celuveat.support.sut
+import com.navercorp.fixturemonkey.kotlin.giveMe
 import com.navercorp.fixturemonkey.kotlin.giveMeBuilder
 import com.navercorp.fixturemonkey.kotlin.setExp
 import io.kotest.core.spec.style.BehaviorSpec
@@ -357,6 +359,55 @@ class RestaurantQueryServiceTest : BehaviorSpec({
                 latestRestaurants.map { it.liked } shouldBe listOf(false, false)
                 verify { readInterestedRestaurantPort wasNot Called }
             }
+        }
+    }
+
+    Given("주변 음식점 조회 시") {
+        val restaurants = sut.giveMe<Restaurant>(3)
+        val restaurantIds = restaurants.map { it.id }
+
+        When("회원이 주변 음식점을 조회하면") {
+            val memberId = 1L
+            every { readRestaurantPort.readBySearchArea(any()) } returns restaurants
+            every { readCelebritiesPort.readVisitedCelebritiesByRestaurants(restaurantIds) } returns mapOf(
+                restaurantIds[0] to sut.giveMeBuilder<Celebrity>()
+                    .setExp(Celebrity::youtubeContents, generateYoutubeContents(size = 2))
+                    .sampleList(2),
+                restaurantIds[1] to sut.giveMeBuilder<Celebrity>()
+                    .setExp(Celebrity::youtubeContents, generateYoutubeContents(size = 1))
+                    .sampleList(2),
+                restaurantIds[2] to sut.giveMeBuilder<Celebrity>()
+                    .setExp(Celebrity::youtubeContents, generateYoutubeContents(size = 1))
+                    .sampleList(1),
+            )
+            every {
+                readInterestedRestaurantPort.readInterestedRestaurantsByIds(
+                    memberId,
+                    restaurantIds,
+                )
+            } returns listOf(
+                sut.giveMeBuilder<InterestedRestaurant>()
+                    .setExp(InterestedRestaurant::restaurant, restaurants[0])
+                    .sample(),
+                sut.giveMeBuilder<InterestedRestaurant>()
+                    .setExp(InterestedRestaurant::restaurant, restaurants[2])
+                    .sample(),
+            ) // 첫 번째, 세번째 음식점 관심 등록
+
+            val readNearbyRestaurantsQuery = ReadNearbyRestaurantsQuery(
+                memberId = memberId,
+                latitude = 37.5666102,
+                longitude = 126.9783881,
+            )
+            val nearbyRestaurants = restaurantQueryService.readNearbyRestaurants(readNearbyRestaurantsQuery)
+
+            Then("관심 등록 여부가 포함되어 응답한다") {
+                nearbyRestaurants.size shouldBe 3
+                nearbyRestaurants[0].liked shouldBe true
+                nearbyRestaurants[1].liked shouldBe false
+                nearbyRestaurants[2].liked shouldBe true
+            }
+
         }
     }
 }) {

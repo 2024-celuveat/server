@@ -18,7 +18,6 @@ import com.celuveat.restaurant.application.port.`in`.result.ReadNearbyRestaurant
 import com.celuveat.restaurant.application.port.`in`.result.RestaurantPreviewResult
 import com.celuveat.restaurant.application.port.out.ReadInterestedRestaurantPort
 import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
-import com.celuveat.restaurant.domain.Restaurant
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.temporal.TemporalAdjusters
@@ -64,7 +63,7 @@ class RestaurantQueryService(
         return visitedRestaurants.convertContent {
             RestaurantPreviewResult.of(
                 restaurant = it,
-                liked = interestedRestaurants.contains(it),
+                liked = interestedRestaurants.contains(it.id),
             )
         }
     }
@@ -77,7 +76,7 @@ class RestaurantQueryService(
         return restaurants.map {
             RestaurantPreviewResult.of(
                 restaurant = it,
-                liked = interestedRestaurants.contains(it),
+                liked = interestedRestaurants.contains(it.id),
                 visitedCelebrities = celebritiesByRestaurants[it.id]!!,
             )
         }
@@ -97,7 +96,7 @@ class RestaurantQueryService(
         return restaurants.convertContent {
             RestaurantPreviewResult.of(
                 restaurant = it,
-                liked = interestedRestaurants.contains(it),
+                liked = interestedRestaurants.contains(it.id),
                 visitedCelebrities = celebritiesByRestaurants[it.id]!!,
             )
         }
@@ -113,7 +112,25 @@ class RestaurantQueryService(
         return restaurants.convertContent {
             RestaurantPreviewResult.of(
                 restaurant = it,
-                liked = interestedRestaurants.contains(it),
+                liked = interestedRestaurants.contains(it.id),
+                visitedCelebrities = celebritiesByRestaurants[it.id]!!,
+            )
+        }
+    }
+
+    override fun readNearbyRestaurants(query: ReadNearbyRestaurantsQuery): List<RestaurantPreviewResult> {
+        val searchArea = SquarePolygon.fromCenter(
+            centerLatitude = query.latitude,
+            centerLongitude = query.longitude,
+        )
+        val restaurants = readRestaurantPort.readBySearchArea(searchArea = searchArea)
+        val restaurantIds = restaurants.map { it.id }
+        val interestedRestaurants = readInterestedRestaurants(query.memberId, restaurantIds)
+        val celebritiesByRestaurants = readCelebritiesPort.readVisitedCelebritiesByRestaurants(restaurantIds)
+        return restaurants.map {
+            RestaurantPreviewResult.of(
+                restaurant = it,
+                liked = interestedRestaurants.contains(it.id),
                 visitedCelebrities = celebritiesByRestaurants[it.id]!!,
             )
         }
@@ -122,18 +139,10 @@ class RestaurantQueryService(
     private fun readInterestedRestaurants(
         memberId: Long?,
         restaurantIds: List<Long>,
-    ): Set<Restaurant> {
+    ): Set<Long> {
         return memberId?.let {
             readInterestedRestaurantPort.readInterestedRestaurantsByIds(it, restaurantIds)
-                .map { interested -> interested.restaurant }.toSet()
+                .map { interested -> interested.restaurant.id }.toSet()
         } ?: emptySet()
-    }
-
-    override fun readNearbyRestaurants(query: ReadNearbyRestaurantsQuery): List<RestaurantPreviewResult> {
-        val searchArea = SquarePolygon.fromCenter(
-            centerLatitude = query.latitude,
-            centerLongitude = query.longitude,
-        )
-        TODO()
     }
 }
