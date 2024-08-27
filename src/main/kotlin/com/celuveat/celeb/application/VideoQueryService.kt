@@ -20,7 +20,7 @@ class VideoQueryService(
             VideoWithCelebrityResult(
                 id = video.id,
                 videoUrl = video.videoUrl,
-                celebrities = celebrities.map { CelebrityWithSubscriberCountResult.from(it) }
+                celebrities = celebrities.map { CelebrityWithSubscriberCountResult.from(it) },
             )
         }
     }

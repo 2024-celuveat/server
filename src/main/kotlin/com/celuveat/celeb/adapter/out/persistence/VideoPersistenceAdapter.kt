@@ -15,7 +15,6 @@ class VideoPersistenceAdapter(
     private val videoPersistenceMapper: VideoPersistenceMapper,
     private val restaurantJpaRepository: RestaurantJpaRepository,
 ) : ReadVideoPort {
-
     override fun readVideosInRestaurant(restaurantId: Long): List<Video> {
         throwWhen(!restaurantJpaRepository.existsById(restaurantId)) { NotFoundRestaurantException }
         val videos = videoJpaRepository.findByRestaurantId(restaurantId)

@@ -19,7 +19,6 @@ data class VideoWithCelebrityResponse(
     )
     val celebrities: List<CelebrityWithSubscriberCountResponse>,
 ) {
-
     companion object {
         fun from(result: VideoWithCelebrityResult): VideoWithCelebrityResponse {
             return VideoWithCelebrityResponse(

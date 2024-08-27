@@ -406,7 +406,6 @@ class RestaurantQueryServiceTest : BehaviorSpec({
                 nearbyRestaurants[1].liked shouldBe false
                 nearbyRestaurants[2].liked shouldBe true
             }
-
         }
     }
 }) {

@@ -13,7 +13,9 @@ class VideoController(
     private val readVideosByRestaurantUseCase: ReadVideosByRestaurantUseCase,
 ) : VideoApi {
     @GetMapping("/in/restaurants/{restaurantsId}")
-    override fun readInterestedCelebrities(@PathVariable restaurantsId: Long): List<VideoWithCelebrityResponse> {
+    override fun readInterestedCelebrities(
+        @PathVariable restaurantsId: Long,
+    ): List<VideoWithCelebrityResponse> {
         val results = readVideosByRestaurantUseCase.readVideosByRestaurant(restaurantsId)
         return results.map { VideoWithCelebrityResponse.from(it) }
     }

@@ -51,7 +51,7 @@ class VideoPersistenceAdapterTest(
                     .set(RestaurantInVideoJpaEntity::video, savedVideos[1])
                     .set(RestaurantInVideoJpaEntity::restaurant, restaurant)
                     .sample(),
-            )
+            ),
         ) // [음식점] -> [영상A, 영상B] 에 출연함
 
         // when
@@ -60,7 +60,6 @@ class VideoPersistenceAdapterTest(
         // then
         videos.size shouldBe 2
         videos.forAll { it.youtubeContent shouldNotBe null }
-
     }
 })
 

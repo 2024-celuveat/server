@@ -10,7 +10,7 @@ class SquarePolygonTest : StringSpec({
             lowLongitude = 1.0,
             highLongitude = 2.0,
             lowLatitude = 3.0,
-            highLatitude = 4.0
+            highLatitude = 4.0,
         )
         squarePolygon shouldNotBe null
     }
@@ -20,7 +20,7 @@ class SquarePolygonTest : StringSpec({
             lowLongitude = 1.0,
             highLongitude = 2.0,
             lowLatitude = 3.0,
-            highLatitude = null
+            highLatitude = null,
         )
         squarePolygon shouldBe null
     }

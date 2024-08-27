@@ -11,7 +11,7 @@ interface VideoJpaRepository : JpaRepository<VideoJpaEntity, Long> {
         JOIN riv.video v
         JOIN FETCH v.youtubeContent
         WHERE riv.restaurant.id = :restaurantId
-        """
+        """,
     )
     fun findByRestaurantId(restaurantId: Long): List<VideoJpaEntity>
 }
