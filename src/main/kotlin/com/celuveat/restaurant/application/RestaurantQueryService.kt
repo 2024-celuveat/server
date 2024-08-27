@@ -20,10 +20,10 @@ import com.celuveat.restaurant.application.port.`in`.result.RestaurantPreviewRes
 import com.celuveat.restaurant.application.port.`in`.result.RestaurantResult
 import com.celuveat.restaurant.application.port.out.ReadInterestedRestaurantPort
 import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
+import org.springframework.stereotype.Service
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.temporal.TemporalAdjusters
-import org.springframework.stereotype.Service
 
 @Service
 class RestaurantQueryService(
@@ -141,7 +141,7 @@ class RestaurantQueryService(
         val liked = query.memberId?.let {
             readInterestedRestaurantPort.existsInterestedRestaurant(
                 query.memberId,
-                query.restaurantId
+                query.restaurantId,
             )
         } ?: false
         return RestaurantResult.of(

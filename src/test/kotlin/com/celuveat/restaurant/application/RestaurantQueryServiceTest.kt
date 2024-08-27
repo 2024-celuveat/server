@@ -449,7 +449,6 @@ class RestaurantQueryServiceTest : BehaviorSpec({
                 verify { readInterestedRestaurantPort wasNot Called }
             }
         }
-
     }
 }) {
     override suspend fun afterEach(
