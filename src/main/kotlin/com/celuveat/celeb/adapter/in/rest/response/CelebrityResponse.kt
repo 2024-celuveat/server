@@ -3,6 +3,7 @@ package com.celuveat.celeb.adapter.`in`.rest.response
 import com.celuveat.celeb.application.port.`in`.result.BestCelebrityResult
 import com.celuveat.celeb.application.port.`in`.result.CelebrityResult
 import com.celuveat.celeb.application.port.`in`.result.CelebrityWithInterestedResult
+import com.celuveat.celeb.application.port.`in`.result.CelebrityWithSubscriberCountResult
 import com.celuveat.celeb.application.port.`in`.result.SimpleCelebrityResult
 import com.celuveat.celeb.application.port.`in`.result.YoutubeContentResult
 import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantPreviewResponse
@@ -171,6 +172,46 @@ data class CelebrityWithInterestedResponse(
             return CelebrityWithInterestedResponse(
                 celebrity = CelebrityResponse.from(result.celebrity),
                 interested = result.interested,
+            )
+        }
+    }
+}
+
+data class CelebrityWithSubscriberCountResponse(
+    @Schema(
+        description = "연예인 ID",
+        example = "1",
+    )
+    val id: Long,
+    @Schema(
+        description = "연예인 이름",
+        example = "성시경",
+    )
+    val name: String,
+    @Schema(
+        description = "프로필 이미지 URL",
+        example = "https://example.com/profile.jpg",
+    )
+    val profileImageUrl: String,
+    @Schema(
+        description = "구독자 수",
+        example = "100000",
+    )
+    val subscriberCount: Long,
+    @Schema(
+        description = "식당 수",
+        example = "10",
+    )
+    val restaurantCount: Int,
+) {
+    companion object {
+        fun from(result: CelebrityWithSubscriberCountResult): CelebrityWithSubscriberCountResponse {
+            return CelebrityWithSubscriberCountResponse(
+                id = result.id,
+                name = result.name,
+                profileImageUrl = result.profileImageUrl,
+                subscriberCount = result.subscriberCount,
+                restaurantCount = result.restaurantCount,
             )
         }
     }

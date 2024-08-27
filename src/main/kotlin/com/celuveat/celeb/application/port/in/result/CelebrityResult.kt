@@ -39,6 +39,26 @@ data class SimpleCelebrityResult(
     }
 }
 
+data class CelebrityWithSubscriberCountResult(
+    val id: Long,
+    val name: String,
+    val profileImageUrl: String,
+    val subscriberCount: Long,
+    val restaurantCount: Int,
+) {
+    companion object {
+        fun from(celebrity: Celebrity): CelebrityWithSubscriberCountResult {
+            return CelebrityWithSubscriberCountResult(
+                id = celebrity.id,
+                name = celebrity.name,
+                profileImageUrl = celebrity.profileImageUrl,
+                subscriberCount = celebrity.youtubeContents.maxOf { it.subscriberCount },
+                restaurantCount = celebrity.youtubeContents.maxOf { it.restaurantCount },
+            )
+        }
+    }
+}
+
 data class BestCelebrityResult(
     val celebrity: SimpleCelebrityResult,
     val restaurants: List<RestaurantPreviewResult>,

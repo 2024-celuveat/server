@@ -6,18 +6,18 @@ class SquarePolygon private constructor(
     val lowLatitude: Double,
     val highLatitude: Double,
 ) {
-
     companion object {
         fun ofNullable(
             lowLongitude: Double?,
             highLongitude: Double?,
             lowLatitude: Double?,
             highLatitude: Double?,
-        ): SquarePolygon? = if (listOf(lowLongitude, highLongitude, lowLatitude, highLatitude).all { it != null }) {
-            SquarePolygon(lowLongitude!!, highLongitude!!, lowLatitude!!, highLatitude!!)
-        } else {
-            null
-        }
+        ): SquarePolygon? =
+            if (listOf(lowLongitude, highLongitude, lowLatitude, highLatitude).all { it != null }) {
+                SquarePolygon(lowLongitude!!, highLongitude!!, lowLatitude!!, highLatitude!!)
+            } else {
+                null
+            }
     }
 
     override fun equals(other: Any?): Boolean {

@@ -48,4 +48,16 @@ class CelebrityPersistenceAdapter(
             .map { it.youtubeContent }
         return celebrityPersistenceMapper.toDomain(celebrity, youtubeContents)
     }
+
+    override fun readByYoutubeContentIds(youtubeContentIds: List<Long>): List<Celebrity> {
+        val celebrityYoutubeContents = celebrityYoutubeContentJpaRepository.findByYoutubeContentIdIn(youtubeContentIds)
+        val celebrityIds = celebrityYoutubeContents.map { it.celebrity.id }
+        val youtubeContentsByCelebrity = celebritiesToContentMap(celebrityIds)
+        return celebrityYoutubeContents.map {
+            celebrityPersistenceMapper.toDomain(
+                it.celebrity,
+                youtubeContentsByCelebrity[it.celebrity.id]!!,
+            )
+        }.distinct()
+    }
 }

@@ -8,4 +8,6 @@ interface ReadCelebritiesPort {
     fun readBestCelebrities(): List<Celebrity>
 
     fun readById(celebrityId: Long): Celebrity
+
+    fun readByYoutubeContentIds(youtubeContentIds: List<Long>): List<Celebrity>
 }

@@ -266,7 +266,6 @@ class RestaurantPersistenceAdapterTest(
             }.flatten(),
         )
 
-
         // when
         val restaurants = restaurantPersistenceAdapter.readNearby(savedRestaurants[0].id)
 

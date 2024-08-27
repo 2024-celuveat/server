@@ -49,7 +49,6 @@ data class ReadRestaurantsRequest(
     )
     val highLatitude: Double?,
 ) {
-
     fun toQuery(
         memberId: Long?,
         page: Int,
