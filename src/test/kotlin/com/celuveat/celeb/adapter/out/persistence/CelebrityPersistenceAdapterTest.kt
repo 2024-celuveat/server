@@ -159,6 +159,32 @@ class CelebrityPersistenceAdapterTest(
         // then
         celebrity.id shouldBe findCelebrity.id
     }
+
+    test("유튜브 컨텐츠 ID로 셀럽을 조회 한다.") {
+        // given
+        val celebrity = celebrityJpaRepository.save(sut.giveMeOne<CelebrityJpaEntity>())
+        val contentA = sut.giveMeBuilder<YoutubeContentJpaEntity>()
+            .set(YoutubeContentJpaEntity::channelId, "@channelAId")
+            .sample()
+        val contentB = sut.giveMeBuilder<YoutubeContentJpaEntity>()
+            .set(YoutubeContentJpaEntity::channelId, "@channelBId")
+            .sample()
+        val savedContents = youtubeContentJpaRepository.saveAll(listOf(contentA, contentB))
+        val youtubeContentIds = savedContents.map { it.id }
+        celebrityYoutubeContentJpaRepository.saveAll(
+            listOf(
+                generateCelebrityYoutubeContent(celebrity, savedContents[0]),
+                generateCelebrityYoutubeContent(celebrity, savedContents[1]),
+            ),
+        )
+
+        // when
+        val celebrities = celebrityPersistenceAdapter.readByYoutubeContentIds(youtubeContentIds)
+
+        // then
+        celebrities.size shouldBe 1
+        celebrities[0].id shouldBe celebrity.id
+    }
 })
 
 private fun generateCelebrityYoutubeContent(
