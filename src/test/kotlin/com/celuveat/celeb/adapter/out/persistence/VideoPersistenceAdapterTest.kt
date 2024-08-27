@@ -36,8 +36,8 @@ class VideoPersistenceAdapterTest(
         val savedContents = youtubeContentJpaRepository.saveAll(listOf(contentA, contentB))
         val savedVideos = videoJpaRepository.saveAll(
             listOf(
-                generateVideoWithYoutubeContent(savedContents[0]).sample(),
-                generateVideoWithYoutubeContent(savedContents[1]).sample(),
+                generateVideoWithYoutubeContent(savedContents[0]),
+                generateVideoWithYoutubeContent(savedContents[1]),
             ),
         )
         val restaurant = restaurantJpaRepository.save(sut.giveMeBuilder<RestaurantJpaEntity>().sample())
@@ -65,4 +65,4 @@ class VideoPersistenceAdapterTest(
 })
 
 private fun generateVideoWithYoutubeContent(youtubeContent: YoutubeContentJpaEntity) =
-    sut.giveMeBuilder<VideoJpaEntity>().set(VideoJpaEntity::youtubeContent, youtubeContent)
+    sut.giveMeBuilder<VideoJpaEntity>().set(VideoJpaEntity::youtubeContent, youtubeContent).sample()
