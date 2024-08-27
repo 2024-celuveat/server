@@ -15,6 +15,18 @@ interface RestaurantInVideoJpaRepository : JpaRepository<RestaurantInVideoJpaEnt
         """,
     )
     fun findVisitedCelebrities(restaurantIds: List<Long>): List<VisitedCelebrity>
+
+    @Query(
+        """
+        SELECT c
+        FROM RestaurantInVideoJpaEntity vfr
+        JOIN vfr.video v
+        JOIN CelebrityYoutubeContentJpaEntity cy ON cy.youtubeContent.id = v.youtubeContent.id
+        JOIN cy.celebrity c
+        WHERE vfr.restaurant.id = :restaurantId
+        """,
+    )
+    fun findCelebritiesByRestaurantId(restaurantId: Long): List<CelebrityJpaEntity>
 }
 
 data class VisitedCelebrity(

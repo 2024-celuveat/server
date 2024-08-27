@@ -91,6 +91,59 @@ class CelebrityPersistenceAdapterTest(
         }
     }
 
+    test("식당의 방문한 셀럽을 조회 한다.(단일 조회)") {
+        // given
+        val savedCelebrities = celebrityJpaRepository.saveAll(sut.giveMeBuilder<CelebrityJpaEntity>().sampleList(2))
+        val celebrityA = savedCelebrities[0]
+        val celebrityB = savedCelebrities[1]
+
+        val contentA = sut.giveMeBuilder<YoutubeContentJpaEntity>()
+            .set(YoutubeContentJpaEntity::channelId, "@channelAId")
+            .sample()
+        val contentB = sut.giveMeBuilder<YoutubeContentJpaEntity>()
+            .set(YoutubeContentJpaEntity::channelId, "@channelBId")
+            .sample()
+        val savedContents = youtubeContentJpaRepository.saveAll(listOf(contentA, contentB))
+        celebrityYoutubeContentJpaRepository.saveAll(
+            listOf(
+                generateCelebrityYoutubeContent(celebrityA, savedContents[0]),
+                generateCelebrityYoutubeContent(celebrityA, savedContents[1]),
+                generateCelebrityYoutubeContent(celebrityB, savedContents[0]),
+            ),
+        ) // [셀럽A] -> [컨텐츠A, 컨텐츠B], [셀럽B] -> [컨텐츠A] 에 출연함
+
+        val savedVideos = videoJpaRepository.saveAll(
+            listOf(
+                generateVideoWithYoutubeContent(savedContents[0]).sample(),
+                generateVideoWithYoutubeContent(savedContents[1]).sample(),
+                generateVideoWithYoutubeContent(savedContents[1]).sample(),
+            ),
+        ) // [영상1] -> [컨텐츠A], [영상2, 영상3] -> [컨텐츠B] 의 영상
+
+        val restaurant = restaurantJpaRepository.save(sut.giveMeOne(RestaurantJpaEntity::class.java))
+        restaurantInVideoJpaRepository.saveAll(
+            listOf(
+                sut.giveMeBuilder<RestaurantInVideoJpaEntity>()
+                    .set(RestaurantInVideoJpaEntity::video, savedVideos[0])
+                    .set(RestaurantInVideoJpaEntity::restaurant, restaurant)
+                    .sample(),
+                sut.giveMeBuilder<RestaurantInVideoJpaEntity>()
+                    .set(RestaurantInVideoJpaEntity::video, savedVideos[1])
+                    .set(RestaurantInVideoJpaEntity::restaurant, restaurant)
+                    .sample(),
+            ),
+        ) // [영상1, 영상2] -> [음식점1] 에 방문함
+
+        // when
+        val celebrities = celebrityPersistenceAdapter.readVisitedCelebritiesByRestaurant(restaurant.id)
+
+        // then
+        assertSoftly {
+            celebrities.size shouldBe 2
+            celebrities.map { it.id } shouldContainExactly listOf(celebrityA.id, celebrityB.id)
+        }
+    }
+
     test("구독자가 많은 컨텐츠의 셀럽순으로 조회 한다.") {
         // given
         val savedCelebrities = celebrityJpaRepository.saveAll(sut.giveMeBuilder<CelebrityJpaEntity>().sampleList(3))
