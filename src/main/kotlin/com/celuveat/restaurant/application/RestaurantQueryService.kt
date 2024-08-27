@@ -6,7 +6,7 @@ import com.celuveat.restaurant.application.port.`in`.ReadCelebrityRecommendResta
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityVisitedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadNearbyRestaurantsUseCase
-import com.celuveat.restaurant.application.port.`in`.ReadRestaurantUseCase
+import com.celuveat.restaurant.application.port.`in`.ReadRestaurantDetailUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadWeeklyUpdateRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityRecommendRestaurantsQuery
@@ -16,8 +16,8 @@ import com.celuveat.restaurant.application.port.`in`.query.ReadNearbyRestaurants
 import com.celuveat.restaurant.application.port.`in`.query.ReadRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadWeeklyUpdateRestaurantsQuery
+import com.celuveat.restaurant.application.port.`in`.result.RestaurantDetailResult
 import com.celuveat.restaurant.application.port.`in`.result.RestaurantPreviewResult
-import com.celuveat.restaurant.application.port.`in`.result.RestaurantResult
 import com.celuveat.restaurant.application.port.out.ReadInterestedRestaurantPort
 import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
 import org.springframework.stereotype.Service
@@ -34,7 +34,7 @@ class RestaurantQueryService(
     ReadCelebrityVisitedRestaurantUseCase,
     ReadCelebrityRecommendRestaurantsUseCase,
     ReadRestaurantsUseCase,
-    ReadRestaurantUseCase,
+    ReadRestaurantDetailUseCase,
     ReadWeeklyUpdateRestaurantsUseCase,
     ReadNearbyRestaurantsUseCase {
     override fun readInterestedRestaurant(query: ReadInterestedRestaurantsQuery): SliceResult<RestaurantPreviewResult> {
@@ -135,7 +135,7 @@ class RestaurantQueryService(
         }
     }
 
-    override fun readRestaurant(query: ReadRestaurantQuery): RestaurantResult {
+    override fun readRestaurantDetail(query: ReadRestaurantQuery): RestaurantDetailResult {
         val restaurant = readRestaurantPort.readById(query.restaurantId)
         val celebrities = readCelebritiesPort.readVisitedCelebritiesByRestaurant(query.restaurantId)
         val liked = query.memberId?.let {
@@ -144,7 +144,7 @@ class RestaurantQueryService(
                 query.restaurantId,
             )
         } ?: false
-        return RestaurantResult.of(
+        return RestaurantDetailResult.of(
             restaurant = restaurant,
             liked = liked,
             visitedCelebrities = celebrities,

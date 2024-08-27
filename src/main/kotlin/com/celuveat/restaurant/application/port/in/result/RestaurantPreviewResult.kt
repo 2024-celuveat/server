@@ -59,7 +59,7 @@ data class RestaurantImageResult(
     }
 }
 
-data class RestaurantResult(
+data class RestaurantDetailResult(
     val id: Long = 0,
     val name: String,
     val category: String,
@@ -79,8 +79,8 @@ data class RestaurantResult(
             restaurant: Restaurant,
             liked: Boolean,
             visitedCelebrities: List<Celebrity> = emptyList(),
-        ): RestaurantResult {
-            return RestaurantResult(
+        ): RestaurantDetailResult {
+            return RestaurantDetailResult(
                 id = restaurant.id,
                 name = restaurant.name,
                 category = restaurant.category,

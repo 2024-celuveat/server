@@ -4,8 +4,8 @@ import com.celuveat.auth.adapter.`in`.rest.Auth
 import com.celuveat.auth.adapter.`in`.rest.AuthContext
 import com.celuveat.common.adapter.`in`.rest.response.SliceResponse
 import com.celuveat.restaurant.adapter.`in`.rest.request.ReadRestaurantsRequest
+import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantDetailResponse
 import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantPreviewResponse
-import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.enums.ParameterIn
@@ -101,8 +101,8 @@ interface RestaurantApi {
 
     @Operation(summary = "음식점 조회")
     @GetMapping("/{restaurantId}")
-    fun readRestaurant(
+    fun readRestaurantDetail(
         @Auth auth: AuthContext,
         @PathVariable restaurantId: Long,
-    ): RestaurantResponse
+    ): RestaurantDetailResponse
 }

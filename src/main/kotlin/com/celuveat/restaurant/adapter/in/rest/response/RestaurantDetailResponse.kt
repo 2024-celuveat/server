@@ -1,9 +1,9 @@
 package com.celuveat.restaurant.adapter.`in`.rest.response
 
 import com.celuveat.celeb.adapter.`in`.rest.response.SimpleCelebrityResponse
+import com.celuveat.restaurant.application.port.`in`.result.RestaurantDetailResult
 import com.celuveat.restaurant.application.port.`in`.result.RestaurantImageResult
 import com.celuveat.restaurant.application.port.`in`.result.RestaurantPreviewResult
-import com.celuveat.restaurant.application.port.`in`.result.RestaurantResult
 import io.swagger.v3.oas.annotations.media.Schema
 
 data class RestaurantPreviewResponse(
@@ -115,7 +115,7 @@ data class RestaurantImageResponse(
     }
 }
 
-data class RestaurantResponse(
+data class RestaurantDetailResponse(
     @Schema(
         description = "식당 ID",
         example = "1",
@@ -192,8 +192,8 @@ data class RestaurantResponse(
     val visitedCelebrities: List<SimpleCelebrityResponse>,
 ) {
     companion object {
-        fun from(result: RestaurantResult): RestaurantResponse {
-            return RestaurantResponse(
+        fun from(result: RestaurantDetailResult): RestaurantDetailResponse {
+            return RestaurantDetailResponse(
                 id = result.id,
                 name = result.name,
                 category = result.category,

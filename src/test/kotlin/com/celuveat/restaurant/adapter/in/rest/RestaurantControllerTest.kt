@@ -4,15 +4,15 @@ import com.celuveat.auth.application.port.`in`.ExtractMemberIdUseCase
 import com.celuveat.common.adapter.`in`.rest.response.SliceResponse
 import com.celuveat.common.application.port.`in`.result.SliceResult
 import com.celuveat.common.utils.geometry.SquarePolygon
+import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantDetailResponse
 import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantPreviewResponse
-import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantResponse
 import com.celuveat.restaurant.application.port.`in`.AddInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.DeleteInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityRecommendRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityVisitedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadNearbyRestaurantsUseCase
-import com.celuveat.restaurant.application.port.`in`.ReadRestaurantUseCase
+import com.celuveat.restaurant.application.port.`in`.ReadRestaurantDetailUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadWeeklyUpdateRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.command.AddInterestedRestaurantCommand
@@ -23,8 +23,8 @@ import com.celuveat.restaurant.application.port.`in`.query.ReadNearbyRestaurants
 import com.celuveat.restaurant.application.port.`in`.query.ReadRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadWeeklyUpdateRestaurantsQuery
+import com.celuveat.restaurant.application.port.`in`.result.RestaurantDetailResult
 import com.celuveat.restaurant.application.port.`in`.result.RestaurantPreviewResult
-import com.celuveat.restaurant.application.port.`in`.result.RestaurantResult
 import com.celuveat.support.sut
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.navercorp.fixturemonkey.kotlin.giveMeBuilder
@@ -55,7 +55,7 @@ class RestaurantControllerTest(
     @MockkBean val readRestaurantsUseCase: ReadRestaurantsUseCase,
     @MockkBean val readWeeklyUpdateRestaurantsUseCase: ReadWeeklyUpdateRestaurantsUseCase,
     @MockkBean val readNearbyRestaurantsUseCase: ReadNearbyRestaurantsUseCase,
-    @MockkBean val readRestaurantUseCase: ReadRestaurantUseCase,
+    @MockkBean val readRestaurantDetailUseCase: ReadRestaurantDetailUseCase,
     // for AuthMemberArgumentResolver
     @MockkBean val extractMemberIdUseCase: ExtractMemberIdUseCase,
 ) : FunSpec({
@@ -383,14 +383,14 @@ class RestaurantControllerTest(
         val accessToken = "celuveatAccessToken"
         val restaurantId = 1L
         test("조회 성공") {
-            val results = sut.giveMeBuilder<RestaurantResult>().sample()
-            val response = RestaurantResponse.from(results)
+            val results = sut.giveMeBuilder<RestaurantDetailResult>().sample()
+            val response = RestaurantDetailResponse.from(results)
             val query = ReadRestaurantQuery(
                 memberId = memberId,
                 restaurantId = restaurantId,
             )
             every { extractMemberIdUseCase.extract(accessToken) } returns memberId
-            every { readRestaurantUseCase.readRestaurant(query) } returns results
+            every { readRestaurantDetailUseCase.readRestaurantDetail(query) } returns results
 
             mockMvc.get("/restaurants/{restaurantId}", restaurantId) {
                 header("Authorization", "Bearer $accessToken")

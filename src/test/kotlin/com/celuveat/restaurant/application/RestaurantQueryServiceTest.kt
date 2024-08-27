@@ -426,7 +426,7 @@ class RestaurantQueryServiceTest : BehaviorSpec({
                 memberId = memberId,
                 restaurantId = restaurantId,
             )
-            val restaurantResult = restaurantQueryService.readRestaurant(readRestaurantQuery)
+            val restaurantResult = restaurantQueryService.readRestaurantDetail(readRestaurantQuery)
 
             Then("관심 등록 여부가 포함되어 응답한다") {
                 restaurantResult.liked shouldBe true
@@ -441,7 +441,7 @@ class RestaurantQueryServiceTest : BehaviorSpec({
                 memberId = null,
                 restaurantId = restaurantId,
             )
-            val restaurantResult = restaurantQueryService.readRestaurant(readRestaurantQuery)
+            val restaurantResult = restaurantQueryService.readRestaurantDetail(readRestaurantQuery)
 
             Then("관심 등록 여부는 false로 응답한다") {
                 restaurantResult.liked shouldBe false

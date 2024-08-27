@@ -4,15 +4,15 @@ import com.celuveat.auth.adapter.`in`.rest.Auth
 import com.celuveat.auth.adapter.`in`.rest.AuthContext
 import com.celuveat.common.adapter.`in`.rest.response.SliceResponse
 import com.celuveat.restaurant.adapter.`in`.rest.request.ReadRestaurantsRequest
+import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantDetailResponse
 import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantPreviewResponse
-import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantResponse
 import com.celuveat.restaurant.application.port.`in`.AddInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.DeleteInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityRecommendRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityVisitedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadNearbyRestaurantsUseCase
-import com.celuveat.restaurant.application.port.`in`.ReadRestaurantUseCase
+import com.celuveat.restaurant.application.port.`in`.ReadRestaurantDetailUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadWeeklyUpdateRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.command.AddInterestedRestaurantCommand
@@ -44,7 +44,7 @@ class RestaurantController(
     private val readRestaurantsUseCase: ReadRestaurantsUseCase,
     private val readWeeklyUpdateRestaurantsUseCase: ReadWeeklyUpdateRestaurantsUseCase,
     private val readNearbyRestaurantsUseCase: ReadNearbyRestaurantsUseCase,
-    private val readRestaurantUseCase: ReadRestaurantUseCase,
+    private val readRestaurantDetailUseCase: ReadRestaurantDetailUseCase,
 ) : RestaurantApi {
     @GetMapping("/interested")
     override fun getInterestedRestaurants(
@@ -171,16 +171,16 @@ class RestaurantController(
     }
 
     @GetMapping("/{restaurantId}")
-    override fun readRestaurant(
+    override fun readRestaurantDetail(
         @Auth auth: AuthContext,
         @PathVariable restaurantId: Long,
-    ): RestaurantResponse {
-        val result = readRestaurantUseCase.readRestaurant(
+    ): RestaurantDetailResponse {
+        val result = readRestaurantDetailUseCase.readRestaurantDetail(
             ReadRestaurantQuery(
                 memberId = auth.optionalMemberId(),
                 restaurantId = restaurantId,
             ),
         )
-        return RestaurantResponse.from(result)
+        return RestaurantDetailResponse.from(result)
     }
 }
