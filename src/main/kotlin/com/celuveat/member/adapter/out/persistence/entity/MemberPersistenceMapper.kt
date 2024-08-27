@@ -11,19 +11,21 @@ class MemberPersistenceMapper {
             id = member.id,
             nickname = member.nickname,
             profileImageUrl = member.profileImageUrl,
+            email = member.email,
             serverType = member.socialIdentifier.serverType,
             socialId = member.socialIdentifier.socialId,
         )
     }
 
-    fun toDomain(memberJpaEntity: MemberJpaEntity): Member {
+    fun toDomain(entity: MemberJpaEntity): Member {
         return Member(
-            id = memberJpaEntity.id,
-            nickname = memberJpaEntity.nickname,
-            profileImageUrl = memberJpaEntity.profileImageUrl,
+            id = entity.id,
+            nickname = entity.nickname,
+            profileImageUrl = entity.profileImageUrl,
+            email = entity.email,
             socialIdentifier = SocialIdentifier(
-                serverType = memberJpaEntity.serverType,
-                socialId = memberJpaEntity.socialId,
+                serverType = entity.serverType,
+                socialId = entity.socialId,
             ),
         )
     }

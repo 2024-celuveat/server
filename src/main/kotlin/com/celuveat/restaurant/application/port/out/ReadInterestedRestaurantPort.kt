@@ -19,4 +19,6 @@ interface ReadInterestedRestaurantPort {
         memberId: Long,
         restaurantIds: List<Long>,
     ): List<InterestedRestaurant>
+
+    fun countByMemberId(memberId: Long): Int
 }

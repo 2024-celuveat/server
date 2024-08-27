@@ -1,8 +1,35 @@
 package com.celuveat.member.domain
 
-data class Member(
+import com.celuveat.review.exception.NoAuthorityReviewException
+
+class Member(
     val id: Long = 0,
-    val nickname: String,
-    val profileImageUrl: String?,
+    var nickname: String,
+    var profileImageUrl: String?,
+    val email: String,
     val socialIdentifier: SocialIdentifier,
-)
+) {
+    fun validateOwner(member: Member) {
+        if (this != member) {
+            throw NoAuthorityReviewException
+        }
+    }
+
+    fun updateProfile(nickname: String, profileImageUrl: String) {
+        this.nickname = nickname
+        this.profileImageUrl = profileImageUrl
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Member
+
+        return id == other.id
+    }
+
+    override fun hashCode(): Int {
+        return id.hashCode()
+    }
+}

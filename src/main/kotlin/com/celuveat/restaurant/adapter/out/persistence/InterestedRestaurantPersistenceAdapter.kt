@@ -86,6 +86,10 @@ class InterestedRestaurantPersistenceAdapter(
             .map { interestedRestaurantPersistenceMapper.toDomain(it) }
     }
 
+    override fun countByMemberId(memberId: Long): Int {
+        return interestedRestaurantJpaRepository.countByMemberId(memberId).toInt()
+    }
+
     companion object {
         val LATEST_SORTER = Sort.by("createdAt").descending()
     }

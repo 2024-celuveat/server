@@ -16,6 +16,7 @@ data class NaverMemberInfoResponse(
         return Member(
             nickname = response.nickname,
             profileImageUrl = response.profileImage,
+            email = response.email,
             socialIdentifier = SocialIdentifier(
                 serverType = SocialLoginType.NAVER,
                 socialId = response.id,

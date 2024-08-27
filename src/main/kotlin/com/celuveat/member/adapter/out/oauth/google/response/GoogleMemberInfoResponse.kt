@@ -13,11 +13,13 @@ data class GoogleMemberInfoResponse(
     private val givenName: String,
     private val picture: String,
     private val locale: String,
+    private val email: String,
 ) {
     fun toMember(): Member {
         return Member(
             nickname = name,
             profileImageUrl = picture,
+            email = email,
             socialIdentifier = SocialIdentifier(
                 serverType = SocialLoginType.GOOGLE,
                 socialId = id,

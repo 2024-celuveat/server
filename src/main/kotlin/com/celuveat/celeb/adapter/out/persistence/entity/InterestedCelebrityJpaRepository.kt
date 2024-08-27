@@ -16,4 +16,6 @@ interface InterestedCelebrityJpaRepository : JpaRepository<InterestedCelebrityJp
         memberId: Long,
         celebrityId: Long,
     ): Boolean
+
+    fun countByMemberId(memberId: Long): Long
 }
