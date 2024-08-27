@@ -5,11 +5,14 @@ import com.celuveat.auth.adapter.`in`.rest.AuthContext
 import com.celuveat.common.adapter.`in`.rest.response.SliceResponse
 import com.celuveat.restaurant.adapter.`in`.rest.request.ReadRestaurantsRequest
 import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantPreviewResponse
+import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantResponse
 import com.celuveat.restaurant.application.port.`in`.AddInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.DeleteInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityRecommendRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityVisitedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadInterestedRestaurantsUseCase
+import com.celuveat.restaurant.application.port.`in`.ReadNearbyRestaurantsUseCase
+import com.celuveat.restaurant.application.port.`in`.ReadRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadWeeklyUpdateRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.command.AddInterestedRestaurantCommand
@@ -18,8 +21,8 @@ import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityRecommen
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadInterestedRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadNearbyRestaurantsQuery
+import com.celuveat.restaurant.application.port.`in`.query.ReadRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadWeeklyUpdateRestaurantsQuery
-import com.celuveat.restaurant.application.port.`in`.result.ReadNearbyRestaurantsUseCase
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -41,6 +44,7 @@ class RestaurantController(
     private val readRestaurantsUseCase: ReadRestaurantsUseCase,
     private val readWeeklyUpdateRestaurantsUseCase: ReadWeeklyUpdateRestaurantsUseCase,
     private val readNearbyRestaurantsUseCase: ReadNearbyRestaurantsUseCase,
+    private val readRestaurantUseCase: ReadRestaurantUseCase,
 ) : RestaurantApi {
     @GetMapping("/interested")
     override fun getInterestedRestaurants(
@@ -164,5 +168,19 @@ class RestaurantController(
             ),
         )
         return result.map(RestaurantPreviewResponse::from)
+    }
+
+    @GetMapping("/{restaurantId}")
+    override fun readRestaurant(
+        @Auth auth: AuthContext,
+        @PathVariable restaurantId: Long,
+    ): RestaurantResponse {
+        val result = readRestaurantUseCase.readRestaurant(
+            ReadRestaurantQuery(
+                memberId = auth.optionalMemberId(),
+                restaurantId = restaurantId,
+            ),
+        )
+        return RestaurantResponse.from(result)
     }
 }
