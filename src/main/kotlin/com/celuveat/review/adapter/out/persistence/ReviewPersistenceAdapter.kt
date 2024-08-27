@@ -62,6 +62,10 @@ class ReviewPersistenceAdapter(
         )
     }
 
+    override fun countByWriterId(memberId: Long): Int {
+        return reviewJpaRepository.countByWriterId(memberId).toInt()
+    }
+
     companion object {
         val LATEST_SORTER = Sort.by("createdAt").descending()
     }

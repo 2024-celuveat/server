@@ -53,7 +53,9 @@ class SocialLoginServiceTest : BehaviorSpec({
             .set(Member::id, 0L)
             .set(Member::socialIdentifier, socialIdentifier)
             .sample()
-        val savedMember = member.copy(id = 1L)
+        val savedMember = sut.giveMeBuilder(member)
+            .set(Member::id, 1L)
+            .sample()
 
         When("최초 회원인 경우") {
             every { fetchSocialMemberPort.fetchMember(serverType, authCode, redirectUrl) } returns member

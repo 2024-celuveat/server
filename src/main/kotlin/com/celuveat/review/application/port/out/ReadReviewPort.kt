@@ -11,4 +11,6 @@ interface ReadReviewPort {
         page: Int,
         size: Int,
     ): SliceResult<Review>
+
+    fun countByWriterId(memberId: Long): Int
 }

@@ -15,4 +15,6 @@ interface ReviewJpaRepository : JpaRepository<ReviewJpaEntity, Long> {
         restaurantsId: Long,
         page: Pageable,
     ): Slice<ReviewJpaEntity>
+
+    fun countByWriterId(writerId: Long): Long
 }

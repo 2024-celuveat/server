@@ -3,7 +3,7 @@ package com.celuveat.member.adapter.`in`.rest
 import com.celuveat.auth.adapter.`in`.rest.Auth
 import com.celuveat.auth.adapter.`in`.rest.AuthContext
 import com.celuveat.member.adapter.`in`.rest.request.UpdateProfileRequest
-import com.celuveat.member.adapter.`in`.rest.response.MemberResponse
+import com.celuveat.member.adapter.`in`.rest.response.MemberProfileResponse
 import com.celuveat.member.application.port.`in`.ReadMemberUseCase
 import com.celuveat.member.application.port.`in`.UpdateProfileUseCase
 import org.springframework.web.bind.annotation.GetMapping
@@ -20,10 +20,10 @@ class MemberController(
 ) : MemberApi {
 
     @GetMapping("/profile")
-    override fun readMember(@Auth auth: AuthContext): MemberResponse {
+    override fun readMember(@Auth auth: AuthContext): MemberProfileResponse {
         val memberId = auth.memberId()
         val result = readMemberUseCase.readMember(memberId)
-        return MemberResponse.from(result)
+        return MemberProfileResponse.from(result)
     }
 
     @PatchMapping("/profile")

@@ -36,4 +36,6 @@ interface InterestedRestaurantJpaRepository : JpaRepository<InterestedRestaurant
         memberId: Long,
         ids: List<Long>,
     ): List<InterestedRestaurantJpaEntity>
+
+    fun countByMemberId(memberId: Long): Long
 }

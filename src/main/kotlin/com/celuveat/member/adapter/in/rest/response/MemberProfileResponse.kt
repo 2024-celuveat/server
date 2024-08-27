@@ -1,11 +1,10 @@
 package com.celuveat.member.adapter.`in`.rest.response
 
-import com.celuveat.member.application.port.`in`.result.MemberResult
+import com.celuveat.member.application.port.`in`.result.MemberProfileResult
 import com.celuveat.member.domain.SocialLoginType
 import io.swagger.v3.oas.annotations.media.Schema
 
-data class MemberResponse(
-
+data class MemberProfileResponse(
     @Schema(
         description = "회원 ID",
         example = "1",
@@ -36,16 +35,28 @@ data class MemberResponse(
         example = "123",
     )
     val socialId: String,
+    @Schema(
+        description = "관심 등록 수",
+        example = "1",
+    )
+    val interestedCount: Int,
+    @Schema(
+        description = "리뷰 수",
+        example = "1",
+    )
+    val reviewCount: Int,
 ) {
     companion object {
-        fun from(result: MemberResult): MemberResponse {
-            return MemberResponse(
+        fun from(result: MemberProfileResult): MemberProfileResponse {
+            return MemberProfileResponse(
                 id = result.id,
                 nickname = result.nickname,
                 profileImageUrl = result.profileImageUrl,
                 email = result.email,
                 serverType = result.serverType,
                 socialId = result.socialId,
+                interestedCount = result.interestedCount,
+                reviewCount = result.reviewCount,
             )
         }
     }

@@ -9,4 +9,6 @@ interface ReadInterestedCelebritiesPort {
         celebrityId: Long,
         memberId: Long,
     ): Boolean
+
+    fun countByMemberId(memberId: Long): Int
 }

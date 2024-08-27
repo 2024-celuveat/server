@@ -66,4 +66,8 @@ class InterestedCelebrityPersistenceAdapter(
     ): Boolean {
         return interestedCelebrityJpaRepository.existsByMemberIdAndCelebrityId(memberId, celebrityId)
     }
+
+    override fun countByMemberId(memberId: Long): Int {
+        return interestedCelebrityJpaRepository.countByMemberId(memberId).toInt()
+    }
 }
