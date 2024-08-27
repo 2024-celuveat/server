@@ -16,6 +16,8 @@ class RestaurantJpaEntity(
     val category: String,
     val roadAddress: String,
     val phoneNumber: String?,
+    val businessHours: String?,
+    val introduction: String?,
     val naverMapUrl: String,
     val latitude: Double,
     val longitude: Double,

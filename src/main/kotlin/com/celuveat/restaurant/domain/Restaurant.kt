@@ -6,6 +6,8 @@ data class Restaurant(
     val category: String,
     val roadAddress: String,
     val phoneNumber: String?,
+    val businessHours: String?,
+    val introduction: String?,
     val naverMapUrl: String,
     val latitude: Double = 0.0,
     val longitude: Double = 0.0,

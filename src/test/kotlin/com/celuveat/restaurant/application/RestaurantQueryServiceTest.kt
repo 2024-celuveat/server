@@ -8,6 +8,7 @@ import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityRecommen
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadInterestedRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadNearbyRestaurantsQuery
+import com.celuveat.restaurant.application.port.`in`.query.ReadRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadWeeklyUpdateRestaurantsQuery
 import com.celuveat.restaurant.application.port.out.ReadInterestedRestaurantPort
@@ -405,6 +406,47 @@ class RestaurantQueryServiceTest : BehaviorSpec({
                 nearbyRestaurants[0].liked shouldBe true
                 nearbyRestaurants[1].liked shouldBe false
                 nearbyRestaurants[2].liked shouldBe true
+            }
+        }
+    }
+
+    Given("음식점 정보 조회시") {
+        val restaurant = sut.giveMeOne(Restaurant::class.java)
+        val restaurantId = restaurant.id
+        val celebrities = sut.giveMeBuilder<Celebrity>()
+            .setExp(Celebrity::youtubeContents, generateYoutubeContents(size = 1))
+            .sampleList(2)
+        When("회원이 음식점을 조회하면") {
+            val memberId = 1L
+            every { readRestaurantPort.readById(restaurant.id) } returns restaurant
+            every { readCelebritiesPort.readVisitedCelebritiesByRestaurant(restaurantId) } returns celebrities
+            every { readInterestedRestaurantPort.existsInterestedRestaurant(memberId, restaurantId) } returns true
+
+            val readRestaurantQuery = ReadRestaurantQuery(
+                memberId = memberId,
+                restaurantId = restaurantId,
+            )
+            val restaurantResult = restaurantQueryService.readRestaurantDetail(readRestaurantQuery)
+
+            Then("관심 등록 여부가 포함되어 응답한다") {
+                restaurantResult.liked shouldBe true
+                restaurantResult.visitedCelebrities.size shouldBe 2
+            }
+        }
+
+        When("비회원이 음식점을 조회하면") {
+            every { readRestaurantPort.readById(restaurantId) } returns restaurant
+            every { readCelebritiesPort.readVisitedCelebritiesByRestaurant(restaurantId) } returns celebrities
+            val readRestaurantQuery = ReadRestaurantQuery(
+                memberId = null,
+                restaurantId = restaurantId,
+            )
+            val restaurantResult = restaurantQueryService.readRestaurantDetail(readRestaurantQuery)
+
+            Then("관심 등록 여부는 false로 응답한다") {
+                restaurantResult.liked shouldBe false
+                restaurantResult.visitedCelebrities.size shouldBe 2
+                verify { readInterestedRestaurantPort wasNot Called }
             }
         }
     }

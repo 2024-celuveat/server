@@ -60,4 +60,16 @@ class CelebrityPersistenceAdapter(
             )
         }.distinct()
     }
+
+    override fun readVisitedCelebritiesByRestaurant(restaurantId: Long): List<Celebrity> {
+        val celebrities = restaurantInVideoJpaRepository.findCelebritiesByRestaurantId(restaurantId)
+        val celebrityIds = celebrities.map { it.id }
+        val youtubeContentsByCelebrity = celebritiesToContentMap(celebrityIds)
+        return celebrities.map {
+            celebrityPersistenceMapper.toDomain(
+                it,
+                youtubeContentsByCelebrity[it.id]!!,
+            )
+        }
+    }
 }
