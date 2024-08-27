@@ -1,9 +1,14 @@
 package com.celuveat.member.domain
 
-data class Member(
+class Member(
     val id: Long = 0,
-    val nickname: String,
-    val profileImageUrl: String?,
+    var nickname: String,
+    var profileImageUrl: String?,
     val email: String,
     val socialIdentifier: SocialIdentifier,
-)
+) {
+    fun updateProfile(nickname: String, profileImageUrl: String) {
+        this.nickname = nickname
+        this.profileImageUrl = profileImageUrl
+    }
+}
