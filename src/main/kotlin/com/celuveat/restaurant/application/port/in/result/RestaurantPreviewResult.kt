@@ -58,3 +58,43 @@ data class RestaurantImageResult(
         }
     }
 }
+
+data class RestaurantResult(
+    val id: Long = 0,
+    val name: String,
+    val category: String,
+    val roadAddress: String,
+    val phoneNumber: String?,
+    val businessHours: String?,
+    val introduction: String?,
+    val naverMapUrl: String,
+    val latitude: Double,
+    val longitude: Double,
+    val images: List<RestaurantImageResult>,
+    val liked: Boolean,
+    val visitedCelebrities: List<SimpleCelebrityResult>,
+) {
+    companion object {
+        fun of(
+            restaurant: Restaurant,
+            liked: Boolean,
+            visitedCelebrities: List<Celebrity> = emptyList(),
+        ): RestaurantResult {
+            return RestaurantResult(
+                id = restaurant.id,
+                name = restaurant.name,
+                category = restaurant.category,
+                roadAddress = restaurant.roadAddress,
+                phoneNumber = restaurant.phoneNumber,
+                businessHours = restaurant.businessHours,
+                introduction = restaurant.introduction,
+                naverMapUrl = restaurant.naverMapUrl,
+                latitude = restaurant.latitude,
+                longitude = restaurant.longitude,
+                images = restaurant.images.map { RestaurantImageResult.from(it) },
+                liked = liked,
+                visitedCelebrities = visitedCelebrities.map { SimpleCelebrityResult.from(it) },
+            )
+        }
+    }
+}
