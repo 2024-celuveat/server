@@ -3,5 +3,5 @@ package com.celuveat.celeb.application.port.`in`.result
 data class VideoWithCelebrityResult(
     val id: Long,
     val videoUrl: String,
-    val celebrity: List<CelebrityWithSubscriberResult>,
+    val celebrities: List<CelebrityWithSubscriberCountResult>,
 )

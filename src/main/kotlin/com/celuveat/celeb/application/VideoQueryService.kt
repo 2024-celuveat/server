@@ -1,7 +1,7 @@
 package com.celuveat.celeb.application
 
 import com.celuveat.celeb.application.port.`in`.ReadVideosByRestaurantUseCase
-import com.celuveat.celeb.application.port.`in`.result.CelebrityWithSubscriberResult
+import com.celuveat.celeb.application.port.`in`.result.CelebrityWithSubscriberCountResult
 import com.celuveat.celeb.application.port.`in`.result.VideoWithCelebrityResult
 import com.celuveat.celeb.application.port.out.ReadCelebritiesPort
 import com.celuveat.celeb.application.port.out.ReadVideoPort
@@ -20,7 +20,7 @@ class VideoQueryService(
             VideoWithCelebrityResult(
                 id = video.id,
                 videoUrl = video.videoUrl,
-                celebrity = celebrities.map { CelebrityWithSubscriberResult.from(it) }
+                celebrities = celebrities.map { CelebrityWithSubscriberCountResult.from(it) }
             )
         }
     }

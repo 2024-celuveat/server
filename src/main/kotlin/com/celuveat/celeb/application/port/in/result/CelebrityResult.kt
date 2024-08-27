@@ -39,7 +39,7 @@ data class SimpleCelebrityResult(
     }
 }
 
-data class CelebrityWithSubscriberResult(
+data class CelebrityWithSubscriberCountResult(
     val id: Long,
     val name: String,
     val profileImageUrl: String,
@@ -47,8 +47,8 @@ data class CelebrityWithSubscriberResult(
     val restaurantCount: Int,
 ) {
     companion object {
-        fun from(celebrity: Celebrity): CelebrityWithSubscriberResult {
-            return CelebrityWithSubscriberResult(
+        fun from(celebrity: Celebrity): CelebrityWithSubscriberCountResult {
+            return CelebrityWithSubscriberCountResult(
                 id = celebrity.id,
                 name = celebrity.name,
                 profileImageUrl = celebrity.profileImageUrl,
