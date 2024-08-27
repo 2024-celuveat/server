@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
+import org.springframework.web.bind.annotation.RequestBody
 
 @Tag(name = "회원 API")
 interface MemberApi {
@@ -23,6 +24,6 @@ interface MemberApi {
     @PatchMapping("/profile")
     fun updateMember(
         @Auth auth: AuthContext,
-        request: UpdateProfileRequest,
+        @RequestBody request: UpdateProfileRequest,
     )
 }

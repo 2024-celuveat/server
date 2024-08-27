@@ -1,5 +1,7 @@
 package com.celuveat.member.domain
 
+import com.celuveat.review.exception.NoAuthorityReviewException
+
 class Member(
     val id: Long = 0,
     var nickname: String,
@@ -7,6 +9,12 @@ class Member(
     val email: String,
     val socialIdentifier: SocialIdentifier,
 ) {
+    fun validateOwner(member: Member) {
+        if (this != member) {
+            throw NoAuthorityReviewException
+        }
+    }
+
     fun updateProfile(nickname: String, profileImageUrl: String) {
         this.nickname = nickname
         this.profileImageUrl = profileImageUrl

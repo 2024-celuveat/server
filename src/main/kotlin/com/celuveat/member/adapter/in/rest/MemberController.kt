@@ -8,6 +8,7 @@ import com.celuveat.member.application.port.`in`.ReadMemberUseCase
 import com.celuveat.member.application.port.`in`.UpdateProfileUseCase
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -29,7 +30,7 @@ class MemberController(
     @PatchMapping("/profile")
     override fun updateMember(
         @Auth auth: AuthContext,
-        request: UpdateProfileRequest,
+        @RequestBody request: UpdateProfileRequest,
     ) {
         val memberId = auth.memberId()
         val command = request.toCommand(memberId)
