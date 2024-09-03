@@ -10,9 +10,9 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming
 data class GoogleMemberInfoResponse(
     private val id: String,
     private val name: String,
+    private val verifiedEmail: Boolean,
     private val givenName: String,
     private val picture: String,
-    private val locale: String,
     private val email: String,
 ) {
     fun toMember(): Member {

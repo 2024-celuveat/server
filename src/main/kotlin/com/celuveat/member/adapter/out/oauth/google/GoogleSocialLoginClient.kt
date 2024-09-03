@@ -59,7 +59,7 @@ class GoogleSocialLoginClient(
             .queryParam("client_id", googleSocialLoginProperty.clientId)
             .queryParam("redirect_uri", toRedirectUrl(requestOrigin))
             .queryParam("response_type", "code")
-            .queryParam("scope", googleSocialLoginProperty.scope.joinToString(","))
+            .queryParam("scope", googleSocialLoginProperty.scope.joinToString(" "))
             .build()
             .toUriString()
     }

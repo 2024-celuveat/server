@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming
 @JsonNaming(value = SnakeCaseStrategy::class)
 data class GoogleSocialLoginToken(
     val accessToken: String,
-    val refreshToken: String,
+    val refreshToken: String?,
     val expiresIn: Int,
     val tokenType: String,
     val scope: String,
