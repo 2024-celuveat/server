@@ -86,7 +86,7 @@ class CelebrityPersistenceAdapterTest(
         // then
         assertSoftly {
             visitedCelebritiesByRestaurants.size shouldBe 2
-            visitedCelebritiesByRestaurants[restaurants[0].id]!!.size shouldBe 2
+            visitedCelebritiesByRestaurants[restaurants[0].id]!!.size shouldBe 3
             visitedCelebritiesByRestaurants[restaurants[1].id]!!.size shouldBe 1
         }
     }
