@@ -730,7 +730,24 @@ class DummyEntityInitializer(
                 video = savedVideos[13],
                 restaurant = savedRestaurants[15],
             ),
+            RestaurantInVideoJpaEntity(
+                video = savedVideos[13],
+                restaurant = savedRestaurants[16],
+            ),
+            RestaurantInVideoJpaEntity(
+                video = savedVideos[13],
+                restaurant = savedRestaurants[17],
+            ),
+            RestaurantInVideoJpaEntity(
+                video = savedVideos[13],
+                restaurant = savedRestaurants[18],
+            ),
+            RestaurantInVideoJpaEntity(
+                video = savedVideos[13],
+                restaurant = savedRestaurants[19],
+            ),
         )
+
         val celebrityRestaurantE = listOf(
             CelebrityRestaurantJpaEntity(
                 celebrity = savedCelebrities[4],
@@ -747,6 +764,22 @@ class DummyEntityInitializer(
             CelebrityRestaurantJpaEntity(
                 celebrity = savedCelebrities[4],
                 restaurant = savedRestaurants[15],
+            ),
+            CelebrityRestaurantJpaEntity(
+                celebrity = savedCelebrities[4],
+                restaurant = savedRestaurants[16],
+            ),
+            CelebrityRestaurantJpaEntity(
+                celebrity = savedCelebrities[4],
+                restaurant = savedRestaurants[17],
+            ),
+            CelebrityRestaurantJpaEntity(
+                celebrity = savedCelebrities[4],
+                restaurant = savedRestaurants[18],
+            ),
+            CelebrityRestaurantJpaEntity(
+                celebrity = savedCelebrities[4],
+                restaurant = savedRestaurants[19],
             ),
         )
 

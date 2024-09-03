@@ -27,7 +27,7 @@ class CelebrityPersistenceAdapter(
                         it.celebrity,
                         youtubeContentsByCelebrity[it.celebrity.id]!!,
                     )
-                }.distinct()
+                }
             }
     }
 

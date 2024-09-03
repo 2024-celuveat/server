@@ -24,7 +24,8 @@ class NaverSocialLoginClient(
         authCode: String,
         requestOrigin: String,
     ): Member {
-        validateAllowedRedirectUrl(requestOrigin)
+        val redirectUrl = toRedirectUrl(requestOrigin)
+        validateAllowedRedirectUrl(redirectUrl)
         val socialLoginToken = fetchAccessToken(authCode)
         return fetchMemberInfo(socialLoginToken.accessToken).toMember()
     }
@@ -73,4 +74,6 @@ class NaverSocialLoginClient(
         )
         naverApiClient.withdraw(tokenRequestBody)
     }
+
+    private fun toRedirectUrl(requestOrigin: String) = "$requestOrigin/oauth/naver"
 }
