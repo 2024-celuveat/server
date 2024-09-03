@@ -24,8 +24,9 @@ class GoogleSocialLoginClient(
         authCode: String,
         requestOrigin: String,
     ): Member {
-        validateAllowedRedirectUrl(requestOrigin)
-        val socialLoginToken = fetchAccessToken(authCode, toRedirectUrl(requestOrigin))
+        val redirectUrl = toRedirectUrl(requestOrigin)
+        validateAllowedRedirectUrl(redirectUrl)
+        val socialLoginToken = fetchAccessToken(authCode, redirectUrl)
         return fetchMemberInfo(socialLoginToken.accessToken).toMember()
     }
 
