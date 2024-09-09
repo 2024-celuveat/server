@@ -22,7 +22,7 @@ data class MemberProfileResponse(
     val profileImageUrl: String?,
     @Schema(
         description = "이메일",
-        example = "email@celuveat.com"
+        example = "email@celuveat.com",
     )
     val email: String,
     @Schema(

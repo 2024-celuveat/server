@@ -115,7 +115,7 @@ class CelebrityQueryServiceTest : BehaviorSpec({
         When("회원이 셀럽을 조회하면") {
             val memberId = 1L
             every { readCelebritiesPort.readById(celebrity.id) } returns celebrity
-            every { readInterestedCelebritiesPort.existsInterestedCelebrity(memberId, celebrity.id) } returns true
+            every { readInterestedCelebritiesPort.existsInterestedCelebrity(celebrity.id, memberId) } returns true
 
             val query = ReadCelebrityQuery(memberId, celebrity.id)
             val result = celebrityQueryService.readCelebrity(query)

@@ -12,16 +12,16 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-
 @RequestMapping("/members")
 @RestController
 class MemberController(
     private val readMemberUseCase: ReadMemberUseCase,
     private val updateProfileUseCase: UpdateProfileUseCase,
 ) : MemberApi {
-
     @GetMapping("/profile")
-    override fun readMember(@Auth auth: AuthContext): MemberProfileResponse {
+    override fun readMember(
+        @Auth auth: AuthContext,
+    ): MemberProfileResponse {
         val memberId = auth.memberId()
         val result = readMemberUseCase.readMember(memberId)
         return MemberProfileResponse.from(result)

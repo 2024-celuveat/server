@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.RequestBody
 
 @Tag(name = "회원 API")
 interface MemberApi {
-
     @Operation(summary = "회원 정보 조회")
     @SecurityRequirement(name = "JWT")
     @GetMapping("/profile")
-    fun readMember(@Auth auth: AuthContext): MemberProfileResponse
+    fun readMember(
+        @Auth auth: AuthContext,
+    ): MemberProfileResponse
 
     @Operation(summary = "회원 정보 조회")
     @SecurityRequirement(name = "JWT")

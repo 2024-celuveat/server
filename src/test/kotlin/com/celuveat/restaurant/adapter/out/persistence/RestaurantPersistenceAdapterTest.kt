@@ -231,28 +231,28 @@ class RestaurantPersistenceAdapterTest(
                     .set(RestaurantJpaEntity::longitude, 127.0)
                     .sample(),
                 sut.giveMeBuilder<RestaurantJpaEntity>()
-                    .set(RestaurantJpaEntity::latitude, 37.6)
-                    .set(RestaurantJpaEntity::longitude, 127.1)
+                    .set(RestaurantJpaEntity::latitude, 37.5)
+                    .set(RestaurantJpaEntity::longitude, 127.001)
                     .sample(),
                 sut.giveMeBuilder<RestaurantJpaEntity>()
-                    .set(RestaurantJpaEntity::latitude, 38.7)
-                    .set(RestaurantJpaEntity::longitude, 128.2)
+                    .set(RestaurantJpaEntity::latitude, 37.5)
+                    .set(RestaurantJpaEntity::longitude, 127.002)
                     .sample(),
                 sut.giveMeBuilder<RestaurantJpaEntity>()
-                    .set(RestaurantJpaEntity::latitude, 38.7)
-                    .set(RestaurantJpaEntity::longitude, 128.3)
+                    .set(RestaurantJpaEntity::latitude, 37.5)
+                    .set(RestaurantJpaEntity::longitude, 127.003)
                     .sample(),
                 sut.giveMeBuilder<RestaurantJpaEntity>()
-                    .set(RestaurantJpaEntity::latitude, 38.7)
-                    .set(RestaurantJpaEntity::longitude, 128.3)
+                    .set(RestaurantJpaEntity::latitude, 37.5)
+                    .set(RestaurantJpaEntity::longitude, 127.004)
                     .sample(),
                 sut.giveMeBuilder<RestaurantJpaEntity>()
-                    .set(RestaurantJpaEntity::latitude, 38.7)
-                    .set(RestaurantJpaEntity::longitude, 128.2)
+                    .set(RestaurantJpaEntity::latitude, 37.5)
+                    .set(RestaurantJpaEntity::longitude, 127.005)
                     .sample(),
                 sut.giveMeBuilder<RestaurantJpaEntity>()
-                    .set(RestaurantJpaEntity::latitude, 70.7)
-                    .set(RestaurantJpaEntity::longitude, 128.2)
+                    .set(RestaurantJpaEntity::latitude, 37.5)
+                    .set(RestaurantJpaEntity::longitude, 127.006)
                     .sample(),
             ),
         )
