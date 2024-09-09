@@ -15,7 +15,10 @@ class Member(
         }
     }
 
-    fun updateProfile(nickname: String, profileImageUrl: String) {
+    fun updateProfile(
+        nickname: String,
+        profileImageUrl: String,
+    ) {
         this.nickname = nickname
         this.profileImageUrl = profileImageUrl
     }
