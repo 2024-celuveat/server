@@ -24,14 +24,15 @@ interface RestaurantJpaRepository : JpaRepository<RestaurantJpaEntity, Long>, Cu
         """
     SELECT r.*
     FROM restaurant r
-    WHERE (6371 * acos(cos(radians(:latitude)) * cos(radians(r.latitude)) * cos(radians(r.longitude) - radians(:longitude)) + sin(radians(:latitude)) * sin(radians(r.latitude)))) < 2
+    WHERE (6371 * acos(cos(radians(:latitude)) * cos(radians(r.latitude)) * cos(radians(r.longitude) - radians(:longitude)) + sin(radians(:latitude)) * sin(radians(r.latitude)))) < :distanceKilometer
     ORDER BY (6371 * acos(cos(radians(:latitude)) * cos(radians(r.latitude)) * cos(radians(r.longitude) - radians(:longitude)) + sin(radians(:latitude)) * sin(radians(r.latitude))))
     LIMIT 5 OFFSET 1 -- 1 is the itself location
     """,
         nativeQuery = true,
     )
-    fun findTop5ByCoordinates(
+    fun findTop5NearestInDistance(
         latitude: Double,
         longitude: Double,
+        distanceKilometer: Double = 2.0,
     ): List<RestaurantJpaEntity>
 }

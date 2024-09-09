@@ -112,7 +112,7 @@ class RestaurantPersistenceAdapter(
 
     override fun readNearby(id: Long): List<Restaurant> {
         val centralRestaurant = restaurantJpaRepository.getById(id)
-        val restaurants = restaurantJpaRepository.findTop5ByCoordinates(
+        val restaurants = restaurantJpaRepository.findTop5NearestInDistance(
             latitude = centralRestaurant.latitude,
             longitude = centralRestaurant.longitude,
         )
