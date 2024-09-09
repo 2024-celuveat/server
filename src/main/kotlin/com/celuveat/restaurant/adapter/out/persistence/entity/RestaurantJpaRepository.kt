@@ -22,10 +22,10 @@ interface RestaurantJpaRepository : JpaRepository<RestaurantJpaEntity, Long>, Cu
 
     @Query(
         """
-    SELECT r.*, 
-           (6371 * acos(cos(radians(:latitude)) * cos(radians(r.latitude)) * cos(radians(r.longitude) - radians(:longitude)) + sin(radians(:latitude)) * sin(radians(r.latitude)))) AS distance
+    SELECT r.*
     FROM restaurant r
-    ORDER BY distance
+    WHERE (6371 * acos(cos(radians(:latitude)) * cos(radians(r.latitude)) * cos(radians(r.longitude) - radians(:longitude)) + sin(radians(:latitude)) * sin(radians(r.latitude)))) < 2
+    ORDER BY (6371 * acos(cos(radians(:latitude)) * cos(radians(r.latitude)) * cos(radians(r.longitude) - radians(:longitude)) + sin(radians(:latitude)) * sin(radians(r.latitude))))
     LIMIT 5 OFFSET 1 -- 1 is the itself location
     """,
         nativeQuery = true,
