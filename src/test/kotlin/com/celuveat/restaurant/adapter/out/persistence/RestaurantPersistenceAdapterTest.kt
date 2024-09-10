@@ -4,6 +4,10 @@ import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityJpaEntity
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityJpaRepository
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityRestaurantJpaEntity
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityRestaurantJpaRepository
+import com.celuveat.member.adapter.out.persistence.entity.MemberJpaEntity
+import com.celuveat.member.adapter.out.persistence.entity.MemberJpaRepository
+import com.celuveat.restaurant.adapter.out.persistence.entity.InterestedRestaurantJpaEntity
+import com.celuveat.restaurant.adapter.out.persistence.entity.InterestedRestaurantJpaRepository
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantImageJpaEntity
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantImageJpaRepository
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantJpaEntity
@@ -15,6 +19,7 @@ import com.navercorp.fixturemonkey.kotlin.giveMeOne
 import com.navercorp.fixturemonkey.kotlin.set
 import com.navercorp.fixturemonkey.kotlin.setExp
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.collections.shouldContainInOrder
 import io.kotest.matchers.collections.shouldNotContain
 import io.kotest.matchers.shouldBe
@@ -27,6 +32,8 @@ class RestaurantPersistenceAdapterTest(
     private val restaurantPersistenceAdapter: RestaurantPersistenceAdapter,
     private val restaurantJpaRepository: RestaurantJpaRepository,
     private val restaurantImageJpaRepository: RestaurantImageJpaRepository,
+    private val memberJpaRepository: MemberJpaRepository,
+    private val interestedRestaurantJpaRepository: InterestedRestaurantJpaRepository,
     private val celebrityJpaRepository: CelebrityJpaRepository,
     private val celebrityRestaurantJpaRepository: CelebrityRestaurantJpaRepository,
 ) : FunSpec({
@@ -272,5 +279,58 @@ class RestaurantPersistenceAdapterTest(
         // then
         restaurants.size shouldBe 5
         restaurants.map { it.id } shouldNotContain savedRestaurants[0].id
+    }
+
+    context("기간내 관심 등록이 많은 음식점 조회 시") {
+        val savedRestaurants = restaurantJpaRepository.saveAll(sut.giveMeBuilder<RestaurantJpaEntity>().sampleList(2))
+        val restaurantA = savedRestaurants[0]
+        val restaurantB = savedRestaurants[1]
+
+        val savedMember = memberJpaRepository.saveAll(sut.giveMeBuilder<MemberJpaEntity>().sampleList(3))
+        val memberA = savedMember[0]
+        val memberB = savedMember[1]
+        val memberC = savedMember[2]
+        interestedRestaurantJpaRepository.saveAll(
+            listOf(
+                sut.giveMeBuilder<InterestedRestaurantJpaEntity>()
+                    .set(InterestedRestaurantJpaEntity::member, memberA)
+                    .set(InterestedRestaurantJpaEntity::restaurant, savedRestaurants[1])
+                    .sample(),
+                sut.giveMeBuilder<InterestedRestaurantJpaEntity>()
+                    .set(InterestedRestaurantJpaEntity::member, memberB)
+                    .set(InterestedRestaurantJpaEntity::restaurant, savedRestaurants[1])
+                    .sample(),
+                sut.giveMeBuilder<InterestedRestaurantJpaEntity>()
+                    .set(InterestedRestaurantJpaEntity::member, memberC)
+                    .set(InterestedRestaurantJpaEntity::restaurant, savedRestaurants[1])
+                    .sample(),
+                sut.giveMeBuilder<InterestedRestaurantJpaEntity>()
+                    .set(InterestedRestaurantJpaEntity::member, memberA)
+                    .set(InterestedRestaurantJpaEntity::restaurant, savedRestaurants[0])
+                    .sample(),
+            ),
+        )
+        
+        restaurantImageJpaRepository.saveAll(
+            savedRestaurants.map {
+                sut.giveMeBuilder<RestaurantImageJpaEntity>()
+                    .set(RestaurantImageJpaEntity::id, 0)
+                    .set(RestaurantImageJpaEntity::restaurant, it)
+                    .set(RestaurantImageJpaEntity::isThumbnail, true, 1)
+                    .sampleList(3)
+            }.flatten(),
+        )
+
+        test("기간내 관심 등록이 많은 음식점을 조회한다.") {
+            // when
+            val interestedRestaurants = restaurantPersistenceAdapter.readTopInterestedRestaurantsInDate(
+                LocalDate.now().minusDays(1),
+                LocalDate.now().plusDays(1),
+            )
+
+            // then
+            interestedRestaurants.size shouldBe 2
+            interestedRestaurants.map { it.id } shouldContainAll listOf(restaurantB.id, restaurantA.id)
+        }
     }
 })

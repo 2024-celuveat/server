@@ -32,4 +32,9 @@ interface ReadRestaurantPort {
     ): SliceResult<Restaurant>
 
     fun readNearby(id: Long): List<Restaurant>
+
+    fun readTopInterestedRestaurantsInDate(
+        startOfDate: LocalDate,
+        endOfDate: LocalDate,
+    ): List<Restaurant>
 }
