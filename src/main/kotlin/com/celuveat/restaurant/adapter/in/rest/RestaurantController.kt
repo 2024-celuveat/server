@@ -12,6 +12,7 @@ import com.celuveat.restaurant.application.port.`in`.ReadCelebrityRecommendResta
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityVisitedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadNearbyRestaurantsUseCase
+import com.celuveat.restaurant.application.port.`in`.ReadPopularRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadRestaurantDetailUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadWeeklyUpdateRestaurantsUseCase
@@ -45,6 +46,7 @@ class RestaurantController(
     private val readWeeklyUpdateRestaurantsUseCase: ReadWeeklyUpdateRestaurantsUseCase,
     private val readNearbyRestaurantsUseCase: ReadNearbyRestaurantsUseCase,
     private val readRestaurantDetailUseCase: ReadRestaurantDetailUseCase,
+    private val readPopularRestaurantsUseCase: ReadPopularRestaurantsUseCase,
 ) : RestaurantApi {
     @GetMapping("/interested")
     override fun getInterestedRestaurants(
@@ -182,5 +184,11 @@ class RestaurantController(
             ),
         )
         return RestaurantDetailResponse.from(result)
+    }
+
+    @GetMapping("/popular")
+    override fun readPopularRestaurants(auth: AuthContext): List<RestaurantPreviewResponse> {
+        val results = readPopularRestaurantsUseCase.readPopularRestaurants(auth.optionalMemberId())
+        return results.map(RestaurantPreviewResponse::from)
     }
 }

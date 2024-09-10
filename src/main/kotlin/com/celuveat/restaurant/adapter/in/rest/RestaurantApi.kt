@@ -105,4 +105,10 @@ interface RestaurantApi {
         @Auth auth: AuthContext,
         @PathVariable restaurantId: Long,
     ): RestaurantDetailResponse
+
+    @Operation(summary = "인기 음식점 조회")
+    @GetMapping("/popular")
+    fun readPopularRestaurants(
+        @Auth auth: AuthContext,
+    ): List<RestaurantPreviewResponse>
 }
