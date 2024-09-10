@@ -100,11 +100,11 @@ class InterestedRestaurantPersistenceAdapterTest(
     }
 
     context("관심 음식점 등록 시") {
-        // given
-        val savedMember = memberJpaRepository.save(sut.giveMeOne<MemberJpaEntity>())
-        val savedRestaurant = restaurantJpaRepository.save(sut.giveMeOne<RestaurantJpaEntity>())
-
         test("관심 음식점을 등록한다.") {
+            // given
+            val savedMember = memberJpaRepository.save(sut.giveMeOne<MemberJpaEntity>())
+            val savedRestaurant = restaurantJpaRepository.save(sut.giveMeOne<RestaurantJpaEntity>())
+
             // when & then
             shouldNotThrowAny {
                 restaurantPersistenceAdapter.saveInterestedRestaurant(
@@ -115,6 +115,9 @@ class InterestedRestaurantPersistenceAdapterTest(
         }
 
         test("존재 하지 않는 회원인 경우 예외가 발생한다.") {
+            // given
+            val savedRestaurant = restaurantJpaRepository.save(sut.giveMeOne<RestaurantJpaEntity>())
+
             // when & then
             shouldThrow<NotFoundMemberException> {
                 restaurantPersistenceAdapter.saveInterestedRestaurant(NOT_EXIST_ID, savedRestaurant.id)
@@ -122,6 +125,9 @@ class InterestedRestaurantPersistenceAdapterTest(
         }
 
         test("존재 하지 않는 음식점인 경우 예외가 발생한다.") {
+            // given
+            val savedMember = memberJpaRepository.save(sut.giveMeOne<MemberJpaEntity>())
+
             // when & then
             shouldThrow<NotFoundRestaurantException> {
                 restaurantPersistenceAdapter.saveInterestedRestaurant(savedMember.id, NOT_EXIST_ID)
@@ -130,6 +136,8 @@ class InterestedRestaurantPersistenceAdapterTest(
 
         test("이미 등록된 관심 음식점인 경우 예외가 발생한다.") {
             // given
+            val savedMember = memberJpaRepository.save(sut.giveMeOne<MemberJpaEntity>())
+            val savedRestaurant = restaurantJpaRepository.save(sut.giveMeOne<RestaurantJpaEntity>())
             restaurantPersistenceAdapter.saveInterestedRestaurant(savedMember.id, savedRestaurant.id)
 
             // when & then

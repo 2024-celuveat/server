@@ -281,7 +281,8 @@ class RestaurantPersistenceAdapterTest(
         restaurants.map { it.id } shouldNotContain savedRestaurants[0].id
     }
 
-    context("기간내 관심 등록이 많은 음식점 조회 시") {
+    test("기간내 관심 등록이 많은 음식점을 조회한다.") {
+        // given
         val savedRestaurants = restaurantJpaRepository.saveAll(sut.giveMeBuilder<RestaurantJpaEntity>().sampleList(2))
         val restaurantA = savedRestaurants[0]
         val restaurantB = savedRestaurants[1]
@@ -310,7 +311,7 @@ class RestaurantPersistenceAdapterTest(
                     .sample(),
             ),
         )
-        
+
         restaurantImageJpaRepository.saveAll(
             savedRestaurants.map {
                 sut.giveMeBuilder<RestaurantImageJpaEntity>()
@@ -321,16 +322,14 @@ class RestaurantPersistenceAdapterTest(
             }.flatten(),
         )
 
-        test("기간내 관심 등록이 많은 음식점을 조회한다.") {
-            // when
-            val interestedRestaurants = restaurantPersistenceAdapter.readTopInterestedRestaurantsInDate(
-                LocalDate.now().minusDays(1),
-                LocalDate.now().plusDays(1),
-            )
+        // when
+        val interestedRestaurants = restaurantPersistenceAdapter.readTopInterestedRestaurantsInDate(
+            LocalDate.now().minusDays(1),
+            LocalDate.now().plusDays(1),
+        )
 
-            // then
-            interestedRestaurants.size shouldBe 2
-            interestedRestaurants.map { it.id } shouldContainAll listOf(restaurantB.id, restaurantA.id)
-        }
+        // then
+        interestedRestaurants.size shouldBe 2
+        interestedRestaurants.map { it.id } shouldContainAll listOf(restaurantB.id, restaurantA.id)
     }
 })
