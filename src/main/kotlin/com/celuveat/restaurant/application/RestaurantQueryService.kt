@@ -108,8 +108,8 @@ class RestaurantQueryService(
     }
 
     override fun readWeeklyUpdateRestaurants(query: ReadWeeklyUpdateRestaurantsQuery): SliceResult<RestaurantPreviewResult> {
-        val startOfWeek: LocalDate = query.baseDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
-        val endOfWeek: LocalDate = query.baseDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY))
+        val startOfWeek = query.baseDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+        val endOfWeek = query.baseDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY))
         val restaurants = readRestaurantPort.readByCreatedAtBetween(startOfWeek, endOfWeek, query.page, query.size)
         val restaurantIds = restaurants.contents.map { it.id }
         val celebritiesByRestaurants = readCelebritiesPort.readVisitedCelebritiesByRestaurants(restaurantIds)
@@ -154,7 +154,19 @@ class RestaurantQueryService(
     }
 
     override fun readPopularRestaurants(memberId: Long?): List<RestaurantPreviewResult> {
-        TODO("Not yet implemented")
+        val baseDate = LocalDate.now()
+        val startOfDate = baseDate.minusWeeks(1)
+        val restaurants = readRestaurantPort.readTopInterestedRestaurantsInDate(
+            startOfDate = startOfDate,
+            endOfDate = baseDate,
+        )
+        val interestedRestaurants = readInterestedRestaurants(memberId, restaurants.map { it.id })
+        return restaurants.map {
+            RestaurantPreviewResult.of(
+                restaurant = it,
+                liked = interestedRestaurants.contains(it.id),
+            )
+        }
     }
 
     private fun readInterestedRestaurants(
