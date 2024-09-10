@@ -6,6 +6,7 @@ import com.celuveat.restaurant.application.port.`in`.ReadCelebrityRecommendResta
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityVisitedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadNearbyRestaurantsUseCase
+import com.celuveat.restaurant.application.port.`in`.ReadPopularRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadRestaurantDetailUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadWeeklyUpdateRestaurantsUseCase
@@ -20,10 +21,10 @@ import com.celuveat.restaurant.application.port.`in`.result.RestaurantDetailResu
 import com.celuveat.restaurant.application.port.`in`.result.RestaurantPreviewResult
 import com.celuveat.restaurant.application.port.out.ReadInterestedRestaurantPort
 import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
-import org.springframework.stereotype.Service
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.temporal.TemporalAdjusters
+import org.springframework.stereotype.Service
 
 @Service
 class RestaurantQueryService(
@@ -36,7 +37,8 @@ class RestaurantQueryService(
     ReadRestaurantsUseCase,
     ReadRestaurantDetailUseCase,
     ReadWeeklyUpdateRestaurantsUseCase,
-    ReadNearbyRestaurantsUseCase {
+    ReadNearbyRestaurantsUseCase,
+    ReadPopularRestaurantsUseCase {
     override fun readInterestedRestaurant(query: ReadInterestedRestaurantsQuery): SliceResult<RestaurantPreviewResult> {
         val interestedRestaurants = readInterestedRestaurantPort.readInterestedRestaurants(
             query.memberId,
@@ -149,6 +151,10 @@ class RestaurantQueryService(
             liked = liked,
             visitedCelebrities = celebrities,
         )
+    }
+
+    override fun readPopularRestaurants(memberId: Long?): List<RestaurantPreviewResult> {
+        TODO("Not yet implemented")
     }
 
     private fun readInterestedRestaurants(
