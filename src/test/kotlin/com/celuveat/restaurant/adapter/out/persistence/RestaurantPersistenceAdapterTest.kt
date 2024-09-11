@@ -323,7 +323,7 @@ class RestaurantPersistenceAdapterTest(
         )
 
         // when
-        val interestedRestaurants = restaurantPersistenceAdapter.readTopInterestedRestaurantsInDate(
+        val interestedRestaurants = restaurantPersistenceAdapter.readTop10InterestedRestaurantsInDate(
             LocalDate.now().minusDays(1),
             LocalDate.now().plusDays(1),
         )

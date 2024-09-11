@@ -50,7 +50,7 @@ interface InterestedRestaurantJpaRepository : JpaRepository<InterestedRestaurant
         LIMIT 10
     """,
     )
-    fun findMostInterestedRestaurantInDate(
+    fun findTop10InterestedRestaurantInDate(
         startOfDate: LocalDateTime,
         endOfDate: LocalDateTime,
     ): List<RestaurantJpaEntity>

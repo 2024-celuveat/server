@@ -128,11 +128,11 @@ class RestaurantPersistenceAdapter(
         }
     }
 
-    override fun readTopInterestedRestaurantsInDate(
+    override fun readTop10InterestedRestaurantsInDate(
         startOfDate: LocalDate,
         endOfDate: LocalDate
     ): List<Restaurant> {
-        val restaurants = interestedRestaurantJpaRepository.findMostInterestedRestaurantInDate(
+        val restaurants = interestedRestaurantJpaRepository.findTop10InterestedRestaurantInDate(
             startOfDate = startOfDate.atStartOfDay(),
             endOfDate = endOfDate.atTime(LocalTime.MAX),
         )

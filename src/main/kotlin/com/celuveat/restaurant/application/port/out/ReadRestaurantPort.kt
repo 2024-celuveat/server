@@ -33,7 +33,7 @@ interface ReadRestaurantPort {
 
     fun readNearby(id: Long): List<Restaurant>
 
-    fun readTopInterestedRestaurantsInDate(
+    fun readTop10InterestedRestaurantsInDate(
         startOfDate: LocalDate,
         endOfDate: LocalDate,
     ): List<Restaurant>
