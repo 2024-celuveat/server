@@ -12,6 +12,7 @@ import com.celuveat.restaurant.application.port.`in`.ReadCelebrityRecommendResta
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityVisitedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadNearbyRestaurantsUseCase
+import com.celuveat.restaurant.application.port.`in`.ReadPopularRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadRestaurantDetailUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadWeeklyUpdateRestaurantsUseCase
@@ -20,6 +21,7 @@ import com.celuveat.restaurant.application.port.`in`.command.DeleteInterestedRes
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadInterestedRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadNearbyRestaurantsQuery
+import com.celuveat.restaurant.application.port.`in`.query.ReadPopularRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadWeeklyUpdateRestaurantsQuery
@@ -56,6 +58,7 @@ class RestaurantControllerTest(
     @MockkBean val readWeeklyUpdateRestaurantsUseCase: ReadWeeklyUpdateRestaurantsUseCase,
     @MockkBean val readNearbyRestaurantsUseCase: ReadNearbyRestaurantsUseCase,
     @MockkBean val readRestaurantDetailUseCase: ReadRestaurantDetailUseCase,
+    @MockkBean val readPopularRestaurantsUseCase: ReadPopularRestaurantsUseCase,
     // for AuthMemberArgumentResolver
     @MockkBean val extractMemberIdUseCase: ExtractMemberIdUseCase,
 ) : FunSpec({
@@ -394,6 +397,46 @@ class RestaurantControllerTest(
 
             mockMvc.get("/restaurants/{restaurantId}", restaurantId) {
                 header("Authorization", "Bearer $accessToken")
+            }.andExpect {
+                status { isOk() }
+                content { json(mapper.writeValueAsString(response)) }
+            }.andDo {
+                print()
+            }
+        }
+    }
+
+    context("인기 음식점을 조회 한다") {
+        val memberId = 1L
+        test("회원 조회 성공") {
+            val accessToken = "celuveatAccessToken"
+            val results = sut.giveMeBuilder<RestaurantPreviewResult>().sampleList(3)
+            val response = results.map(RestaurantPreviewResponse::from)
+            val query = ReadPopularRestaurantQuery(memberId = memberId)
+
+            every { readPopularRestaurantsUseCase.readPopularRestaurants(query) } returns results
+            every { extractMemberIdUseCase.extract(accessToken) } returns memberId
+
+            mockMvc.get("/restaurants/popular") {
+                header("Authorization", "Bearer $accessToken")
+            }.andExpect {
+                status { isOk() }
+                content { json(mapper.writeValueAsString(response)) }
+            }.andDo {
+                print()
+            }
+        }
+
+        test("비호원 조회 성공") {
+            val results = sut.giveMeBuilder<RestaurantPreviewResult>()
+                .setExp(RestaurantPreviewResult::liked, false)
+                .sampleList(3)
+            val response = results.map(RestaurantPreviewResponse::from)
+            val query = ReadPopularRestaurantQuery(memberId = null)
+            
+            every { readPopularRestaurantsUseCase.readPopularRestaurants(query) } returns results
+
+            mockMvc.get("/restaurants/popular") {
             }.andExpect {
                 status { isOk() }
                 content { json(mapper.writeValueAsString(response)) }

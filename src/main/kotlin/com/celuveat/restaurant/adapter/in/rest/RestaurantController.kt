@@ -12,6 +12,7 @@ import com.celuveat.restaurant.application.port.`in`.ReadCelebrityRecommendResta
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityVisitedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadNearbyRestaurantsUseCase
+import com.celuveat.restaurant.application.port.`in`.ReadPopularRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadRestaurantDetailUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadWeeklyUpdateRestaurantsUseCase
@@ -21,6 +22,7 @@ import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityRecommen
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadInterestedRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadNearbyRestaurantsQuery
+import com.celuveat.restaurant.application.port.`in`.query.ReadPopularRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadWeeklyUpdateRestaurantsQuery
 import org.springframework.data.domain.Pageable
@@ -45,6 +47,7 @@ class RestaurantController(
     private val readWeeklyUpdateRestaurantsUseCase: ReadWeeklyUpdateRestaurantsUseCase,
     private val readNearbyRestaurantsUseCase: ReadNearbyRestaurantsUseCase,
     private val readRestaurantDetailUseCase: ReadRestaurantDetailUseCase,
+    private val readPopularRestaurantsUseCase: ReadPopularRestaurantsUseCase,
 ) : RestaurantApi {
     @GetMapping("/interested")
     override fun getInterestedRestaurants(
@@ -182,5 +185,12 @@ class RestaurantController(
             ),
         )
         return RestaurantDetailResponse.from(result)
+    }
+
+    @GetMapping("/popular")
+    override fun readPopularRestaurants(auth: AuthContext): List<RestaurantPreviewResponse> {
+        val query = ReadPopularRestaurantQuery(memberId = auth.optionalMemberId())
+        val results = readPopularRestaurantsUseCase.readPopularRestaurants(query)
+        return results.map(RestaurantPreviewResponse::from)
     }
 }

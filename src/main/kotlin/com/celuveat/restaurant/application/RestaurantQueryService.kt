@@ -6,6 +6,7 @@ import com.celuveat.restaurant.application.port.`in`.ReadCelebrityRecommendResta
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityVisitedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadNearbyRestaurantsUseCase
+import com.celuveat.restaurant.application.port.`in`.ReadPopularRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadRestaurantDetailUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadWeeklyUpdateRestaurantsUseCase
@@ -13,6 +14,7 @@ import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityRecommen
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadInterestedRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadNearbyRestaurantsQuery
+import com.celuveat.restaurant.application.port.`in`.query.ReadPopularRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadWeeklyUpdateRestaurantsQuery
@@ -20,10 +22,9 @@ import com.celuveat.restaurant.application.port.`in`.result.RestaurantDetailResu
 import com.celuveat.restaurant.application.port.`in`.result.RestaurantPreviewResult
 import com.celuveat.restaurant.application.port.out.ReadInterestedRestaurantPort
 import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
-import org.springframework.stereotype.Service
 import java.time.DayOfWeek
-import java.time.LocalDate
 import java.time.temporal.TemporalAdjusters
+import org.springframework.stereotype.Service
 
 @Service
 class RestaurantQueryService(
@@ -36,7 +37,8 @@ class RestaurantQueryService(
     ReadRestaurantsUseCase,
     ReadRestaurantDetailUseCase,
     ReadWeeklyUpdateRestaurantsUseCase,
-    ReadNearbyRestaurantsUseCase {
+    ReadNearbyRestaurantsUseCase,
+    ReadPopularRestaurantsUseCase {
     override fun readInterestedRestaurant(query: ReadInterestedRestaurantsQuery): SliceResult<RestaurantPreviewResult> {
         val interestedRestaurants = readInterestedRestaurantPort.readInterestedRestaurants(
             query.memberId,
@@ -106,8 +108,8 @@ class RestaurantQueryService(
     }
 
     override fun readWeeklyUpdateRestaurants(query: ReadWeeklyUpdateRestaurantsQuery): SliceResult<RestaurantPreviewResult> {
-        val startOfWeek: LocalDate = query.baseDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
-        val endOfWeek: LocalDate = query.baseDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY))
+        val startOfWeek = query.baseDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+        val endOfWeek = query.baseDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY))
         val restaurants = readRestaurantPort.readByCreatedAtBetween(startOfWeek, endOfWeek, query.page, query.size)
         val restaurantIds = restaurants.contents.map { it.id }
         val celebritiesByRestaurants = readCelebritiesPort.readVisitedCelebritiesByRestaurants(restaurantIds)
@@ -149,6 +151,21 @@ class RestaurantQueryService(
             liked = liked,
             visitedCelebrities = celebrities,
         )
+    }
+
+    override fun readPopularRestaurants(query: ReadPopularRestaurantQuery): List<RestaurantPreviewResult> {
+        val startOfDate = query.baseDate.minusWeeks(1)
+        val restaurants = readRestaurantPort.readTop10InterestedRestaurantsInDate(
+            startOfDate = startOfDate,
+            endOfDate = query.baseDate,
+        )
+        val interestedRestaurants = readInterestedRestaurants(query.memberId, restaurants.map { it.id })
+        return restaurants.map {
+            RestaurantPreviewResult.of(
+                restaurant = it,
+                liked = interestedRestaurants.contains(it.id),
+            )
+        }
     }
 
     private fun readInterestedRestaurants(
