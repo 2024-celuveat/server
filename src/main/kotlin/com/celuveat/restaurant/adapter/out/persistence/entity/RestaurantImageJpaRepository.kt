@@ -4,4 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface RestaurantImageJpaRepository : JpaRepository<RestaurantImageJpaEntity, Long> {
     fun findByRestaurantIn(restaurants: List<RestaurantJpaEntity>): List<RestaurantImageJpaEntity>
+
+    fun findByRestaurant(restaurant: RestaurantJpaEntity): List<RestaurantImageJpaEntity>
 }

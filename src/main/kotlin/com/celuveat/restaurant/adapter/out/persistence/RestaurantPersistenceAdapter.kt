@@ -46,7 +46,9 @@ class RestaurantPersistenceAdapter(
     }
 
     override fun readById(id: Long): Restaurant {
-        return restaurantPersistenceMapper.toDomainWithoutImage(restaurantJpaRepository.getById(id))
+        val restaurant = restaurantJpaRepository.getById(id)
+        val images = restaurantImageJpaRepository.findByRestaurant(restaurant)
+        return restaurantPersistenceMapper.toDomain(restaurant, images)
     }
 
     override fun readCelebrityRecommendRestaurant(): List<Restaurant> {
