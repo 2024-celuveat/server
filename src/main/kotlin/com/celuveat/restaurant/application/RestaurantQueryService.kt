@@ -14,6 +14,7 @@ import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityRecommen
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadInterestedRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadNearbyRestaurantsQuery
+import com.celuveat.restaurant.application.port.`in`.query.ReadPopularRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadWeeklyUpdateRestaurantsQuery
@@ -22,7 +23,6 @@ import com.celuveat.restaurant.application.port.`in`.result.RestaurantPreviewRes
 import com.celuveat.restaurant.application.port.out.ReadInterestedRestaurantPort
 import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
 import java.time.DayOfWeek
-import java.time.LocalDate
 import java.time.temporal.TemporalAdjusters
 import org.springframework.stereotype.Service
 
@@ -153,14 +153,13 @@ class RestaurantQueryService(
         )
     }
 
-    override fun readPopularRestaurants(memberId: Long?): List<RestaurantPreviewResult> {
-        val baseDate = LocalDate.now()
-        val startOfDate = baseDate.minusWeeks(1)
-        val restaurants = readRestaurantPort.readTopInterestedRestaurantsInDate(
+    override fun readPopularRestaurants(query: ReadPopularRestaurantQuery): List<RestaurantPreviewResult> {
+        val startOfDate = query.baseDate.minusWeeks(1)
+        val restaurants = readRestaurantPort.readTop10InterestedRestaurantsInDate(
             startOfDate = startOfDate,
-            endOfDate = baseDate,
+            endOfDate = query.baseDate,
         )
-        val interestedRestaurants = readInterestedRestaurants(memberId, restaurants.map { it.id })
+        val interestedRestaurants = readInterestedRestaurants(query.memberId, restaurants.map { it.id })
         return restaurants.map {
             RestaurantPreviewResult.of(
                 restaurant = it,

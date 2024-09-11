@@ -22,6 +22,7 @@ import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityRecommen
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadInterestedRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadNearbyRestaurantsQuery
+import com.celuveat.restaurant.application.port.`in`.query.ReadPopularRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadWeeklyUpdateRestaurantsQuery
 import org.springframework.data.domain.Pageable
@@ -188,7 +189,8 @@ class RestaurantController(
 
     @GetMapping("/popular")
     override fun readPopularRestaurants(auth: AuthContext): List<RestaurantPreviewResponse> {
-        val results = readPopularRestaurantsUseCase.readPopularRestaurants(auth.optionalMemberId())
+        val query = ReadPopularRestaurantQuery(memberId = auth.optionalMemberId())
+        val results = readPopularRestaurantsUseCase.readPopularRestaurants(query)
         return results.map(RestaurantPreviewResponse::from)
     }
 }

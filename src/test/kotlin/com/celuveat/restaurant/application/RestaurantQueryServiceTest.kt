@@ -8,6 +8,7 @@ import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityRecommen
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadInterestedRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadNearbyRestaurantsQuery
+import com.celuveat.restaurant.application.port.`in`.query.ReadPopularRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadWeeklyUpdateRestaurantsQuery
@@ -447,6 +448,37 @@ class RestaurantQueryServiceTest : BehaviorSpec({
                 restaurantResult.liked shouldBe false
                 restaurantResult.visitedCelebrities.size shouldBe 2
                 verify { readInterestedRestaurantPort wasNot Called }
+            }
+        }
+    }
+
+    Given("인기 음식점 조회시") {
+        val restaurants = sut.giveMeBuilder<Restaurant>().sampleList(2)
+        val restaurantIds = restaurants.map { it.id }
+        val interestedRestaurants = listOf(
+            sut.giveMeBuilder<InterestedRestaurant>()
+                .setExp(InterestedRestaurant::restaurant, restaurants[0])
+                .sample(),
+        )
+
+        When("일주일간 관심 추가가 가장 많은") {
+            val memberId = 1L
+            val query = ReadPopularRestaurantQuery(memberId = memberId)
+
+            every { readRestaurantPort.readTop10InterestedRestaurantsInDate(any(), any()) } returns restaurants
+            every {
+                readInterestedRestaurantPort.readInterestedRestaurantsByIds(
+                    memberId,
+                    restaurantIds
+                )
+            } returns interestedRestaurants
+
+            val restaurantResult = restaurantQueryService.readPopularRestaurants(query)
+
+            Then("음식점을 조회한다") {
+                restaurantResult.size shouldBe 2
+                restaurantResult[0].liked shouldBe true
+                restaurantResult[1].liked shouldBe false
             }
         }
     }

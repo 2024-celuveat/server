@@ -21,6 +21,7 @@ import com.celuveat.restaurant.application.port.`in`.command.DeleteInterestedRes
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadInterestedRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadNearbyRestaurantsQuery
+import com.celuveat.restaurant.application.port.`in`.query.ReadPopularRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadWeeklyUpdateRestaurantsQuery
@@ -411,8 +412,9 @@ class RestaurantControllerTest(
             val accessToken = "celuveatAccessToken"
             val results = sut.giveMeBuilder<RestaurantPreviewResult>().sampleList(3)
             val response = results.map(RestaurantPreviewResponse::from)
+            val query = ReadPopularRestaurantQuery(memberId = memberId)
 
-            every { readPopularRestaurantsUseCase.readPopularRestaurants(memberId) } returns results
+            every { readPopularRestaurantsUseCase.readPopularRestaurants(query) } returns results
             every { extractMemberIdUseCase.extract(accessToken) } returns memberId
 
             mockMvc.get("/restaurants/popular") {
@@ -430,7 +432,9 @@ class RestaurantControllerTest(
                 .setExp(RestaurantPreviewResult::liked, false)
                 .sampleList(3)
             val response = results.map(RestaurantPreviewResponse::from)
-            every { readPopularRestaurantsUseCase.readPopularRestaurants(null) } returns results
+            val query = ReadPopularRestaurantQuery(memberId = null)
+            
+            every { readPopularRestaurantsUseCase.readPopularRestaurants(query) } returns results
 
             mockMvc.get("/restaurants/popular") {
             }.andExpect {
