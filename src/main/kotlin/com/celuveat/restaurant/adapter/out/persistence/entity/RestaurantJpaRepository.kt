@@ -35,4 +35,7 @@ interface RestaurantJpaRepository : JpaRepository<RestaurantJpaEntity, Long>, Cu
         longitude: Double,
         distanceKilometer: Double = 2.0,
     ): List<RestaurantJpaEntity>
+
+    @Query(value = "SELECT r FROM RestaurantJpaEntity r WHERE r.name LIKE %:name%")
+    fun readByNameContains(name: String): List<RestaurantJpaEntity>
 }

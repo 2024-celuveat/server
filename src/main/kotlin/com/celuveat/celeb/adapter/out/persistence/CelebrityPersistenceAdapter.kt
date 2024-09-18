@@ -72,4 +72,9 @@ class CelebrityPersistenceAdapter(
             )
         }
     }
+
+    override fun readByName(name: String): List<Celebrity> {
+        val celebrities = celebrityJpaRepository.readByNameContains(name)
+        return celebrities.map { celebrityPersistenceMapper.toDomainWithoutYoutubeContent(it) }
+    }
 }

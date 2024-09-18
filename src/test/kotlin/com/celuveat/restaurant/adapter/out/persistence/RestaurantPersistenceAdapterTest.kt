@@ -332,4 +332,34 @@ class RestaurantPersistenceAdapterTest(
         interestedRestaurants.size shouldBe 2
         interestedRestaurants.map { it.id } shouldContainAll listOf(restaurantB.id, restaurantA.id)
     }
+
+    test("이름으로 음식점을 조회한다.") {
+        // given
+        restaurantJpaRepository.saveAll(
+            listOf(
+                sut.giveMeBuilder<RestaurantJpaEntity>()
+                    .setExp(RestaurantJpaEntity::name, "말랑이의 감자탕")
+                    .sample(),
+                sut.giveMeBuilder<RestaurantJpaEntity>()
+                    .setExp(RestaurantJpaEntity::name, "말랑이의감자탕")
+                    .sample(),
+                sut.giveMeBuilder<RestaurantJpaEntity>()
+                    .setExp(RestaurantJpaEntity::name, "말랑이의 삼계탕")
+                    .sample(),
+                sut.giveMeBuilder<RestaurantJpaEntity>()
+                    .setExp(RestaurantJpaEntity::name, "로이스의 감자탕")
+                    .sample(),
+            )
+        )
+
+        // when
+        val readBy감자 = restaurantPersistenceAdapter.readByName("감자")
+        val readBy말랑 = restaurantPersistenceAdapter.readByName("말랑")
+        val readBy의감 = restaurantPersistenceAdapter.readByName("의 감")
+
+        // then
+        readBy감자.size shouldBe 3
+        readBy말랑.size shouldBe 3
+        readBy의감.size shouldBe 2
+    }
 })
