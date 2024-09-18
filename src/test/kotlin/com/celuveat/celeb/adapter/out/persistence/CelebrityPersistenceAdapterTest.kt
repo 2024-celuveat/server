@@ -247,19 +247,16 @@ class CelebrityPersistenceAdapterTest(
                 sut.giveMeBuilder<CelebrityJpaEntity>()
                     .setExp(CelebrityJpaEntity::name, "말랑")
                     .sample(),
-
                 sut.giveMeBuilder<CelebrityJpaEntity>()
                     .setExp(CelebrityJpaEntity::name, "말랭")
                     .sample(),
-
                 sut.giveMeBuilder<CelebrityJpaEntity>()
                     .setExp(CelebrityJpaEntity::name, "로이스")
                     .sample(),
-
                 sut.giveMeBuilder<CelebrityJpaEntity>()
                     .setExp(CelebrityJpaEntity::name, "로말스")
                     .sample(),
-            )
+            ),
         )
 
         // when

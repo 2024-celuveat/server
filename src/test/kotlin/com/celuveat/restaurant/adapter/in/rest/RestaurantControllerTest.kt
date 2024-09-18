@@ -433,7 +433,7 @@ class RestaurantControllerTest(
                 .sampleList(3)
             val response = results.map(RestaurantPreviewResponse::from)
             val query = ReadPopularRestaurantQuery(memberId = null)
-            
+
             every { readPopularRestaurantsUseCase.readPopularRestaurants(query) } returns results
 
             mockMvc.get("/restaurants/popular") {

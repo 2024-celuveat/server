@@ -8,9 +8,7 @@ data class IntegratedSearchResponse(
     val celebrityResults: List<ResponseWithId>,
 ) {
     companion object {
-        fun from(
-            result: IntegratedSearchResult
-        ): IntegratedSearchResponse {
+        fun from(result: IntegratedSearchResult): IntegratedSearchResponse {
             return IntegratedSearchResponse(
                 regionResults = result.regionResults.map { ResponseWithId(id = it.id, name = it.name) },
                 restaurantResults = result.restaurantResults.map { ResponseWithId(id = it.id, name = it.name) },
@@ -22,5 +20,5 @@ data class IntegratedSearchResponse(
 
 data class ResponseWithId(
     val id: Long,
-    val name: String
+    val name: String,
 )

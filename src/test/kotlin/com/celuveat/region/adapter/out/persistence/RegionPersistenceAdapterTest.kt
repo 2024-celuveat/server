@@ -21,29 +21,26 @@ class RegionPersistenceAdapterTest(
                 sut.giveMeBuilder<RegionJpaEntity>()
                     .setExp(RegionJpaEntity::name, "서울 도봉구")
                     .sample(),
-
                 sut.giveMeBuilder<RegionJpaEntity>()
                     .setExp(RegionJpaEntity::name, "서울 노원구")
                     .sample(),
-
                 sut.giveMeBuilder<RegionJpaEntity>()
                     .setExp(RegionJpaEntity::name, "경기 순천")
                     .sample(),
-
                 sut.giveMeBuilder<RegionJpaEntity>()
                     .setExp(RegionJpaEntity::name, "전남 순천")
                     .sample(),
-            )
+            ),
         )
 
         // when
-        val readBy서울 = regionPersistenceAdapter.readByName("서울")
-        val readBy순천 = regionPersistenceAdapter.readByName("순천")
-        val readBy도봉 = regionPersistenceAdapter.readByName("도봉")
+        val result1 = regionPersistenceAdapter.readByName("서울")
+        val result2 = regionPersistenceAdapter.readByName("순천")
+        val result3 = regionPersistenceAdapter.readByName("도봉")
 
         // then
-        readBy서울.size shouldBe 2
-        readBy순천.size shouldBe 2
-        readBy도봉.size shouldBe 1
+        result1.size shouldBe 2
+        result2.size shouldBe 2
+        result3.size shouldBe 1
     }
 })

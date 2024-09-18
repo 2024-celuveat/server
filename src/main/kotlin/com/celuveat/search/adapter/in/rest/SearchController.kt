@@ -14,7 +14,9 @@ class SearchController(
     private val integratedSearchUseCase: IntegratedSearchUseCase,
 ) : SearchApi {
     @GetMapping("/integrated")
-    override fun integratedSearch(@RequestParam(name = "name") name: String): IntegratedSearchResponse {
+    override fun integratedSearch(
+        @RequestParam(name = "name") name: String,
+    ): IntegratedSearchResponse {
         return IntegratedSearchResponse.from(integratedSearchUseCase.searchByName(IntegratedSearchQuery(name)))
     }
 }

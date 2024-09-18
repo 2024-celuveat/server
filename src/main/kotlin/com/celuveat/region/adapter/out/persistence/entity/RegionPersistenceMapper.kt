@@ -5,7 +5,6 @@ import com.celuveat.region.domain.Region
 
 @Mapper
 class RegionPersistenceMapper {
-
     fun toDomain(region: RegionJpaEntity): Region {
         return Region(id = region.id, name = region.name)
     }

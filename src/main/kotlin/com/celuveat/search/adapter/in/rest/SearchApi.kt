@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam
 
 @Tag(name = "검색 API")
 interface SearchApi {
-
     @Operation(summary = "지역, 셀럽, 음식점 통합 검색")
     @GetMapping("/integrated")
     fun integratedSearch(

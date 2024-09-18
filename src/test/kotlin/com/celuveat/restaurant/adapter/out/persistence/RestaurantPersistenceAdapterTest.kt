@@ -349,17 +349,17 @@ class RestaurantPersistenceAdapterTest(
                 sut.giveMeBuilder<RestaurantJpaEntity>()
                     .setExp(RestaurantJpaEntity::name, "로이스의 감자탕")
                     .sample(),
-            )
+            ),
         )
 
         // when
-        val readBy감자 = restaurantPersistenceAdapter.readByName("감자")
-        val readBy말랑 = restaurantPersistenceAdapter.readByName("말랑")
-        val readBy의감 = restaurantPersistenceAdapter.readByName("의 감")
+        val result1 = restaurantPersistenceAdapter.readByName("감자")
+        val result2 = restaurantPersistenceAdapter.readByName("말랑")
+        val result3 = restaurantPersistenceAdapter.readByName("의 감")
 
         // then
-        readBy감자.size shouldBe 3
-        readBy말랑.size shouldBe 3
-        readBy의감.size shouldBe 2
+        result1.size shouldBe 3
+        result2.size shouldBe 3
+        result3.size shouldBe 2
     }
 })

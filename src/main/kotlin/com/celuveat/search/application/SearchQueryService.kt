@@ -14,7 +14,6 @@ class SearchQueryService(
     private val readRestaurantPort: ReadRestaurantPort,
     private val readCelebritiesPort: ReadCelebritiesPort,
 ) : IntegratedSearchUseCase {
-
     override fun searchByName(query: IntegratedSearchQuery): IntegratedSearchResult {
         val regions = readRegionPort.readByName(query.name)
         val restaurants = readRestaurantPort.readByName(query.name)

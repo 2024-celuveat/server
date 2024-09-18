@@ -26,5 +26,5 @@ data class IntegratedSearchResult(
 
 data class ResultWithId(
     val id: Long,
-    val name: String
+    val name: String,
 )
