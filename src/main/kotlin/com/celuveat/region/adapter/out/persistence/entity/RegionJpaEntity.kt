@@ -15,6 +15,8 @@ class RegionJpaEntity(
     val id: Long = 0,
     @Column(nullable = false)
     val name: String,
+    val latitude: Double,
+    val longitude: Double,
 ) : RootEntity<Long>() {
     override fun id(): Long {
         return this.id
