@@ -43,7 +43,10 @@ class HelpfulReviewPersistenceAdapter(
         reviewId: Long,
         memberId: Long,
     ): HelpfulReview {
-        val entity = helpfulReviewJpaRepository.getByMemberIdAndReviewId(reviewId, memberId)
+        val entity = helpfulReviewJpaRepository.getByMemberIdAndReviewId(
+            memberId = memberId,
+            reviewId = reviewId,
+        )
         val images = reviewImageJpaRepository.findAllByReview(entity.review)
         return helpfulReviewPersistenceMapper.toDomain(entity, images)
     }
