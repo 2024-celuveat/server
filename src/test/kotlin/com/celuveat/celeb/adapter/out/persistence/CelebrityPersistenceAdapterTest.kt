@@ -17,6 +17,7 @@ import com.celuveat.support.sut
 import com.navercorp.fixturemonkey.kotlin.giveMeBuilder
 import com.navercorp.fixturemonkey.kotlin.giveMeOne
 import com.navercorp.fixturemonkey.kotlin.set
+import com.navercorp.fixturemonkey.kotlin.setExp
 import io.kotest.assertions.assertSoftly
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContainExactly
@@ -237,6 +238,32 @@ class CelebrityPersistenceAdapterTest(
         // then
         celebrities.size shouldBe 1
         celebrities[0].id shouldBe celebrity.id
+    }
+
+    test("이름으로 셀럽을 조회한다") {
+        // given
+        celebrityJpaRepository.saveAll(
+            listOf(
+                sut.giveMeBuilder<CelebrityJpaEntity>()
+                    .setExp(CelebrityJpaEntity::name, "말랑")
+                    .sample(),
+                sut.giveMeBuilder<CelebrityJpaEntity>()
+                    .setExp(CelebrityJpaEntity::name, "말랭")
+                    .sample(),
+                sut.giveMeBuilder<CelebrityJpaEntity>()
+                    .setExp(CelebrityJpaEntity::name, "로이스")
+                    .sample(),
+                sut.giveMeBuilder<CelebrityJpaEntity>()
+                    .setExp(CelebrityJpaEntity::name, "로말스")
+                    .sample(),
+            ),
+        )
+
+        // when
+        val celebrities = celebrityPersistenceAdapter.readByName("말")
+
+        // then
+        celebrities.size shouldBe 3
     }
 })
 

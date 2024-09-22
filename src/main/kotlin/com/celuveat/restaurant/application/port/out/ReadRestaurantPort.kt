@@ -37,4 +37,6 @@ interface ReadRestaurantPort {
         startOfDate: LocalDate,
         endOfDate: LocalDate,
     ): List<Restaurant>
+
+    fun readByName(name: String): List<Restaurant>
 }

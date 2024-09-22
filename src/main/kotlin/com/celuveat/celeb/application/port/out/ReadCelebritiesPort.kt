@@ -12,4 +12,6 @@ interface ReadCelebritiesPort {
     fun readById(celebrityId: Long): Celebrity
 
     fun readByYoutubeContentIds(youtubeContentIds: List<Long>): List<Celebrity>
+
+    fun readByName(name: String): List<Celebrity>
 }

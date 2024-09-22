@@ -20,4 +20,7 @@ interface CelebrityJpaRepository : JpaRepository<CelebrityJpaEntity, Long> {
         """,
     )
     fun findAllBySubscriberCountDescTop10(): Set<CelebrityJpaEntity>
+
+    @Query(value = "SELECT c FROM CelebrityJpaEntity c WHERE c.name LIKE %:name%")
+    fun readByNameContains(name: String): List<CelebrityJpaEntity>
 }

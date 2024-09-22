@@ -469,7 +469,7 @@ class RestaurantQueryServiceTest : BehaviorSpec({
             every {
                 readInterestedRestaurantPort.readInterestedRestaurantsByIds(
                     memberId,
-                    restaurantIds
+                    restaurantIds,
                 )
             } returns interestedRestaurants
 
