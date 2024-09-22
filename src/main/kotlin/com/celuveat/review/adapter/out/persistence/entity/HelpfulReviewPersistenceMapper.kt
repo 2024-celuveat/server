@@ -11,6 +11,7 @@ class HelpfulReviewPersistenceMapper(
 ) {
     fun toEntity(helpfulReview: HelpfulReview): HelpfulReviewJpaEntity {
         return HelpfulReviewJpaEntity(
+            id = helpfulReview.id,
             review = reviewPersistenceMapper.toEntity(helpfulReview.review),
             member = memberPersistenceMapper.toEntity(helpfulReview.member),
         )
