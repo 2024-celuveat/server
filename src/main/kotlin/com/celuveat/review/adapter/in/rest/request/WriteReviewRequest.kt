@@ -16,24 +16,24 @@ data class WriteReviewRequest(
         description = "리뷰 내용",
         example = "맛있어요",
     )
-    @NotBlank var content: String,
+    @NotBlank val content: String,
     @Schema(
         description = "리뷰 별점",
-        example = "THREE",
+        example = "3",
     )
-    @NotNull var star: Star,
+    @NotNull val star: Int,
     @Schema(
         description = "리뷰 이미지들",
         example = "[\"imgUrl1\", \"imgUrl2\"]",
     )
-    var images: List<String>,
+    val images: List<String>,
 ) {
     fun toCommand(memberId: Long): WriteReviewCommand {
         return WriteReviewCommand(
             memberId = memberId,
             restaurantId = restaurantId,
             content = content,
-            star = star,
+            star = Star.from(star),
             images = images,
         )
     }

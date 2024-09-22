@@ -9,17 +9,17 @@ data class UpdateReviewRequest(
         description = "리뷰 내용",
         example = "맛있어요",
     )
-    var content: String,
+    val content: String,
     @Schema(
         description = "리뷰 별점",
-        example = "THREE",
+        example = "2",
     )
-    var star: Star,
+    val star: Int,
     @Schema(
         description = "리뷰 이미지들",
         example = "[\"imgUrl1\", \"imgUrl2\"]",
     )
-    var images: List<String>,
+    val images: List<String>,
 ) {
     fun toCommand(
         reviewId: Long,
@@ -29,7 +29,7 @@ data class UpdateReviewRequest(
             memberId = memberId,
             reviewId = reviewId,
             content = content,
-            star = star,
+            star = Star.from(star),
             images = images,
         )
     }
