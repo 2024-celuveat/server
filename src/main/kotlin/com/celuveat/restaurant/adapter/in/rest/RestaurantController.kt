@@ -10,6 +10,7 @@ import com.celuveat.restaurant.application.port.`in`.AddInterestedRestaurantsUse
 import com.celuveat.restaurant.application.port.`in`.DeleteInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadAmountOfInterestedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadAmountOfRestaurantByCelebrityUseCase
+import com.celuveat.restaurant.application.port.`in`.ReadAmountOfWeeklyUpdateRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityRecommendRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityVisitedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadInterestedRestaurantsUseCase
@@ -48,6 +49,7 @@ class RestaurantController(
     private val readCelebrityRecommendRestaurantsUseCase: ReadCelebrityRecommendRestaurantsUseCase,
     private val readRestaurantsUseCase: ReadRestaurantsUseCase,
     private val readWeeklyUpdateRestaurantsUseCase: ReadWeeklyUpdateRestaurantsUseCase,
+    private val readAmountOfWeeklyUpdateRestaurantsUseCase: ReadAmountOfWeeklyUpdateRestaurantsUseCase,
     private val readNearbyRestaurantsUseCase: ReadNearbyRestaurantsUseCase,
     private val readRestaurantDetailUseCase: ReadRestaurantDetailUseCase,
     private val readPopularRestaurantsUseCase: ReadPopularRestaurantsUseCase,
@@ -174,6 +176,10 @@ class RestaurantController(
             sliceResult = result,
             converter = RestaurantPreviewResponse::from,
         )
+    }
+
+    override fun readAmountOfWeeklyUpdatedRestaurants(auth: AuthContext): Int {
+        return readAmountOfWeeklyUpdateRestaurantsUseCase.readAmountOfWeeklyUpdateRestaurants()
     }
 
     @GetMapping("/nearby/{restaurantId}")

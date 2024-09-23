@@ -112,6 +112,12 @@ interface RestaurantApi {
         @PageableDefault(size = 10, page = 0) pageable: Pageable,
     ): SliceResponse<RestaurantPreviewResponse>
 
+    @Operation(summary = "이번주 업데이트된 음식점 개수 조회")
+    @GetMapping("/weekly/count")
+    fun readAmountOfWeeklyUpdatedRestaurants(
+        @Auth auth: AuthContext,
+    ): Int
+
     @Operation(summary = "주변 음식점 조회")
     @GetMapping("/nearby/{restaurantId}")
     fun readNearByRestaurants(

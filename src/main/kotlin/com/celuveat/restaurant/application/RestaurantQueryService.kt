@@ -4,6 +4,7 @@ import com.celuveat.celeb.application.port.out.ReadCelebritiesPort
 import com.celuveat.common.application.port.`in`.result.SliceResult
 import com.celuveat.restaurant.application.port.`in`.ReadAmountOfInterestedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadAmountOfRestaurantByCelebrityUseCase
+import com.celuveat.restaurant.application.port.`in`.ReadAmountOfWeeklyUpdateRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityRecommendRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityVisitedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadInterestedRestaurantsUseCase
@@ -26,6 +27,7 @@ import com.celuveat.restaurant.application.port.out.ReadInterestedRestaurantPort
 import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
 import org.springframework.stereotype.Service
 import java.time.DayOfWeek
+import java.time.LocalDate
 import java.time.temporal.TemporalAdjusters
 
 @Service
@@ -42,7 +44,8 @@ class RestaurantQueryService(
     ReadWeeklyUpdateRestaurantsUseCase,
     ReadNearbyRestaurantsUseCase,
     ReadPopularRestaurantsUseCase,
-    ReadAmountOfRestaurantByCelebrityUseCase {
+    ReadAmountOfRestaurantByCelebrityUseCase,
+    ReadAmountOfWeeklyUpdateRestaurantsUseCase {
     override fun readInterestedRestaurant(query: ReadInterestedRestaurantsQuery): SliceResult<RestaurantPreviewResult> {
         val interestedRestaurants = readInterestedRestaurantPort.readInterestedRestaurants(
             query.memberId,
@@ -133,6 +136,12 @@ class RestaurantQueryService(
                 visitedCelebrities = celebritiesByRestaurants[it.id]!!,
             )
         }
+    }
+
+    override fun readAmountOfWeeklyUpdateRestaurants(baseDate: LocalDate): Int {
+        val startOfWeek = baseDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+        val endOfWeek = baseDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY))
+        return readRestaurantPort.countByCreatedAtBetween(startOfWeek = startOfWeek, endOfWeek = endOfWeek)
     }
 
     override fun readNearbyRestaurants(query: ReadNearbyRestaurantsQuery): List<RestaurantPreviewResult> {

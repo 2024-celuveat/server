@@ -118,6 +118,13 @@ class RestaurantPersistenceAdapter(
         )
     }
 
+    override fun countByCreatedAtBetween(startOfWeek: LocalDate, endOfWeek: LocalDate): Int {
+        return restaurantJpaRepository.countByCreatedAtBetween(
+            startOfWeek.atStartOfDay(),
+            endOfWeek.atTime(LocalTime.MAX),
+        ).toInt()
+    }
+
     override fun readNearby(id: Long): List<Restaurant> {
         val centralRestaurant = restaurantJpaRepository.getById(id)
         val restaurants = restaurantJpaRepository.findTop5NearestInDistance(

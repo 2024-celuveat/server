@@ -31,6 +31,11 @@ interface ReadRestaurantPort {
         size: Int,
     ): SliceResult<Restaurant>
 
+    fun countByCreatedAtBetween(
+        startOfWeek: LocalDate,
+        endOfWeek: LocalDate,
+    ): Int
+
     fun readNearby(id: Long): List<Restaurant>
 
     fun readTop10InterestedRestaurantsInDate(
