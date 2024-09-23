@@ -10,6 +10,7 @@ import com.celuveat.review.adapter.`in`.rest.response.SingleReviewResponse
 import com.celuveat.review.application.port.`in`.ClickHelpfulReviewUseCase
 import com.celuveat.review.application.port.`in`.DeleteHelpfulReviewUseCase
 import com.celuveat.review.application.port.`in`.DeleteReviewUseCase
+import com.celuveat.review.application.port.`in`.ReadAmountOfRestaurantReviewsUseCase
 import com.celuveat.review.application.port.`in`.ReadRestaurantReviewsUseCase
 import com.celuveat.review.application.port.`in`.ReadSingleReviewUseCase
 import com.celuveat.review.application.port.`in`.UpdateReviewUseCase
@@ -36,6 +37,7 @@ class ReviewController(
     private val clickHelpfulReviewUseCase: ClickHelpfulReviewUseCase,
     private val deleteHelpfulReviewUseCase: DeleteHelpfulReviewUseCase,
     private val readRestaurantReviewsUseCase: ReadRestaurantReviewsUseCase,
+    private val readAmountOfRestaurantReviewsUseCase: ReadAmountOfRestaurantReviewsUseCase,
     private val readSingleReviewUseCase: ReadSingleReviewUseCase,
 ) : ReviewApi {
     @PostMapping
@@ -100,6 +102,11 @@ class ReviewController(
             sliceResult = reviews,
             converter = ReviewPreviewResponse::from,
         )
+    }
+
+    @GetMapping("/restaurants/{restaurantId}/count")
+    override fun readAmountOfRestaurantsReviews(@PathVariable restaurantId: Long): Int {
+        return readAmountOfRestaurantReviewsUseCase.readAmountOfRestaurantReviews(restaurantId)
     }
 
     @GetMapping("/{reviewId}")

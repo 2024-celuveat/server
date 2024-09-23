@@ -1,6 +1,7 @@
 package com.celuveat.review.application.port
 
 import com.celuveat.common.application.port.`in`.result.SliceResult
+import com.celuveat.review.application.port.`in`.ReadAmountOfRestaurantReviewsUseCase
 import com.celuveat.review.application.port.`in`.ReadRestaurantReviewsUseCase
 import com.celuveat.review.application.port.`in`.ReadSingleReviewUseCase
 import com.celuveat.review.application.port.`in`.result.ReviewPreviewResult
@@ -15,7 +16,7 @@ class ReviewQueryService(
     private val readReviewPort: ReadReviewPort,
     private val readHelpfulReviewPort: ReadHelpfulReviewPort,
     private val saveReviewPort: SaveReviewPort,
-) : ReadRestaurantReviewsUseCase, ReadSingleReviewUseCase {
+) : ReadRestaurantReviewsUseCase, ReadSingleReviewUseCase, ReadAmountOfRestaurantReviewsUseCase {
     override fun readAll(
         memberId: Long?,
         restaurantId: Long,
@@ -28,6 +29,10 @@ class ReviewQueryService(
                 .map { helpful -> helpful.review }.toSet()
         } ?: emptySet()
         return reviewResults.convertContent { ReviewPreviewResult.of(it, reviewHelpfulReviewMapping.contains(it)) }
+    }
+
+    override fun readAmountOfRestaurantReviews(restaurantId: Long): Int {
+        return readReviewPort.countByRestaurantId(restaurantId)
     }
 
     override fun read(

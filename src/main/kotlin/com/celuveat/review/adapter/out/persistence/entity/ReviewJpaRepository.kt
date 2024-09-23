@@ -17,4 +17,6 @@ interface ReviewJpaRepository : JpaRepository<ReviewJpaEntity, Long> {
     ): Slice<ReviewJpaEntity>
 
     fun countByWriterId(writerId: Long): Long
+
+    fun countByRestaurantId(restaurantId: Long): Long
 }

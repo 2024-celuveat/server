@@ -102,6 +102,18 @@ interface ReviewApi {
         @PageableDefault(size = 10, page = 0) pageable: Pageable,
     ): SliceResponse<ReviewPreviewResponse>
 
+    @Operation(summary = "특정 음식점의 리뷰 개수 조회")
+    @GetMapping("/restaurants/{restaurantId}/count")
+    fun readAmountOfRestaurantsReviews(
+        @Parameter(
+            `in` = ParameterIn.PATH,
+            description = "음식점 ID",
+            example = "1",
+            required = true,
+        )
+        @PathVariable restaurantId: Long,
+    ): Int
+
     @Operation(summary = "리뷰 상세조회")
     @GetMapping("/{reviewId}")
     fun readReview(
