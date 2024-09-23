@@ -11,10 +11,10 @@ import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantJpaRepos
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantPersistenceMapper
 import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
 import com.celuveat.restaurant.domain.Restaurant
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Sort
 import java.time.LocalDate
 import java.time.LocalTime
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 
 @Adapter
 class RestaurantPersistenceAdapter(
@@ -90,6 +90,10 @@ class RestaurantPersistenceAdapter(
             currentPage = page,
             hasNext = restaurantSlice.hasNext(),
         )
+    }
+
+    override fun countRestaurantsByCondition(category: String?, region: String?, searchArea: SquarePolygon?): Int {
+        return restaurantJpaRepository.countAllByFilter(RestaurantFilter(category, region, searchArea)).toInt()
     }
 
     override fun readByCreatedAtBetween(

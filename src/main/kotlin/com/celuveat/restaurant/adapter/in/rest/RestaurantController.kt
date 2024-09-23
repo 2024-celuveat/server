@@ -3,6 +3,7 @@ package com.celuveat.restaurant.adapter.`in`.rest
 import com.celuveat.auth.adapter.`in`.rest.Auth
 import com.celuveat.auth.adapter.`in`.rest.AuthContext
 import com.celuveat.common.adapter.`in`.rest.response.SliceResponse
+import com.celuveat.common.utils.geometry.SquarePolygon
 import com.celuveat.restaurant.adapter.`in`.rest.request.ReadRestaurantsRequest
 import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantDetailResponse
 import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantPreviewResponse
@@ -10,6 +11,7 @@ import com.celuveat.restaurant.application.port.`in`.AddInterestedRestaurantsUse
 import com.celuveat.restaurant.application.port.`in`.DeleteInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadAmountOfInterestedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadAmountOfRestaurantByCelebrityUseCase
+import com.celuveat.restaurant.application.port.`in`.ReadAmountOfRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadAmountOfWeeklyUpdateRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityRecommendRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityVisitedRestaurantUseCase
@@ -21,6 +23,7 @@ import com.celuveat.restaurant.application.port.`in`.ReadRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadWeeklyUpdateRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.command.AddInterestedRestaurantCommand
 import com.celuveat.restaurant.application.port.`in`.command.DeleteInterestedRestaurantCommand
+import com.celuveat.restaurant.application.port.`in`.query.CountRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityRecommendRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadInterestedRestaurantsQuery
@@ -48,6 +51,7 @@ class RestaurantController(
     private val readCelebrityVisitedRestaurantUseCase: ReadCelebrityVisitedRestaurantUseCase,
     private val readCelebrityRecommendRestaurantsUseCase: ReadCelebrityRecommendRestaurantsUseCase,
     private val readRestaurantsUseCase: ReadRestaurantsUseCase,
+    private val readAmountOfRestaurantsUseCase: ReadAmountOfRestaurantsUseCase,
     private val readWeeklyUpdateRestaurantsUseCase: ReadWeeklyUpdateRestaurantsUseCase,
     private val readAmountOfWeeklyUpdateRestaurantsUseCase: ReadAmountOfWeeklyUpdateRestaurantsUseCase,
     private val readNearbyRestaurantsUseCase: ReadNearbyRestaurantsUseCase,
@@ -158,6 +162,21 @@ class RestaurantController(
             sliceResult = result,
             converter = RestaurantPreviewResponse::from,
         )
+    }
+
+    @GetMapping("/count")
+    override fun readAmountOfRestaurants(@ModelAttribute request: ReadRestaurantsRequest): Int {
+        val query = CountRestaurantsQuery(
+            category = request.category,
+            region = request.region,
+            searchArea = SquarePolygon.ofNullable(
+                lowLongitude = request.lowLongitude,
+                highLongitude = request.highLongitude,
+                lowLatitude = request.lowLatitude,
+                highLatitude = request.highLatitude,
+            ),
+        )
+        return readAmountOfRestaurantsUseCase.readAmountOfRestaurants(query)
     }
 
     @GetMapping("/weekly")
