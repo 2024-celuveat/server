@@ -30,6 +30,13 @@ interface RestaurantApi {
     ): SliceResponse<RestaurantPreviewResponse>
 
     @SecurityRequirement(name = "JWT")
+    @Operation(summary = "관심 음식점 개수 조회")
+    @GetMapping("/interested/count")
+    fun getAmountOfInterestedRestaurants(
+        @Auth auth: AuthContext,
+    ): Int
+
+    @SecurityRequirement(name = "JWT")
     @Operation(summary = "관심 음식점 추가")
     @PostMapping("/interested/{restaurantId}")
     fun addInterestedRestaurant(

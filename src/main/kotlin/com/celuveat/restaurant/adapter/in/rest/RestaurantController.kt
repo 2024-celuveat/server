@@ -8,6 +8,7 @@ import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantDetailRespon
 import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantPreviewResponse
 import com.celuveat.restaurant.application.port.`in`.AddInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.DeleteInterestedRestaurantsUseCase
+import com.celuveat.restaurant.application.port.`in`.ReadAmountOfInterestedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadAmountOfRestaurantByCelebrityUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityRecommendRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityVisitedRestaurantUseCase
@@ -40,6 +41,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class RestaurantController(
     private val readInterestedRestaurantsUseCase: ReadInterestedRestaurantsUseCase,
+    private val readAmountOfInterestedRestaurantUseCase: ReadAmountOfInterestedRestaurantUseCase,
     private val addInterestedRestaurantsUseCase: AddInterestedRestaurantsUseCase,
     private val deleteInterestedRestaurantsUseCase: DeleteInterestedRestaurantsUseCase,
     private val readCelebrityVisitedRestaurantUseCase: ReadCelebrityVisitedRestaurantUseCase,
@@ -67,6 +69,12 @@ class RestaurantController(
             sliceResult = interestedRestaurant,
             converter = RestaurantPreviewResponse::from,
         )
+    }
+
+    @GetMapping("/interested/count")
+    override fun getAmountOfInterestedRestaurants(@Auth auth: AuthContext): Int {
+        val memberId = auth.memberId()
+        return readAmountOfInterestedRestaurantUseCase.readAmountOfInterestedRestaurant(memberId)
     }
 
     @PostMapping("/interested/{restaurantId}")

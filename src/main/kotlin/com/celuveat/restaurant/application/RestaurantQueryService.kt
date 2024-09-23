@@ -2,6 +2,7 @@ package com.celuveat.restaurant.application
 
 import com.celuveat.celeb.application.port.out.ReadCelebritiesPort
 import com.celuveat.common.application.port.`in`.result.SliceResult
+import com.celuveat.restaurant.application.port.`in`.ReadAmountOfInterestedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadAmountOfRestaurantByCelebrityUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityRecommendRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityVisitedRestaurantUseCase
@@ -33,6 +34,7 @@ class RestaurantQueryService(
     private val readCelebritiesPort: ReadCelebritiesPort,
     private val readInterestedRestaurantPort: ReadInterestedRestaurantPort,
 ) : ReadInterestedRestaurantsUseCase,
+    ReadAmountOfInterestedRestaurantUseCase,
     ReadCelebrityVisitedRestaurantUseCase,
     ReadCelebrityRecommendRestaurantsUseCase,
     ReadRestaurantsUseCase,
@@ -59,6 +61,10 @@ class RestaurantQueryService(
         }
     }
 
+    override fun readAmountOfInterestedRestaurant(memberId: Long): Int {
+        return readInterestedRestaurantPort.countByMemberId(memberId)
+    }
+
     override fun readCelebrityVisitedRestaurant(query: ReadCelebrityVisitedRestaurantQuery): SliceResult<RestaurantPreviewResult> {
         val visitedRestaurants = readRestaurantPort.readVisitedRestaurantByCelebrity(
             query.celebrityId,
@@ -73,6 +79,10 @@ class RestaurantQueryService(
                 liked = interestedRestaurants.contains(it.id),
             )
         }
+    }
+
+    override fun readAmountOfRestaurantByCelebrity(celebrityId: Long): Int {
+        return readRestaurantPort.countRestaurantByCelebrity(celebrityId)
     }
 
     override fun readCelebrityRecommendRestaurants(query: ReadCelebrityRecommendRestaurantsQuery): List<RestaurantPreviewResult> {
@@ -178,9 +188,5 @@ class RestaurantQueryService(
             readInterestedRestaurantPort.readInterestedRestaurantsByIds(it, restaurantIds)
                 .map { interested -> interested.restaurant.id }.toSet()
         } ?: emptySet()
-    }
-
-    override fun readAmountOfRestaurantByCelebrity(celebrityId: Long): Int {
-        return readRestaurantPort.countRestaurantByCelebrity(celebrityId)
     }
 }

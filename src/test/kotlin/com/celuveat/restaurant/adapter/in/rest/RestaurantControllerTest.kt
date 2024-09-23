@@ -8,6 +8,8 @@ import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantDetailRespon
 import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantPreviewResponse
 import com.celuveat.restaurant.application.port.`in`.AddInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.DeleteInterestedRestaurantsUseCase
+import com.celuveat.restaurant.application.port.`in`.ReadAmountOfInterestedRestaurantUseCase
+import com.celuveat.restaurant.application.port.`in`.ReadAmountOfRestaurantByCelebrityUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityRecommendRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityVisitedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadInterestedRestaurantsUseCase
@@ -59,6 +61,8 @@ class RestaurantControllerTest(
     @MockkBean val readNearbyRestaurantsUseCase: ReadNearbyRestaurantsUseCase,
     @MockkBean val readRestaurantDetailUseCase: ReadRestaurantDetailUseCase,
     @MockkBean val readPopularRestaurantsUseCase: ReadPopularRestaurantsUseCase,
+    @MockkBean val readAmountOfInterestedRestaurantUseCase: ReadAmountOfInterestedRestaurantUseCase,
+    @MockkBean val readAmountOfRestaurantByCelebrityUseCase: ReadAmountOfRestaurantByCelebrityUseCase,
     // for AuthMemberArgumentResolver
     @MockkBean val extractMemberIdUseCase: ExtractMemberIdUseCase,
 ) : FunSpec({
