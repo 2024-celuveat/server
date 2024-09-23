@@ -90,7 +90,6 @@ interface RestaurantApi {
         @PathVariable celebrityId: Long,
     ): Int
 
-
     @Operation(summary = "셀럽 추천 음식점 조회")
     @GetMapping("/celebrity/recommend")
     fun readCelebrityRecommendRestaurants(

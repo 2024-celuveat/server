@@ -32,7 +32,7 @@ class CustomRestaurantRepositoryImpl(
                 filter.searchArea?.let {
                     path(RestaurantJpaEntity::longitude).between(
                         it.lowLongitude,
-                        it.highLongitude
+                        it.highLongitude,
                     )
                 },
                 filter.searchArea?.let { path(RestaurantJpaEntity::latitude).between(it.lowLatitude, it.highLatitude) },
@@ -58,7 +58,7 @@ class CustomRestaurantRepositoryImpl(
                 filter.searchArea?.let {
                     path(RestaurantJpaEntity::longitude).between(
                         it.lowLongitude,
-                        it.highLongitude
+                        it.highLongitude,
                     )
                 },
                 filter.searchArea?.let { path(RestaurantJpaEntity::latitude).between(it.lowLatitude, it.highLatitude) },

@@ -105,7 +105,9 @@ class ReviewController(
     }
 
     @GetMapping("/restaurants/{restaurantId}/count")
-    override fun readAmountOfRestaurantsReviews(@PathVariable restaurantId: Long): Int {
+    override fun readAmountOfRestaurantsReviews(
+        @PathVariable restaurantId: Long,
+    ): Int {
         return readAmountOfRestaurantReviewsUseCase.readAmountOfRestaurantReviews(restaurantId)
     }
 

@@ -78,7 +78,9 @@ class RestaurantController(
     }
 
     @GetMapping("/interested/count")
-    override fun getAmountOfInterestedRestaurants(@Auth auth: AuthContext): Int {
+    override fun getAmountOfInterestedRestaurants(
+        @Auth auth: AuthContext,
+    ): Int {
         val memberId = auth.memberId()
         return readAmountOfInterestedRestaurantUseCase.readAmountOfInterestedRestaurant(memberId)
     }
@@ -165,7 +167,9 @@ class RestaurantController(
     }
 
     @GetMapping("/count")
-    override fun readAmountOfRestaurants(@ModelAttribute request: ReadRestaurantsRequest): Int {
+    override fun readAmountOfRestaurants(
+        @ModelAttribute request: ReadRestaurantsRequest,
+    ): Int {
         val query = CountRestaurantsQuery(
             category = request.category,
             region = request.region,
