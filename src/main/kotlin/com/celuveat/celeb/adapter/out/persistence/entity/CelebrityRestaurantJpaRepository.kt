@@ -21,6 +21,15 @@ interface CelebrityRestaurantJpaRepository : JpaRepository<CelebrityRestaurantJp
 
     @Query(
         """
+        SELECT COUNT(cr)
+        FROM CelebrityRestaurantJpaEntity cr
+        WHERE cr.celebrity.id = :celebrityId
+        """,
+    )
+    fun countRestaurantsByCelebrityId(celebrityId: Long): Long
+
+    @Query(
+        """
         SELECT cr.restaurant
         FROM CelebrityRestaurantJpaEntity cr
         GROUP BY cr.restaurant

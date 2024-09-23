@@ -39,4 +39,6 @@ interface ReadRestaurantPort {
     ): List<Restaurant>
 
     fun readByName(name: String): List<Restaurant>
+
+    fun countRestaurantByCelebrity(celebrityId: Long): Int
 }

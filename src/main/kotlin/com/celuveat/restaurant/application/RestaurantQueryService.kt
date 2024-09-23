@@ -2,6 +2,7 @@ package com.celuveat.restaurant.application
 
 import com.celuveat.celeb.application.port.out.ReadCelebritiesPort
 import com.celuveat.common.application.port.`in`.result.SliceResult
+import com.celuveat.restaurant.application.port.`in`.ReadAmountOfRestaurantByCelebrityUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityRecommendRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityVisitedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadInterestedRestaurantsUseCase
@@ -38,7 +39,8 @@ class RestaurantQueryService(
     ReadRestaurantDetailUseCase,
     ReadWeeklyUpdateRestaurantsUseCase,
     ReadNearbyRestaurantsUseCase,
-    ReadPopularRestaurantsUseCase {
+    ReadPopularRestaurantsUseCase,
+    ReadAmountOfRestaurantByCelebrityUseCase {
     override fun readInterestedRestaurant(query: ReadInterestedRestaurantsQuery): SliceResult<RestaurantPreviewResult> {
         val interestedRestaurants = readInterestedRestaurantPort.readInterestedRestaurants(
             query.memberId,
@@ -176,5 +178,9 @@ class RestaurantQueryService(
             readInterestedRestaurantPort.readInterestedRestaurantsByIds(it, restaurantIds)
                 .map { interested -> interested.restaurant.id }.toSet()
         } ?: emptySet()
+    }
+
+    override fun readAmountOfRestaurantByCelebrity(celebrityId: Long): Int {
+        return readRestaurantPort.countRestaurantByCelebrity(celebrityId)
     }
 }

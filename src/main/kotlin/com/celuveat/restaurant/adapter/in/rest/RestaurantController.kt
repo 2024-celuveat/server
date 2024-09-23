@@ -8,6 +8,7 @@ import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantDetailRespon
 import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantPreviewResponse
 import com.celuveat.restaurant.application.port.`in`.AddInterestedRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.DeleteInterestedRestaurantsUseCase
+import com.celuveat.restaurant.application.port.`in`.ReadAmountOfRestaurantByCelebrityUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityRecommendRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityVisitedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadInterestedRestaurantsUseCase
@@ -48,6 +49,7 @@ class RestaurantController(
     private val readNearbyRestaurantsUseCase: ReadNearbyRestaurantsUseCase,
     private val readRestaurantDetailUseCase: ReadRestaurantDetailUseCase,
     private val readPopularRestaurantsUseCase: ReadPopularRestaurantsUseCase,
+    private val readAmountOfRestaurantByCelebrityUseCase: ReadAmountOfRestaurantByCelebrityUseCase,
 ) : RestaurantApi {
     @GetMapping("/interested")
     override fun getInterestedRestaurants(
@@ -111,6 +113,13 @@ class RestaurantController(
             sliceResult = visitedRestaurant,
             converter = RestaurantPreviewResponse::from,
         )
+    }
+
+    @GetMapping("/celebrity/{celebrityId}/count")
+    override fun readAmountOfRestaurantsByCelebrity(
+        @PathVariable celebrityId: Long,
+    ): Int {
+        return readAmountOfRestaurantByCelebrityUseCase.readAmountOfRestaurantByCelebrity(celebrityId)
     }
 
     @GetMapping("/celebrity/recommend")
