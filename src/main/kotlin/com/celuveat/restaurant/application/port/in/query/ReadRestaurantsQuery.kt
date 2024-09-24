@@ -12,3 +12,9 @@ data class ReadRestaurantsQuery(
     val page: Int = 0,
     val size: Int = DEFAULT_RESTAURANTS_SIZE,
 )
+
+data class CountRestaurantsQuery(
+    val category: String?,
+    val region: String?,
+    val searchArea: SquarePolygon?,
+)

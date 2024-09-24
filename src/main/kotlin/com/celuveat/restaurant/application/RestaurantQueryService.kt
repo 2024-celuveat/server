@@ -2,6 +2,10 @@ package com.celuveat.restaurant.application
 
 import com.celuveat.celeb.application.port.out.ReadCelebritiesPort
 import com.celuveat.common.application.port.`in`.result.SliceResult
+import com.celuveat.restaurant.application.port.`in`.ReadAmountOfInterestedRestaurantUseCase
+import com.celuveat.restaurant.application.port.`in`.ReadAmountOfRestaurantByCelebrityUseCase
+import com.celuveat.restaurant.application.port.`in`.ReadAmountOfRestaurantsUseCase
+import com.celuveat.restaurant.application.port.`in`.ReadAmountOfWeeklyUpdateRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityRecommendRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadCelebrityVisitedRestaurantUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadInterestedRestaurantsUseCase
@@ -10,6 +14,7 @@ import com.celuveat.restaurant.application.port.`in`.ReadPopularRestaurantsUseCa
 import com.celuveat.restaurant.application.port.`in`.ReadRestaurantDetailUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadRestaurantsUseCase
 import com.celuveat.restaurant.application.port.`in`.ReadWeeklyUpdateRestaurantsUseCase
+import com.celuveat.restaurant.application.port.`in`.query.CountRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityRecommendRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadInterestedRestaurantsQuery
@@ -24,6 +29,7 @@ import com.celuveat.restaurant.application.port.out.ReadInterestedRestaurantPort
 import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
 import org.springframework.stereotype.Service
 import java.time.DayOfWeek
+import java.time.LocalDate
 import java.time.temporal.TemporalAdjusters
 
 @Service
@@ -32,13 +38,17 @@ class RestaurantQueryService(
     private val readCelebritiesPort: ReadCelebritiesPort,
     private val readInterestedRestaurantPort: ReadInterestedRestaurantPort,
 ) : ReadInterestedRestaurantsUseCase,
+    ReadAmountOfInterestedRestaurantUseCase,
     ReadCelebrityVisitedRestaurantUseCase,
     ReadCelebrityRecommendRestaurantsUseCase,
     ReadRestaurantsUseCase,
     ReadRestaurantDetailUseCase,
     ReadWeeklyUpdateRestaurantsUseCase,
     ReadNearbyRestaurantsUseCase,
-    ReadPopularRestaurantsUseCase {
+    ReadPopularRestaurantsUseCase,
+    ReadAmountOfRestaurantByCelebrityUseCase,
+    ReadAmountOfWeeklyUpdateRestaurantsUseCase,
+    ReadAmountOfRestaurantsUseCase {
     override fun readInterestedRestaurant(query: ReadInterestedRestaurantsQuery): SliceResult<RestaurantPreviewResult> {
         val interestedRestaurants = readInterestedRestaurantPort.readInterestedRestaurants(
             query.memberId,
@@ -57,6 +67,10 @@ class RestaurantQueryService(
         }
     }
 
+    override fun readAmountOfInterestedRestaurant(memberId: Long): Int {
+        return readInterestedRestaurantPort.countByMemberId(memberId)
+    }
+
     override fun readCelebrityVisitedRestaurant(query: ReadCelebrityVisitedRestaurantQuery): SliceResult<RestaurantPreviewResult> {
         val visitedRestaurants = readRestaurantPort.readVisitedRestaurantByCelebrity(
             query.celebrityId,
@@ -71,6 +85,10 @@ class RestaurantQueryService(
                 liked = interestedRestaurants.contains(it.id),
             )
         }
+    }
+
+    override fun readAmountOfRestaurantByCelebrity(celebrityId: Long): Int {
+        return readRestaurantPort.countRestaurantByCelebrity(celebrityId)
     }
 
     override fun readCelebrityRecommendRestaurants(query: ReadCelebrityRecommendRestaurantsQuery): List<RestaurantPreviewResult> {
@@ -107,6 +125,14 @@ class RestaurantQueryService(
         }
     }
 
+    override fun readAmountOfRestaurants(query: CountRestaurantsQuery): Int {
+        return readRestaurantPort.countRestaurantsByCondition(
+            category = query.category,
+            region = query.region,
+            searchArea = query.searchArea,
+        )
+    }
+
     override fun readWeeklyUpdateRestaurants(query: ReadWeeklyUpdateRestaurantsQuery): SliceResult<RestaurantPreviewResult> {
         val startOfWeek = query.baseDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
         val endOfWeek = query.baseDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY))
@@ -121,6 +147,12 @@ class RestaurantQueryService(
                 visitedCelebrities = celebritiesByRestaurants[it.id]!!,
             )
         }
+    }
+
+    override fun readAmountOfWeeklyUpdateRestaurants(baseDate: LocalDate): Int {
+        val startOfWeek = baseDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+        val endOfWeek = baseDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY))
+        return readRestaurantPort.countByCreatedAtBetween(startOfWeek = startOfWeek, endOfWeek = endOfWeek)
     }
 
     override fun readNearbyRestaurants(query: ReadNearbyRestaurantsQuery): List<RestaurantPreviewResult> {

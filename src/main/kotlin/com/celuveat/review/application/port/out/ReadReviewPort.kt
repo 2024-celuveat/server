@@ -13,4 +13,6 @@ interface ReadReviewPort {
     ): SliceResult<Review>
 
     fun countByWriterId(memberId: Long): Int
+
+    fun countByRestaurantId(restaurantId: Long): Int
 }

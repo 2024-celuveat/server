@@ -20,6 +20,11 @@ interface RestaurantJpaRepository : JpaRepository<RestaurantJpaEntity, Long>, Cu
         pageable: Pageable,
     ): Slice<RestaurantJpaEntity>
 
+    fun countByCreatedAtBetween(
+        startOfWeek: LocalDateTime,
+        endOfWeek: LocalDateTime,
+    ): Long
+
     @Query(
         """
     SELECT r.*

@@ -176,6 +176,26 @@ class RestaurantPersistenceAdapterTest(
         restaurants.hasNext shouldBe false
     }
 
+    test("조건에 맞는 음식점의 개수를 조회 한다.") {
+        // given
+        restaurantJpaRepository.saveAll(
+            sut.giveMeBuilder<RestaurantJpaEntity>()
+                .setExp(RestaurantJpaEntity::category, "한식", 2)
+                .setExp(RestaurantJpaEntity::roadAddress, "서울", 1)
+                .sampleList(5),
+        )
+
+        // when
+        val count = restaurantPersistenceAdapter.countRestaurantsByCondition(
+            category = "한식",
+            region = "서울",
+            searchArea = null,
+        )
+
+        // then
+        count shouldBe 1
+    }
+
     test("최근 업데이트된 음식점을 조회한다.") {
         // given
         val savedRestaurants = restaurantJpaRepository.saveAll(

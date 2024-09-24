@@ -30,6 +30,13 @@ interface RestaurantApi {
     ): SliceResponse<RestaurantPreviewResponse>
 
     @SecurityRequirement(name = "JWT")
+    @Operation(summary = "관심 음식점 개수 조회")
+    @GetMapping("/interested/count")
+    fun getAmountOfInterestedRestaurants(
+        @Auth auth: AuthContext,
+    ): Int
+
+    @SecurityRequirement(name = "JWT")
     @Operation(summary = "관심 음식점 추가")
     @PostMapping("/interested/{restaurantId}")
     fun addInterestedRestaurant(
@@ -71,6 +78,18 @@ interface RestaurantApi {
         @PageableDefault(size = 10, page = 0) pageable: Pageable,
     ): SliceResponse<RestaurantPreviewResponse>
 
+    @Operation(summary = "셀럽이 다녀간 음식점 개수 조회")
+    @GetMapping("/celebrity/{celebrityId}/count")
+    fun readAmountOfRestaurantsByCelebrity(
+        @Parameter(
+            `in` = ParameterIn.PATH,
+            description = "셀럽 ID",
+            example = "1",
+            required = true,
+        )
+        @PathVariable celebrityId: Long,
+    ): Int
+
     @Operation(summary = "셀럽 추천 음식점 조회")
     @GetMapping("/celebrity/recommend")
     fun readCelebrityRecommendRestaurants(
@@ -85,12 +104,24 @@ interface RestaurantApi {
         @PageableDefault(size = 10, page = 0) pageable: Pageable,
     ): SliceResponse<RestaurantPreviewResponse>
 
+    @Operation(summary = "음식점 개수 조회")
+    @GetMapping("/count")
+    fun readAmountOfRestaurants(
+        @ModelAttribute request: ReadRestaurantsRequest,
+    ): Int
+
     @Operation(summary = "이번주 업데이트된 음식점 조회")
     @GetMapping("/weekly")
     fun readWeeklyUpdatedRestaurants(
         @Auth auth: AuthContext,
         @PageableDefault(size = 10, page = 0) pageable: Pageable,
     ): SliceResponse<RestaurantPreviewResponse>
+
+    @Operation(summary = "이번주 업데이트된 음식점 개수 조회")
+    @GetMapping("/weekly/count")
+    fun readAmountOfWeeklyUpdatedRestaurants(
+        @Auth auth: AuthContext,
+    ): Int
 
     @Operation(summary = "주변 음식점 조회")
     @GetMapping("/nearby/{restaurantId}")

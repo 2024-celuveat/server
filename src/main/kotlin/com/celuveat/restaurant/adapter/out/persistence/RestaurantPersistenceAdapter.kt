@@ -45,6 +45,10 @@ class RestaurantPersistenceAdapter(
         )
     }
 
+    override fun countRestaurantByCelebrity(celebrityId: Long): Int {
+        return celebrityRestaurantJpaRepository.countRestaurantsByCelebrityId(celebrityId).toInt()
+    }
+
     override fun readById(id: Long): Restaurant {
         val restaurant = restaurantJpaRepository.getById(id)
         val images = restaurantImageJpaRepository.findByRestaurant(restaurant)
@@ -88,6 +92,14 @@ class RestaurantPersistenceAdapter(
         )
     }
 
+    override fun countRestaurantsByCondition(
+        category: String?,
+        region: String?,
+        searchArea: SquarePolygon?,
+    ): Int {
+        return restaurantJpaRepository.countAllByFilter(RestaurantFilter(category, region, searchArea)).toInt()
+    }
+
     override fun readByCreatedAtBetween(
         startOfWeek: LocalDate,
         endOfWeek: LocalDate,
@@ -112,6 +124,16 @@ class RestaurantPersistenceAdapter(
             currentPage = page,
             hasNext = restaurants.hasNext(),
         )
+    }
+
+    override fun countByCreatedAtBetween(
+        startOfWeek: LocalDate,
+        endOfWeek: LocalDate,
+    ): Int {
+        return restaurantJpaRepository.countByCreatedAtBetween(
+            startOfWeek.atStartOfDay(),
+            endOfWeek.atTime(LocalTime.MAX),
+        ).toInt()
     }
 
     override fun readNearby(id: Long): List<Restaurant> {

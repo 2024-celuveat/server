@@ -24,12 +24,23 @@ interface ReadRestaurantPort {
         size: Int,
     ): SliceResult<Restaurant>
 
+    fun countRestaurantsByCondition(
+        category: String?,
+        region: String?,
+        searchArea: SquarePolygon?,
+    ): Int
+
     fun readByCreatedAtBetween(
         startOfWeek: LocalDate,
         endOfWeek: LocalDate,
         page: Int,
         size: Int,
     ): SliceResult<Restaurant>
+
+    fun countByCreatedAtBetween(
+        startOfWeek: LocalDate,
+        endOfWeek: LocalDate,
+    ): Int
 
     fun readNearby(id: Long): List<Restaurant>
 
@@ -39,4 +50,6 @@ interface ReadRestaurantPort {
     ): List<Restaurant>
 
     fun readByName(name: String): List<Restaurant>
+
+    fun countRestaurantByCelebrity(celebrityId: Long): Int
 }
