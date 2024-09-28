@@ -1,6 +1,7 @@
 package com.celuveat.review.application.port
 
 import com.celuveat.common.application.port.`in`.result.SliceResult
+import com.celuveat.review.application.ReviewQueryService
 import com.celuveat.review.application.port.out.ReadHelpfulReviewPort
 import com.celuveat.review.application.port.out.ReadReviewPort
 import com.celuveat.review.application.port.out.SaveReviewPort

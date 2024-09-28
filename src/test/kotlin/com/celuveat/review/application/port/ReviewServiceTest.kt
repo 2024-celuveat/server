@@ -4,6 +4,7 @@ import com.celuveat.member.application.port.out.ReadMemberPort
 import com.celuveat.member.domain.Member
 import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
 import com.celuveat.restaurant.domain.Restaurant
+import com.celuveat.review.application.ReviewService
 import com.celuveat.review.application.port.`in`.command.UpdateReviewCommand
 import com.celuveat.review.application.port.`in`.command.WriteReviewCommand
 import com.celuveat.review.application.port.out.DeleteHelpfulReviewPort

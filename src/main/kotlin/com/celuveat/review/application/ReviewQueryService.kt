@@ -1,4 +1,4 @@
-package com.celuveat.review.application.port
+package com.celuveat.review.application
 
 import com.celuveat.common.application.port.`in`.result.SliceResult
 import com.celuveat.review.application.port.`in`.ReadAmountOfRestaurantReviewsUseCase
