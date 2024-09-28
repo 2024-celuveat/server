@@ -17,10 +17,9 @@ class NotificationController(
     private val readNotificationUseCase: ReadNotificationUseCase,
     private val readNotificationsUseCase: ReadNotificationsUseCase,
 ) : NotificationApi {
-
     @GetMapping
     override fun getNotifications(
-        @Auth auth: AuthContext
+        @Auth auth: AuthContext,
     ): List<NotificationResponse> {
         return readNotificationsUseCase.readNotifications(auth.memberId())
             .map { NotificationResponse.from(it) }
@@ -29,7 +28,7 @@ class NotificationController(
     @PostMapping("/{notificationId}")
     override fun readNotification(
         @Auth auth: AuthContext,
-        @PathVariable("notificationId") notificationId: Long
+        @PathVariable("notificationId") notificationId: Long,
     ) {
         readNotificationUseCase.readNotification(notificationId = notificationId, memberId = auth.memberId())
     }

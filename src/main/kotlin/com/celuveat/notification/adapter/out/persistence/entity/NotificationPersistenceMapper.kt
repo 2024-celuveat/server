@@ -6,7 +6,7 @@ import com.celuveat.notification.domain.Notification
 
 @Mapper
 class NotificationPersistenceMapper(
-    private val memberPersistenceMapper: MemberPersistenceMapper
+    private val memberPersistenceMapper: MemberPersistenceMapper,
 ) {
     fun toDomain(notification: NotificationJpaEntity): Notification {
         return Notification(

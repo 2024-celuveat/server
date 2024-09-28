@@ -12,7 +12,10 @@ class NotificationService(
     private val saveNotificationPort: SaveNotificationPort,
     private val readMemberPort: ReadMemberPort,
 ) : ReadNotificationUseCase {
-    override fun readNotification(notificationId: Long, memberId: Long) {
+    override fun readNotification(
+        notificationId: Long,
+        memberId: Long,
+    ) {
         val member = readMemberPort.readById(memberId)
         val notification = readNotificationPort.readById(notificationId)
         notification.validateOwner(member)

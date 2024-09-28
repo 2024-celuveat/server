@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping
 @SecurityRequirement(name = "JWT")
 @Tag(name = "알림 API")
 interface NotificationApi {
-
     @Operation(summary = "회원의 알림 목록 조회")
     @GetMapping
     fun getNotifications(

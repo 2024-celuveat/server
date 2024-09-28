@@ -21,13 +21,11 @@ data class NotificationResponse(
         example = "공지사항입니다.",
     )
     val content: String,
-
     @Schema(
         description = "읽었는지 여부",
         example = "false",
     )
     var isRead: Boolean,
-
     @Schema(
         description = "알림 생성일",
     )

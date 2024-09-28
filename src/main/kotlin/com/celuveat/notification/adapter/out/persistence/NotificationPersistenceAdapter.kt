@@ -10,7 +10,7 @@ import com.celuveat.notification.domain.Notification
 @Adapter
 class NotificationPersistenceAdapter(
     private val notificationJpaRepository: NotificationJpaRepository,
-    private val notificationPersistenceMapper: NotificationPersistenceMapper
+    private val notificationPersistenceMapper: NotificationPersistenceMapper,
 ) : ReadNotificationPort, SaveNotificationPort {
     override fun readById(id: Long): Notification {
         return notificationPersistenceMapper.toDomain(notificationJpaRepository.getById(id))
