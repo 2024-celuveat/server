@@ -15,4 +15,8 @@ data class Notification(
     fun read() {
         this.isRead = true
     }
+
+    fun validateOwner(member: Member) {
+        this.member.validateOwner(member)
+    }
 }

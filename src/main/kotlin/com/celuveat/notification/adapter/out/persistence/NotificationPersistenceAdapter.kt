@@ -12,6 +12,9 @@ class NotificationPersistenceAdapter(
     private val notificationJpaRepository: NotificationJpaRepository,
     private val notificationPersistenceMapper: NotificationPersistenceMapper
 ) : ReadNotificationPort, SaveNotificationPort {
+    override fun readById(id: Long): Notification {
+        return notificationPersistenceMapper.toDomain(notificationJpaRepository.getById(id))
+    }
 
     override fun readByMember(memberId: Long): List<Notification> {
         return notificationJpaRepository.findAllByMemberId(memberId)
