@@ -105,6 +105,32 @@ class ReviewQueryServiceTest : BehaviorSpec({
             }
         }
     }
+
+    Given("내가 작성한 리뷰 조회 시") {
+        val memberId = 1L
+        val reviews = sut.giveMeBuilder<Review>()
+            .setExp(Review::star, Star.FOUR)
+            .sampleList(3)
+        val helpFulReview = sut.giveMeBuilder<HelpfulReview>()
+            .setExp(HelpfulReview::review, reviews[0])
+            .sample()
+        When("내가 작성한 리뷰를 조회하면") {
+            every { readReviewPort.readMyReviews(memberId) } returns reviews
+            every {
+                readHelpfulReviewPort.readHelpfulReviewByMemberAndReviews(
+                    memberId,
+                    reviews,
+                )
+            } returns listOf(helpFulReview)
+
+            val result = reviewQueryService.readMyReviews(memberId)
+            Then("리뷰가 조회되고, 도움돼요 클릭 여부가 반환 된다.") {
+                result.size shouldBe reviews.size
+                result.filter { it.clickedHelpful }.size shouldBe 1
+            }
+        }
+
+    }
 }) {
     override suspend fun afterEach(
         testCase: TestCase,

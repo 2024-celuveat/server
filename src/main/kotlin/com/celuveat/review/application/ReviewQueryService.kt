@@ -2,6 +2,7 @@ package com.celuveat.review.application
 
 import com.celuveat.common.application.port.`in`.result.SliceResult
 import com.celuveat.review.application.port.`in`.ReadAmountOfRestaurantReviewsUseCase
+import com.celuveat.review.application.port.`in`.ReadMyReviewsUseCase
 import com.celuveat.review.application.port.`in`.ReadRestaurantReviewsUseCase
 import com.celuveat.review.application.port.`in`.ReadSingleReviewUseCase
 import com.celuveat.review.application.port.`in`.result.ReviewPreviewResult
@@ -16,7 +17,7 @@ class ReviewQueryService(
     private val readReviewPort: ReadReviewPort,
     private val readHelpfulReviewPort: ReadHelpfulReviewPort,
     private val saveReviewPort: SaveReviewPort,
-) : ReadRestaurantReviewsUseCase, ReadSingleReviewUseCase, ReadAmountOfRestaurantReviewsUseCase {
+) : ReadRestaurantReviewsUseCase, ReadSingleReviewUseCase, ReadAmountOfRestaurantReviewsUseCase, ReadMyReviewsUseCase {
     override fun readAll(
         memberId: Long?,
         restaurantId: Long,
@@ -46,5 +47,12 @@ class ReviewQueryService(
             readHelpfulReviewPort.existsByReviewAndMember(reviewId = review.id, memberId = it)
         } ?: false
         return SingleReviewResult.of(review, clickedHelpful)
+    }
+
+    override fun readMyReviews(memberId: Long): List<ReviewPreviewResult> {
+        val reviews = readReviewPort.readMyReviews(memberId)
+        val reviewHelpfulReviewMapping = readHelpfulReviewPort.readHelpfulReviewByMemberAndReviews(memberId, reviews)
+            .map { helpful -> helpful.review }.toSet()
+        return reviews.map { ReviewPreviewResult.of(it, reviewHelpfulReviewMapping.contains(it)) }
     }
 }
