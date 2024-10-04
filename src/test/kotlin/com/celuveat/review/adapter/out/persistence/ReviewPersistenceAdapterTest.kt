@@ -139,4 +139,37 @@ class ReviewPersistenceAdapterTest(
             }
         }
     }
+
+    Given("내가 작성한 리뷰 조회 시") {
+        val member = memberJpaRepository.save(sut.giveMeOne(MemberJpaEntity::class.java))
+        val otherMember = memberJpaRepository.save(sut.giveMeOne(MemberJpaEntity::class.java))
+        val restaurant = restaurantJpaRepository.save(sut.giveMeOne(RestaurantJpaEntity::class.java))
+        val myReview = sut.giveMeBuilder<ReviewJpaEntity>()
+            .setExp(ReviewJpaEntity::restaurant, restaurant)
+            .setExp(ReviewJpaEntity::writer, member)
+            .setExp(ReviewJpaEntity::star, 4)
+            .sample()
+
+        val otherReview = sut.giveMeBuilder<ReviewJpaEntity>()
+            .setExp(ReviewJpaEntity::restaurant, restaurant)
+            .setExp(ReviewJpaEntity::writer, otherMember)
+            .setExp(ReviewJpaEntity::star, 4)
+            .sample()
+        val savedReviews = reviewJpaRepository.saveAll(listOf(myReview, otherReview))
+        val reviewAImages = sut.giveMeBuilder<ReviewImageJpaEntity>()
+            .setExp(ReviewImageJpaEntity::review, savedReviews[0])
+            .sampleList(2)
+        val reviewBImages = sut.giveMeBuilder<ReviewImageJpaEntity>()
+            .setExp(ReviewImageJpaEntity::review, savedReviews[1])
+            .sampleList(3)
+        reviewImageJpaRepository.saveAll(reviewAImages + reviewBImages)
+
+        When("내가 작성한 리뷰를 조회한 경우") {
+            val myReviews = reviewPersistenceAdapter.readMyReviews(member.id)
+
+            Then("내가 작성한 리뷰만 조회된다") {
+                myReviews.size shouldBe 1
+            }
+        }
+    }
 })

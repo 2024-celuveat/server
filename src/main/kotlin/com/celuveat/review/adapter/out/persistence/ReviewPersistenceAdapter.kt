@@ -70,6 +70,16 @@ class ReviewPersistenceAdapter(
         return reviewJpaRepository.countByRestaurantId(restaurantId).toInt()
     }
 
+    override fun readMyReviews(memberId: Long): List<Review> {
+        val reviews = reviewJpaRepository.findAllByWriterId(memberId)
+        return reviews.map {
+            reviewPersistenceMapper.toDomain(
+                it,
+                reviewImageJpaRepository.findAllByReview(it),
+            )
+        }
+    }
+
     companion object {
         val LATEST_SORTER = Sort.by("createdAt").descending()
     }
