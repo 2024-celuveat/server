@@ -27,7 +27,8 @@ class NaverSocialLoginClient(
         val redirectUrl = toRedirectUrl(requestOrigin)
         validateAllowedRedirectUrl(redirectUrl)
         val socialLoginToken = fetchAccessToken(authCode)
-        return fetchMemberInfo(socialLoginToken.accessToken).toMember()
+        return fetchMemberInfo(socialLoginToken.accessToken)
+            .toMember(socialLoginToken.refreshToken)
     }
 
     private fun validateAllowedRedirectUrl(redirectUrl: String) {

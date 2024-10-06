@@ -23,6 +23,10 @@ class Member(
         this.profileImageUrl = profileImageUrl
     }
 
+    fun updateRefreshToken(refreshToken: String) {
+        socialIdentifier.refreshToken = refreshToken
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

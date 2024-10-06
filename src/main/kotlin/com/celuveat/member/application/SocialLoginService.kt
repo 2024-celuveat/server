@@ -31,6 +31,8 @@ class SocialLoginService(
         )
         val signInMember = readMemberPort.findBySocialIdentifier(member.socialIdentifier)
             ?: saveMemberPort.save(member)
+        signInMember.updateRefreshToken(member.socialIdentifier.refreshToken)
+        saveMemberPort.save(member)
         return signInMember.id
     }
 

@@ -12,7 +12,7 @@ data class NaverMemberInfoResponse(
     private val message: String,
     private val response: Response,
 ) {
-    fun toMember(): Member {
+    fun toMember(refreshToken: String): Member {
         return Member(
             nickname = response.nickname,
             profileImageUrl = response.profileImage,
@@ -20,6 +20,7 @@ data class NaverMemberInfoResponse(
             socialIdentifier = SocialIdentifier(
                 serverType = SocialLoginType.NAVER,
                 socialId = response.id,
+                refreshToken = refreshToken,
             ),
         )
     }

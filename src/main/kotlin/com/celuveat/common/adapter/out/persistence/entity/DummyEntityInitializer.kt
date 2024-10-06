@@ -64,6 +64,7 @@ class DummyEntityInitializer(
             email = "email@celuveat.com",
             socialId = "1234567890",
             serverType = SocialLoginType.KAKAO,
+            refreshToken = "refresh"
         )
         return memberJpaRepository.save(member)
     }

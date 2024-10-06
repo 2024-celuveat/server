@@ -14,6 +14,7 @@ class MemberPersistenceMapper {
             email = member.email,
             serverType = member.socialIdentifier.serverType,
             socialId = member.socialIdentifier.socialId,
+            refreshToken = member.socialIdentifier.refreshToken,
         )
     }
 
@@ -26,6 +27,7 @@ class MemberPersistenceMapper {
             socialIdentifier = SocialIdentifier(
                 serverType = entity.serverType,
                 socialId = entity.socialId,
+                refreshToken = entity.refreshToken,
             ),
         )
     }
