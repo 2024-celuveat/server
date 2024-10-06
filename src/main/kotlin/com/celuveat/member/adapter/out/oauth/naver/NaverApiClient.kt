@@ -15,6 +15,12 @@ interface NaverApiClient {
         @RequestParam params: Map<String, String>,
     ): NaverSocialLoginToken
 
+    // ref - https://developers.naver.com/docs/login/api/api.md
+    @PostExchange(url = "https://nid.naver.com/oauth2.0/token")
+    fun refreshToken(
+        @RequestParam params: Map<String, String>,
+    ): NaverSocialLoginToken
+
     // ref - https://developers.naver.com/docs/login/profile/profile.md
     @GetExchange("https://openapi.naver.com/v1/nid/me")
     fun fetchMemberInfo(
