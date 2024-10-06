@@ -19,15 +19,15 @@ import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantImageJpa
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantImageJpaRepository
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantJpaEntity
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantJpaRepository
+import java.time.LocalDate
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.annotation.Profile
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
-import java.time.LocalDate
 
 @Suppress("ktlint:standard:max-line-length")
 @Component
-@Profile("local", "prod")
+@Profile("local")
 class DummyEntityInitializer(
     private val memberJpaRepository: MemberJpaRepository,
     private val celebrityJpaRepository: CelebrityJpaRepository,
