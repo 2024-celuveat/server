@@ -1,4 +1,4 @@
-package com.celuveat.review.application.port
+package com.celuveat.review.application
 
 import com.celuveat.common.utils.throwWhen
 import com.celuveat.member.application.port.out.ReadMemberPort
@@ -22,8 +22,8 @@ import org.springframework.stereotype.Service
 
 @Service
 class ReviewService(
-    private val findMemberPort: ReadMemberPort,
-    private val findRestaurantPort: ReadRestaurantPort,
+    private val readMemberPort: ReadMemberPort,
+    private val readRestaurantPort: ReadRestaurantPort,
     private val readReviewPort: ReadReviewPort,
     private val readHelpfulReviewPort: ReadHelpfulReviewPort,
     private val saveHelpfulReviewPort: SaveHelpfulReviewPort,
@@ -36,14 +36,14 @@ class ReviewService(
     ClickHelpfulReviewUseCase,
     DeleteHelpfulReviewUseCase {
     override fun write(command: WriteReviewCommand): Long {
-        val member = findMemberPort.readById(command.memberId)
-        val restaurant = findRestaurantPort.readById(command.restaurantId)
+        val member = readMemberPort.readById(command.memberId)
+        val restaurant = readRestaurantPort.readById(command.restaurantId)
         val review = command.toReview(member, restaurant)
         return saveReviewPort.save(review).id
     }
 
     override fun update(command: UpdateReviewCommand) {
-        val member = findMemberPort.readById(command.memberId)
+        val member = readMemberPort.readById(command.memberId)
         val review = readReviewPort.readById(command.reviewId)
         review.validateWriter(member)
         review.update(command.content, command.star, command.images.map { ReviewImage(imageUrl = it) })
@@ -54,7 +54,7 @@ class ReviewService(
         memberId: Long,
         reviewId: Long,
     ) {
-        val member = findMemberPort.readById(memberId)
+        val member = readMemberPort.readById(memberId)
         val review = readReviewPort.readById(reviewId)
         review.validateWriter(member)
         deleteReviewPort.delete(review)
@@ -70,7 +70,7 @@ class ReviewService(
                 memberId = memberId,
             ),
         ) { throw AlreadyClickHelpfulReviewException }
-        val member = findMemberPort.readById(memberId)
+        val member = readMemberPort.readById(memberId)
         val review = readReviewPort.readById(reviewId)
         val helpfulReview = review.clickHelpful(member)
         saveReviewPort.save(review)
