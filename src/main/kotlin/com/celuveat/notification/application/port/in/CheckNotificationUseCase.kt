@@ -1,7 +1,7 @@
 package com.celuveat.notification.application.port.`in`
 
-interface ReadNotificationUseCase {
-    fun readNotification(
+interface CheckNotificationUseCase {
+    fun checkNotification(
         notificationId: Long,
         memberId: Long,
     )

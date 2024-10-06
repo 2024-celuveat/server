@@ -3,7 +3,7 @@ package com.celuveat.notification.adapter.`in`
 import com.celuveat.auth.adapter.`in`.rest.Auth
 import com.celuveat.auth.adapter.`in`.rest.AuthContext
 import com.celuveat.notification.adapter.`in`.response.NotificationResponse
-import com.celuveat.notification.application.port.`in`.ReadNotificationUseCase
+import com.celuveat.notification.application.port.`in`.CheckNotificationUseCase
 import com.celuveat.notification.application.port.`in`.ReadNotificationsUseCase
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/notifications")
 @RestController
 class NotificationController(
-    private val readNotificationUseCase: ReadNotificationUseCase,
+    private val checkNotificationUseCase: CheckNotificationUseCase,
     private val readNotificationsUseCase: ReadNotificationsUseCase,
 ) : NotificationApi {
     @GetMapping
@@ -30,6 +30,6 @@ class NotificationController(
         @Auth auth: AuthContext,
         @PathVariable("notificationId") notificationId: Long,
     ) {
-        readNotificationUseCase.readNotification(notificationId = notificationId, memberId = auth.memberId())
+        checkNotificationUseCase.checkNotification(notificationId = notificationId, memberId = auth.memberId())
     }
 }
