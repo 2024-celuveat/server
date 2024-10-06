@@ -4,7 +4,7 @@ import com.celuveat.member.domain.SocialLoginType
 
 interface WithdrawSocialMemberPort {
     fun withdraw(
-        authCode: String,
+        refreshToken: String,
         socialLoginType: SocialLoginType,
         requestOrigin: String,
     )

@@ -63,7 +63,7 @@ interface SocialLoginApi {
 
     @SecurityRequirement(name = "JWT")
     @Operation(summary = "소셜 회원 탈퇴")
-    @DeleteMapping("/withdraw/{socialLoginType}")
+    @DeleteMapping("/withdraw")
     fun withdraw(
         @Auth auth: AuthContext,
         @Parameter(
@@ -71,13 +71,6 @@ interface SocialLoginApi {
             required = true,
             description = "소셜 로그인 서비스에서 제공해주는 auth code",
         )
-        @RequestParam authCode: String,
-        @Parameter(
-            `in` = ParameterIn.PATH,
-            required = true,
-            description = "소셜 로그인 타입",
-        )
-        @PathVariable socialLoginType: SocialLoginType,
         @Parameter(
             `in` = ParameterIn.HEADER,
             required = true,
