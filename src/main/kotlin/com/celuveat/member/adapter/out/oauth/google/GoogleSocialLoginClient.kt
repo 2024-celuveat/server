@@ -65,13 +65,25 @@ class GoogleSocialLoginClient(
             .toUriString()
     }
 
+    private fun toRedirectUrl(requestOrigin: String) = "$requestOrigin/oauth/google"
+
     override fun withdraw(
-        authCode: String,
+        refreshToken: String,
         requestOrigin: String,
     ) {
-        val socialLoginToken = fetchAccessToken(authCode, toRedirectUrl(requestOrigin))
+        val socialLoginToken = refreshToken(refreshToken)
         googleApiClient.withdraw(socialLoginToken.accessToken)
     }
 
-    private fun toRedirectUrl(requestOrigin: String) = "$requestOrigin/oauth/google"
+    private fun refreshToken(
+        refreshToken: String,
+    ): GoogleSocialLoginToken {
+        val tokenRequestBody = mapOf(
+            "grant_type" to "refresh_token",
+            "client_id" to googleSocialLoginProperty.clientId,
+            "client_secret" to googleSocialLoginProperty.clientSecret,
+            "refresh_token" to refreshToken,
+        )
+        return googleApiClient.refreshToken(tokenRequestBody)
+    }
 }
