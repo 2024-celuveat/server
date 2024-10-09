@@ -100,7 +100,7 @@ class CelebrityController(
             ),
         )
 
-        val results = readCelebritiesInRestaurantConditionUseCase.readCelebrities(query)
+        val results = readCelebritiesInRestaurantConditionUseCase.readCelebritiesInRestaurantCondition(query)
         return results.map { SimpleCelebrityResponse.from(it) }
     }
 }
