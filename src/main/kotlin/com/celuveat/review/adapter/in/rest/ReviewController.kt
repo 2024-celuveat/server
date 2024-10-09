@@ -11,6 +11,7 @@ import com.celuveat.review.application.port.`in`.ClickHelpfulReviewUseCase
 import com.celuveat.review.application.port.`in`.DeleteHelpfulReviewUseCase
 import com.celuveat.review.application.port.`in`.DeleteReviewUseCase
 import com.celuveat.review.application.port.`in`.ReadAmountOfRestaurantReviewsUseCase
+import com.celuveat.review.application.port.`in`.ReadMyReviewsUseCase
 import com.celuveat.review.application.port.`in`.ReadRestaurantReviewsUseCase
 import com.celuveat.review.application.port.`in`.ReadSingleReviewUseCase
 import com.celuveat.review.application.port.`in`.UpdateReviewUseCase
@@ -39,6 +40,7 @@ class ReviewController(
     private val readRestaurantReviewsUseCase: ReadRestaurantReviewsUseCase,
     private val readAmountOfRestaurantReviewsUseCase: ReadAmountOfRestaurantReviewsUseCase,
     private val readSingleReviewUseCase: ReadSingleReviewUseCase,
+    private val readMyReviewsUseCase: ReadMyReviewsUseCase,
 ) : ReviewApi {
     @PostMapping
     override fun writeReview(
@@ -122,5 +124,11 @@ class ReviewController(
                 memberId = auth.optionalMemberId(),
             ),
         )
+    }
+
+    @GetMapping("/my")
+    override fun readMyReviews(@Auth auth: AuthContext): List<ReviewPreviewResponse> {
+        val reviews = readMyReviewsUseCase.readMyReviews(auth.memberId())
+        return reviews.map(ReviewPreviewResponse::from)
     }
 }

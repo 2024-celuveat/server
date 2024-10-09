@@ -19,4 +19,6 @@ interface ReviewJpaRepository : JpaRepository<ReviewJpaEntity, Long> {
     fun countByWriterId(writerId: Long): Long
 
     fun countByRestaurantId(restaurantId: Long): Long
+
+    fun findAllByWriterId(writerId: Long): List<ReviewJpaEntity>
 }

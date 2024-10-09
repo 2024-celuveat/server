@@ -15,4 +15,6 @@ interface ReadReviewPort {
     fun countByWriterId(memberId: Long): Int
 
     fun countByRestaurantId(restaurantId: Long): Int
+
+    fun readMyReviews(memberId: Long): List<Review>
 }
