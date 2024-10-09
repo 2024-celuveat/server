@@ -19,11 +19,11 @@ import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantImageJpa
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantImageJpaRepository
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantJpaEntity
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantJpaRepository
-import java.time.LocalDate
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.annotation.Profile
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
+import java.time.LocalDate
 
 @Suppress("ktlint:standard:max-line-length")
 @Component
@@ -64,7 +64,7 @@ class DummyEntityInitializer(
             email = "email@celuveat.com",
             socialId = "1234567890",
             serverType = SocialLoginType.KAKAO,
-            refreshToken = "refresh"
+            refreshToken = "refresh",
         )
         return memberJpaRepository.save(member)
     }

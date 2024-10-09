@@ -129,7 +129,6 @@ class ReviewQueryServiceTest : BehaviorSpec({
                 result.filter { it.clickedHelpful }.size shouldBe 1
             }
         }
-
     }
 }) {
     override suspend fun afterEach(

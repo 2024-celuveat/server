@@ -127,7 +127,9 @@ class ReviewController(
     }
 
     @GetMapping("/my")
-    override fun readMyReviews(@Auth auth: AuthContext): List<ReviewPreviewResponse> {
+    override fun readMyReviews(
+        @Auth auth: AuthContext,
+    ): List<ReviewPreviewResponse> {
         val reviews = readMyReviewsUseCase.readMyReviews(auth.memberId())
         return reviews.map(ReviewPreviewResponse::from)
     }

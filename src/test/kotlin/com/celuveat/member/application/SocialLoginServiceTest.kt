@@ -45,19 +45,19 @@ class SocialLoginServiceTest : BehaviorSpec({
     Given("소셜 로그인을 통해 회원가입할 때") {
 
         val serverType = SocialLoginType.KAKAO
-        val socialIdentifier = SocialIdentifier(serverType = serverType, socialId = "socialId")
+        val socialIdentifier = SocialIdentifier(serverType = serverType, socialId = "socialId", "refreshToken")
         val redirectUrl = "redirectUrl"
         val authCode = "authCode"
 
-        val member = sut.giveMeBuilder<Member>()
-            .set(Member::id, 0L)
-            .set(Member::socialIdentifier, socialIdentifier)
-            .sample()
-        val savedMember = sut.giveMeBuilder(member)
-            .set(Member::id, 1L)
-            .sample()
-
         When("최초 회원인 경우") {
+            val member = sut.giveMeBuilder<Member>()
+                .set(Member::id, 0L)
+                .set(Member::socialIdentifier, socialIdentifier)
+                .sample()
+            val savedMember = sut.giveMeBuilder(member)
+                .set(Member::id, 1L)
+                .sample()
+
             every { fetchSocialMemberPort.fetchMember(serverType, authCode, redirectUrl) } returns member
             every { readMemberPort.findBySocialIdentifier(socialIdentifier) } returns null
             every { saveMemberPort.save(member) } returns savedMember
@@ -69,13 +69,22 @@ class SocialLoginServiceTest : BehaviorSpec({
 
                 verify { fetchSocialMemberPort.fetchMember(serverType, authCode, redirectUrl) }
                 verify { readMemberPort.findBySocialIdentifier(socialIdentifier) }
-                verify { saveMemberPort.save(member) }
+                verify(exactly = 2) { saveMemberPort.save(member) }
             }
         }
 
         When("이미 가입된 회원인 경우") {
+            val member = sut.giveMeBuilder<Member>()
+                .set(Member::id, 0L)
+                .set(Member::socialIdentifier, socialIdentifier)
+                .sample()
+            val savedMember = sut.giveMeBuilder(member)
+                .set(Member::id, 1L)
+                .sample()
+
             every { fetchSocialMemberPort.fetchMember(serverType, authCode, redirectUrl) } returns member
             every { readMemberPort.findBySocialIdentifier(socialIdentifier) } returns savedMember
+            every { saveMemberPort.save(member) } returns member
             val command = SocialLoginCommand(serverType, authCode, redirectUrl)
 
             val result = socialLoginService.login(command)
@@ -84,7 +93,7 @@ class SocialLoginServiceTest : BehaviorSpec({
 
                 verify { fetchSocialMemberPort.fetchMember(serverType, authCode, redirectUrl) }
                 verify { readMemberPort.findBySocialIdentifier(socialIdentifier) }
-                verify(exactly = 0) { saveMemberPort.save(member) }
+                verify(exactly = 1) { saveMemberPort.save(member) }
             }
         }
     }
@@ -109,14 +118,23 @@ class SocialLoginServiceTest : BehaviorSpec({
         val serverType = SocialLoginType.KAKAO
         val redirectUrl = "redirectUrl"
         val authCode = "authCode"
-        val command = WithdrawSocialLoginCommand(1L, authCode, serverType, redirectUrl)
-        every { withdrawSocialMemberPort.withdraw(authCode, serverType, redirectUrl) } returns Unit
+        val command = WithdrawSocialLoginCommand(1L, redirectUrl)
+        val refreshToken = "refreshToken"
+        val member = Member(
+            id = command.memberId,
+            nickname = "nickname",
+            profileImageUrl = "profileImageUrl",
+            email = "email",
+            socialIdentifier = SocialIdentifier(serverType, "socialId", refreshToken),
+        )
+        every { readMemberPort.readById(command.memberId) } returns member
+        every { withdrawSocialMemberPort.withdraw(refreshToken, serverType, redirectUrl) } returns Unit
         every { deleteMemberPort.deleteById(command.memberId) } returns Unit
         When("회원 탈퇴 요청을 전달하면") {
             socialLoginService.withdraw(command)
 
             Then("소셜 로그인 회원 탈퇴가 완료된다") {
-                verify { withdrawSocialMemberPort.withdraw(authCode, serverType, redirectUrl) }
+                verify { withdrawSocialMemberPort.withdraw(refreshToken, serverType, redirectUrl) }
                 verify { deleteMemberPort.deleteById(command.memberId) }
             }
         }

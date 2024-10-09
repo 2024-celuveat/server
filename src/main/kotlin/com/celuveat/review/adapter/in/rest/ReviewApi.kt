@@ -131,6 +131,6 @@ interface ReviewApi {
     @Operation(summary = "내가 작성한 리뷰 조회")
     @GetMapping("/my")
     fun readMyReviews(
-        @Auth auth: AuthContext
+        @Auth auth: AuthContext,
     ): List<ReviewPreviewResponse>
 }

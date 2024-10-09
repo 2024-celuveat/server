@@ -75,9 +75,7 @@ class KakaoSocialLoginClient(
         kakaoApiClient.withdraw("Bearer ${socialLoginToken.accessToken}")
     }
 
-    private fun refreshToken(
-        refreshToken: String,
-    ): KakaoSocialLoginToken {
+    private fun refreshToken(refreshToken: String): KakaoSocialLoginToken {
         val tokenRequestBody = mapOf(
             "grant_type" to "refresh_token",
             "client_id" to kakaoSocialLoginProperty.clientId,

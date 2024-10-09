@@ -28,7 +28,7 @@ class GoogleSocialLoginClient(
         validateAllowedRedirectUrl(redirectUrl)
         val socialLoginToken = fetchAccessToken(authCode, redirectUrl)
         return fetchMemberInfo(socialLoginToken.accessToken)
-            .toMember(socialLoginToken.refreshToken)
+            .toMember(socialLoginToken.refreshToken ?: "")
     }
 
     private fun validateAllowedRedirectUrl(redirectUrl: String) {
@@ -75,9 +75,7 @@ class GoogleSocialLoginClient(
         googleApiClient.withdraw(socialLoginToken.accessToken)
     }
 
-    private fun refreshToken(
-        refreshToken: String,
-    ): GoogleSocialLoginToken {
+    private fun refreshToken(refreshToken: String): GoogleSocialLoginToken {
         val tokenRequestBody = mapOf(
             "grant_type" to "refresh_token",
             "client_id" to googleSocialLoginProperty.clientId,

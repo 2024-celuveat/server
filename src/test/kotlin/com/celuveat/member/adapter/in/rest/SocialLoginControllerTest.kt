@@ -97,18 +97,16 @@ class SocialLoginControllerTest(
 
     context("회원 탈퇴를 요청한다") {
         val socialLoginType = SocialLoginType.KAKAO
-        val authCode = "authCode"
         val accessToken = "celuveatAccessToken"
         val requestOrigin = "http://localhost:3000"
         val memberId = 1L
 
         test("소셜 로그인 회원 탈퇴 성공") {
-            val command = WithdrawSocialLoginCommand(memberId, authCode, socialLoginType, requestOrigin)
+            val command = WithdrawSocialLoginCommand(memberId, requestOrigin)
             every { extractMemberIdUseCase.extract(accessToken) } returns memberId
             every { withdrawSocialLoginUseCase.withdraw(command) } returns Unit
 
-            mockMvc.delete("/social-login/withdraw/{socialLoginType}", socialLoginType) {
-                param("authCode", authCode)
+            mockMvc.delete("/social-login/withdraw", socialLoginType) {
                 header("Origin", requestOrigin)
                 header("Authorization", "Bearer $accessToken")
             }.andExpect {

@@ -21,7 +21,7 @@ class MemberJpaEntity(
     @Enumerated(EnumType.STRING)
     val serverType: SocialLoginType,
     val socialId: String,
-    var refreshToken: String
+    var refreshToken: String,
 ) : RootEntity<Long>() {
     override fun id(): Long {
         return this.id
