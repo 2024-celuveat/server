@@ -5,16 +5,22 @@ import com.celuveat.auth.adapter.`in`.rest.AuthContext
 import com.celuveat.celeb.adapter.`in`.rest.response.BestCelebrityResponse
 import com.celuveat.celeb.adapter.`in`.rest.response.CelebrityResponse
 import com.celuveat.celeb.adapter.`in`.rest.response.CelebrityWithInterestedResponse
+import com.celuveat.celeb.adapter.`in`.rest.response.SimpleCelebrityResponse
 import com.celuveat.celeb.application.port.`in`.AddInterestedCelebrityUseCase
 import com.celuveat.celeb.application.port.`in`.DeleteInterestedCelebrityUseCase
 import com.celuveat.celeb.application.port.`in`.ReadBestCelebritiesUseCase
+import com.celuveat.celeb.application.port.`in`.ReadCelebritiesInRestaurantConditionUseCase
 import com.celuveat.celeb.application.port.`in`.ReadCelebrityUseCase
 import com.celuveat.celeb.application.port.`in`.ReadInterestedCelebritiesUseCase
 import com.celuveat.celeb.application.port.`in`.command.AddInterestedCelebrityCommand
 import com.celuveat.celeb.application.port.`in`.command.DeleteInterestedCelebrityCommand
+import com.celuveat.celeb.application.port.`in`.query.ReadCelebritiesInRestaurantConditionQuery
 import com.celuveat.celeb.application.port.`in`.query.ReadCelebrityQuery
+import com.celuveat.common.utils.geometry.SquarePolygon
+import com.celuveat.restaurant.adapter.`in`.rest.request.ReadRestaurantsRequest
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -28,6 +34,7 @@ class CelebrityController(
     private val addInterestedCelebrityUseCase: AddInterestedCelebrityUseCase,
     private val deleteInterestedCelebrityUseCase: DeleteInterestedCelebrityUseCase,
     private val readCelebrityUseCase: ReadCelebrityUseCase,
+    private val readCelebritiesInRestaurantConditionUseCase: ReadCelebritiesInRestaurantConditionUseCase,
 ) : CelebrityApi {
     @GetMapping("/interested")
     override fun readInterestedCelebrities(
@@ -76,5 +83,24 @@ class CelebrityController(
         val query = ReadCelebrityQuery(memberId, celebrityId)
         val celebrityResult = readCelebrityUseCase.readCelebrity(query)
         return CelebrityWithInterestedResponse.from(celebrityResult)
+    }
+
+    @GetMapping("/in/restaurants/condition")
+    override fun readCelebritiesInRestaurantsCondition(
+        @ModelAttribute request: ReadRestaurantsRequest,
+    ): List<SimpleCelebrityResponse> {
+        val query = ReadCelebritiesInRestaurantConditionQuery(
+            category = request.category,
+            region = request.region,
+            searchArea = SquarePolygon.ofNullable(
+                lowLongitude = request.lowLongitude,
+                highLongitude = request.highLongitude,
+                lowLatitude = request.lowLatitude,
+                highLatitude = request.highLatitude,
+            ),
+        )
+
+        val results = readCelebritiesInRestaurantConditionUseCase.readCelebrities(query)
+        return results.map { SimpleCelebrityResponse.from(it) }
     }
 }
