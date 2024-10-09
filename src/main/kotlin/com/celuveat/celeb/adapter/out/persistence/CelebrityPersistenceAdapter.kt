@@ -33,7 +33,7 @@ class CelebrityPersistenceAdapter(
             }
     }
 
-    override fun readCelebritiesByRestaurants(restaurantIds: List<Long>): List<Celebrity> {
+    override fun readByRestaurants(restaurantIds: List<Long>): List<Celebrity> {
         return celebrityRestaurantJpaRepository.findAllByRestaurantIdIn(restaurantIds)
             .map { it.celebrity }
             .distinct()

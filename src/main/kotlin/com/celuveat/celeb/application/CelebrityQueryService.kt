@@ -83,7 +83,13 @@ class CelebrityQueryService(
         )
     }
 
-    override fun readCelebrities(query: ReadCelebritiesInRestaurantConditionQuery): List<SimpleCelebrityResult> {
-        TODO("Not yet implemented")
+    override fun readCelebritiesInRestaurantCondition(query: ReadCelebritiesInRestaurantConditionQuery): List<SimpleCelebrityResult> {
+        val restaurants = readRestaurantPort.readRestaurantsByCondition(
+            category = query.category,
+            region = query.region,
+            searchArea = query.searchArea,
+        )
+        return readCelebritiesPort.readByRestaurants(restaurants.map { it.id })
+            .map { SimpleCelebrityResult.from(it) }
     }
 }

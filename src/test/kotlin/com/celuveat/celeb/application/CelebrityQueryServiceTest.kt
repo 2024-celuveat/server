@@ -1,5 +1,6 @@
 package com.celuveat.celeb.application
 
+import com.celuveat.celeb.application.port.`in`.query.ReadCelebritiesInRestaurantConditionQuery
 import com.celuveat.celeb.application.port.`in`.query.ReadCelebrityQuery
 import com.celuveat.celeb.application.port.out.ReadCelebritiesPort
 import com.celuveat.celeb.application.port.out.ReadInterestedCelebritiesPort
@@ -136,6 +137,30 @@ class CelebrityQueryServiceTest : BehaviorSpec({
                 result.celebrity.id shouldBe celebrity.id
                 result.interested shouldBe false
                 verify { readInterestedCelebritiesPort wasNot Called }
+            }
+        }
+    }
+
+    Given("음식점 검색 조건에 포함 되는 셀럽 조회 시") {
+        val query = ReadCelebritiesInRestaurantConditionQuery(category = "한식", region = "서울", searchArea = null)
+        val celebrities = sut.giveMeBuilder<Celebrity>()
+            .setExp(Celebrity::youtubeContents, generateYoutubeContents(size = 2))
+            .sampleList(3)
+        val restaurants = sut.giveMe<Restaurant>(4)
+        When("음식점 검색 조건으로") {
+            every {
+                readRestaurantPort.readRestaurantsByCondition(
+                    category = query.category,
+                    region = query.region,
+                    searchArea = query.searchArea
+                )
+            } returns restaurants
+            every { readCelebritiesPort.readByRestaurants(restaurants.map { it.id }) } returns celebrities
+
+            val results = celebrityQueryService.readCelebritiesInRestaurantCondition(query)
+
+            Then("조건에 해당하는 음식점에 다녀간 셀럽들이 조회 된다") {
+                results.size shouldBe 3
             }
         }
     }

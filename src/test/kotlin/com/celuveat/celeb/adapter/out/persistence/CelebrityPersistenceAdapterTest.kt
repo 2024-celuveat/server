@@ -173,7 +173,7 @@ class CelebrityPersistenceAdapterTest(
         )
 
         // when
-        val celebrities = celebrityPersistenceAdapter.readCelebritiesByRestaurants(restaurants.map { it.id })
+        val celebrities = celebrityPersistenceAdapter.readByRestaurants(restaurants.map { it.id })
 
         // then
         celebrities.size shouldBe 2
