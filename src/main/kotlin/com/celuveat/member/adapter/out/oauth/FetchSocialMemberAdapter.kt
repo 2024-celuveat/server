@@ -35,11 +35,11 @@ class FetchSocialMemberAdapter(
     }
 
     override fun withdraw(
-        authCode: String,
+        refreshToken: String,
         socialLoginType: SocialLoginType,
         requestOrigin: String,
     ) {
         val socialLoginClient = getSocialLoginClient(socialLoginType)
-        socialLoginClient.withdraw(authCode, requestOrigin)
+        socialLoginClient.withdraw(refreshToken, requestOrigin)
     }
 }

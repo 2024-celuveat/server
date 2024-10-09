@@ -27,7 +27,8 @@ class NaverSocialLoginClient(
         val redirectUrl = toRedirectUrl(requestOrigin)
         validateAllowedRedirectUrl(redirectUrl)
         val socialLoginToken = fetchAccessToken(authCode)
-        return fetchMemberInfo(socialLoginToken.accessToken).toMember()
+        return fetchMemberInfo(socialLoginToken.accessToken)
+            .toMember(socialLoginToken.refreshToken)
     }
 
     private fun validateAllowedRedirectUrl(redirectUrl: String) {
@@ -62,17 +63,27 @@ class NaverSocialLoginClient(
     }
 
     override fun withdraw(
-        authCode: String,
+        refreshToken: String,
         requestOrigin: String,
     ) {
-        val accessToken = fetchAccessToken(authCode)
-        val tokenRequestBody = mapOf(
+        val accessToken = refreshToken(refreshToken)
+        val withdrawRequestBody = mapOf(
             "client_id" to naverSocialLoginProperty.clientId,
             "client_secret" to naverSocialLoginProperty.clientSecret,
             "access_token" to accessToken.accessToken,
             "grant_type" to "delete",
         )
-        naverApiClient.withdraw(tokenRequestBody)
+        naverApiClient.withdraw(withdrawRequestBody)
+    }
+
+    private fun refreshToken(refreshToken: String): NaverSocialLoginToken {
+        val tokenRequestBody = mapOf(
+            "grant_type" to "refresh_token",
+            "client_id" to naverSocialLoginProperty.clientId,
+            "client_secret" to naverSocialLoginProperty.clientSecret,
+            "refresh_token" to refreshToken,
+        )
+        return naverApiClient.refreshToken(tokenRequestBody)
     }
 
     private fun toRedirectUrl(requestOrigin: String) = "$requestOrigin/oauth/naver"

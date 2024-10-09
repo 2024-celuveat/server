@@ -14,7 +14,7 @@ interface SocialLoginClient {
     fun getSocialLoginUrl(requestOrigin: String): String
 
     fun withdraw(
-        authCode: String,
+        refreshToken: String,
         requestOrigin: String,
     )
 }

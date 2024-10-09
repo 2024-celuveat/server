@@ -31,6 +31,8 @@ class SocialLoginService(
         )
         val signInMember = readMemberPort.findBySocialIdentifier(member.socialIdentifier)
             ?: saveMemberPort.save(member)
+        signInMember.updateRefreshToken(member.socialIdentifier.refreshToken)
+        saveMemberPort.save(member)
         return signInMember.id
     }
 
@@ -42,9 +44,10 @@ class SocialLoginService(
     }
 
     override fun withdraw(command: WithdrawSocialLoginCommand) {
+        val member = readMemberPort.readById(command.memberId)
         withdrawSocialMemberPort.withdraw(
-            command.authCode,
-            command.socialLoginType,
+            member.socialIdentifier.refreshToken,
+            member.socialIdentifier.serverType,
             command.requestOrigin,
         )
         deleteMemberPort.deleteById(command.memberId)

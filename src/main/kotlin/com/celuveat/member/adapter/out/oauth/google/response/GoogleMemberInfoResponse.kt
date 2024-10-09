@@ -15,7 +15,7 @@ data class GoogleMemberInfoResponse(
     private val picture: String,
     private val email: String,
 ) {
-    fun toMember(): Member {
+    fun toMember(refreshToken: String): Member {
         return Member(
             nickname = name,
             profileImageUrl = picture,
@@ -23,6 +23,7 @@ data class GoogleMemberInfoResponse(
             socialIdentifier = SocialIdentifier(
                 serverType = SocialLoginType.GOOGLE,
                 socialId = id,
+                refreshToken = refreshToken,
             ),
         )
     }

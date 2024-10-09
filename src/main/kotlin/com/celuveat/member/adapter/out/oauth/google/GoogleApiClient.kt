@@ -19,6 +19,12 @@ interface GoogleApiClient {
         @RequestHeader(AUTHORIZATION) bearerToken: String,
     ): GoogleMemberInfoResponse
 
+    // ref - https://cloud.google.com/apigee/docs/api-platform/security/oauth/access-tokens?hl=ko#refreshinganaccesstoken
+    @PostExchange(url = "https://oauth2.googleapis.com/token")
+    fun refreshToken(
+        @RequestParam params: Map<String, String>,
+    ): GoogleSocialLoginToken
+
     // ref - https://developers.google.com/identity/protocols/oauth2/web-server#tokenrevoke
     @PostExchange("https://oauth2.googleapis.com/revoke")
     fun withdraw(

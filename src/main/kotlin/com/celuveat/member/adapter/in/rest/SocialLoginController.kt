@@ -49,15 +49,13 @@ class SocialLoginController(
         return socialLoginUrl
     }
 
-    @DeleteMapping("/withdraw/{socialLoginType}")
+    @DeleteMapping("/withdraw")
     override fun withdraw(
         @Auth auth: AuthContext,
-        @RequestParam authCode: String,
-        @PathVariable socialLoginType: SocialLoginType,
         @RequestHeader(HttpHeaders.ORIGIN) requestOrigin: String,
     ): ResponseEntity<Unit> {
         val memberId = auth.memberId()
-        val command = WithdrawSocialLoginCommand(memberId, authCode, socialLoginType, requestOrigin)
+        val command = WithdrawSocialLoginCommand(memberId, requestOrigin)
         withdrawSocialLoginUseCase.withdraw(command)
         return ResponseEntity.noContent().build()
     }

@@ -27,7 +27,8 @@ class KakaoSocialLoginClient(
         val redirectUrl = toRedirectUrl(requestOrigin)
         validateAllowedRedirectUrl(redirectUrl)
         val socialLoginToken = fetchAccessToken(authCode, redirectUrl)
-        return fetchMemberInfo(socialLoginToken.accessToken).toMember()
+        return fetchMemberInfo(socialLoginToken.accessToken)
+            .toMember(socialLoginToken.refreshToken)
     }
 
     private fun validateAllowedRedirectUrl(redirectUrl: String) {
@@ -64,13 +65,25 @@ class KakaoSocialLoginClient(
             .toUriString()
     }
 
+    private fun toRedirectUrl(requestOrigin: String) = "$requestOrigin/oauth/kakao"
+
     override fun withdraw(
-        authCode: String,
+        refreshToken: String,
         requestOrigin: String,
     ) {
-        val socialLoginToken = fetchAccessToken(authCode, toRedirectUrl(requestOrigin))
+        val socialLoginToken = refreshToken(refreshToken)
         kakaoApiClient.withdraw("Bearer ${socialLoginToken.accessToken}")
     }
 
-    private fun toRedirectUrl(requestOrigin: String) = "$requestOrigin/oauth/kakao"
+    private fun refreshToken(
+        refreshToken: String,
+    ): KakaoSocialLoginToken {
+        val tokenRequestBody = mapOf(
+            "grant_type" to "refresh_token",
+            "client_id" to kakaoSocialLoginProperty.clientId,
+            "refresh_token" to refreshToken,
+            "client_secret" to kakaoSocialLoginProperty.clientSecret,
+        )
+        return kakaoApiClient.refreshToken(tokenRequestBody)
+    }
 }
