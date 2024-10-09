@@ -179,6 +179,7 @@ class RestaurantController(
                 lowLatitude = request.lowLatitude,
                 highLatitude = request.highLatitude,
             ),
+            celebrityId = request.celebrityId,
         )
         return readAmountOfRestaurantsUseCase.readAmountOfRestaurants(query)
     }

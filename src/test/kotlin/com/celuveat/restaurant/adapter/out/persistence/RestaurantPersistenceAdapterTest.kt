@@ -143,6 +143,7 @@ class RestaurantPersistenceAdapterTest(
             category = "한식",
             region = "서울",
             searchArea = null,
+            celebrityId = null,
             page = 0,
             size = 2,
         )
@@ -166,6 +167,7 @@ class RestaurantPersistenceAdapterTest(
             category = "한식",
             region = "서울",
             searchArea = null,
+            celebrityId = null,
         )
 
         // then
@@ -186,6 +188,7 @@ class RestaurantPersistenceAdapterTest(
             category = null,
             region = "서울",
             searchArea = null,
+            celebrityId = null,
             page = 0,
             size = 3,
         )
@@ -210,6 +213,7 @@ class RestaurantPersistenceAdapterTest(
             category = "한식",
             region = "서울",
             searchArea = null,
+            celebrityId = null,
         )
 
         // then

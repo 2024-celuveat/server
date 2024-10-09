@@ -19,4 +19,5 @@ data class RestaurantFilter(
     val category: String?,
     val region: String?,
     val searchArea: SquarePolygon?,
+    val celebrityId: Long?,
 )

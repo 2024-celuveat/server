@@ -88,6 +88,7 @@ class CelebrityQueryService(
             category = query.category,
             region = query.region,
             searchArea = query.searchArea,
+            celebrityId = null, // celebrityId is not used in this case
         )
         return readCelebritiesPort.readByRestaurants(restaurants.map { it.id })
             .map { SimpleCelebrityResult.from(it) }

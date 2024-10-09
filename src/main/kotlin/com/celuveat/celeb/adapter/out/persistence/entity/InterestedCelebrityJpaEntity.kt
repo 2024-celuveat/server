@@ -29,7 +29,7 @@ class InterestedCelebrityJpaEntity(
     @JoinColumn(name = "celebrity_id", foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT))
     val celebrity: CelebrityJpaEntity,
 ) : RootEntity<Long>() {
-    override fun id(): Long {
+    override fun readId(): Long {
         return this.id
     }
 }

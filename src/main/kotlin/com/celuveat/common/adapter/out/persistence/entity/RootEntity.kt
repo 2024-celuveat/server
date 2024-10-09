@@ -2,10 +2,10 @@ package com.celuveat.common.adapter.out.persistence.entity
 
 import jakarta.persistence.EntityListeners
 import jakarta.persistence.MappedSuperclass
+import java.time.LocalDateTime
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
-import java.time.LocalDateTime
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener::class)
@@ -16,7 +16,7 @@ abstract class RootEntity<ID> {
     @LastModifiedDate
     lateinit var updatedAt: LocalDateTime
 
-    abstract fun id(): ID
+    abstract fun readId(): ID
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -24,10 +24,10 @@ abstract class RootEntity<ID> {
 
         other as RootEntity<*>
 
-        return id() == other.id()
+        return readId() == other.readId()
     }
 
     override fun hashCode(): Int {
-        return id()?.hashCode() ?: 0
+        return readId()?.hashCode() ?: 0
     }
 }

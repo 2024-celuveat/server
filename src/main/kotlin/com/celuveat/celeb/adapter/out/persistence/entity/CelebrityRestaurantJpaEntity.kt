@@ -25,7 +25,7 @@ class CelebrityRestaurantJpaEntity(
     @JoinColumn(name = "restaurant_id", foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT))
     val restaurant: RestaurantJpaEntity,
 ) : RootEntity<Long>() {
-    override fun id(): Long {
+    override fun readId(): Long {
         return this.id
     }
 }

@@ -152,7 +152,8 @@ class CelebrityQueryServiceTest : BehaviorSpec({
                 readRestaurantPort.readRestaurantsByCondition(
                     category = query.category,
                     region = query.region,
-                    searchArea = query.searchArea
+                    searchArea = query.searchArea,
+                    celebrityId = null,
                 )
             } returns restaurants
             every { readCelebritiesPort.readByRestaurants(restaurants.map { it.id }) } returns celebrities

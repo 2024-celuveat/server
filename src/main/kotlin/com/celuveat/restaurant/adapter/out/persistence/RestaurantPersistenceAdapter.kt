@@ -71,11 +71,12 @@ class RestaurantPersistenceAdapter(
         category: String?,
         region: String?,
         searchArea: SquarePolygon?,
+        celebrityId: Long?,
         page: Int,
         size: Int,
     ): SliceResult<Restaurant> {
         val pageRequest = PageRequest.of(page, size, LATEST_SORTER)
-        val filter = RestaurantFilter(category, region, searchArea)
+        val filter = RestaurantFilter(category, region, searchArea, celebrityId)
         val restaurantSlice = restaurantJpaRepository.findAllByFilter(filter, pageRequest)
         val restaurants = restaurantSlice.content.map { it }
         val imagesByRestaurants = restaurantImageJpaRepository.findByRestaurantIn(restaurants)
@@ -95,9 +96,10 @@ class RestaurantPersistenceAdapter(
     override fun readRestaurantsByCondition(
         category: String?,
         region: String?,
-        searchArea: SquarePolygon?
+        searchArea: SquarePolygon?,
+        celebrityId: Long?,
     ): List<Restaurant> {
-        val filter = RestaurantFilter(category, region, searchArea)
+        val filter = RestaurantFilter(category, region, searchArea, celebrityId)
         val restaurants = restaurantJpaRepository.findAllByFilter(filter)
         val imagesByRestaurants = restaurantImageJpaRepository.findByRestaurantIn(restaurants)
             .groupBy { it.restaurant.id }
@@ -113,8 +115,16 @@ class RestaurantPersistenceAdapter(
         category: String?,
         region: String?,
         searchArea: SquarePolygon?,
+        celebrityId: Long?,
     ): Int {
-        return restaurantJpaRepository.countAllByFilter(RestaurantFilter(category, region, searchArea)).toInt()
+        return restaurantJpaRepository.countAllByFilter(
+            RestaurantFilter(
+                category = category,
+                region = region,
+                searchArea = searchArea,
+                celebrityId = celebrityId
+            )
+        ).toInt()
     }
 
     override fun readByCreatedAtBetween(
