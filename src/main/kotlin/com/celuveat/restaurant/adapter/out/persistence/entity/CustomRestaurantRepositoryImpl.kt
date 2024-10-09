@@ -46,6 +46,30 @@ class CustomRestaurantRepositoryImpl(
         )
     }
 
+    override fun findAllByFilter(filter: RestaurantFilter): List<RestaurantJpaEntity> {
+        val query = jpql {
+            select(
+                entity(RestaurantJpaEntity::class),
+            ).from(
+                entity(RestaurantJpaEntity::class),
+            ).whereAnd(
+                filter.category?.let { path(RestaurantJpaEntity::category).eq(it) },
+                filter.region?.let { path(RestaurantJpaEntity::roadAddress).like("%$it%") },
+                filter.searchArea?.let {
+                    path(RestaurantJpaEntity::longitude).between(
+                        it.lowLongitude,
+                        it.highLongitude,
+                    )
+                },
+                filter.searchArea?.let { path(RestaurantJpaEntity::latitude).between(it.lowLatitude, it.highLatitude) },
+            )
+        }
+        val rendered = renderer.render(query, context)
+        return entityManager.createQuery(rendered.query, RestaurantJpaEntity::class.java)
+            .apply { rendered.params.forEach { (name, value) -> setParameter(name, value) } }
+            .resultList
+    }
+
     override fun countAllByFilter(filter: RestaurantFilter): Long {
         val query = jpql {
             select(

@@ -10,6 +10,8 @@ interface CustomRestaurantRepository {
         pageable: Pageable,
     ): Slice<RestaurantJpaEntity>
 
+    fun findAllByFilter(filter: RestaurantFilter): List<RestaurantJpaEntity>
+
     fun countAllByFilter(filter: RestaurantFilter): Long
 }
 

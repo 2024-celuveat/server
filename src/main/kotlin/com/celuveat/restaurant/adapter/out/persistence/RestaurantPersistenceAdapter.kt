@@ -11,10 +11,10 @@ import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantJpaRepos
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantPersistenceMapper
 import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
 import com.celuveat.restaurant.domain.Restaurant
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Sort
 import java.time.LocalDate
 import java.time.LocalTime
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 
 @Adapter
 class RestaurantPersistenceAdapter(
@@ -90,6 +90,23 @@ class RestaurantPersistenceAdapter(
             currentPage = page,
             hasNext = restaurantSlice.hasNext(),
         )
+    }
+
+    override fun readRestaurantsByCondition(
+        category: String?,
+        region: String?,
+        searchArea: SquarePolygon?
+    ): List<Restaurant> {
+        val filter = RestaurantFilter(category, region, searchArea)
+        val restaurants = restaurantJpaRepository.findAllByFilter(filter)
+        val imagesByRestaurants = restaurantImageJpaRepository.findByRestaurantIn(restaurants)
+            .groupBy { it.restaurant.id }
+        return restaurants.map {
+            restaurantPersistenceMapper.toDomain(
+                it,
+                imagesByRestaurants[it.id] ?: emptyList(),
+            )
+        }
     }
 
     override fun countRestaurantsByCondition(
