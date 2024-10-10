@@ -20,14 +20,23 @@ interface ReadRestaurantPort {
         category: String?,
         region: String?,
         searchArea: SquarePolygon?,
+        celebrityId: Long?,
         page: Int,
         size: Int,
     ): SliceResult<Restaurant>
+
+    fun readRestaurantsByCondition(
+        category: String?,
+        region: String?,
+        searchArea: SquarePolygon?,
+        celebrityId: Long?,
+    ): List<Restaurant>
 
     fun countRestaurantsByCondition(
         category: String?,
         region: String?,
         searchArea: SquarePolygon?,
+        celebrityId: Long?,
     ): Int
 
     fun readByCreatedAtBetween(

@@ -41,7 +41,7 @@ class ReviewJpaEntity(
         this.updatedAt = updatedAt
     }
 
-    override fun id(): Long {
+    override fun readId(): Long {
         return this.id
     }
 }

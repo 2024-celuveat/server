@@ -25,7 +25,7 @@ class RestaurantInVideoJpaEntity(
     @JoinColumn(name = "video_id", foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT))
     val video: VideoJpaEntity,
 ) : RootEntity<Long>() {
-    override fun id(): Long {
+    override fun readId(): Long {
         return this.id
     }
 }

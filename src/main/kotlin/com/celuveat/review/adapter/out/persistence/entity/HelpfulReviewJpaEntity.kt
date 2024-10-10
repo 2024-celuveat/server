@@ -30,7 +30,7 @@ class HelpfulReviewJpaEntity(
     @JoinColumn(name = "member_id", foreignKey = ForeignKey(NO_CONSTRAINT))
     val member: MemberJpaEntity,
 ) : RootEntity<Long>() {
-    override fun id(): Long {
+    override fun readId(): Long {
         return this.id
     }
 }

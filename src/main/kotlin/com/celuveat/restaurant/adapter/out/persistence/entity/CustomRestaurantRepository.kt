@@ -10,6 +10,8 @@ interface CustomRestaurantRepository {
         pageable: Pageable,
     ): Slice<RestaurantJpaEntity>
 
+    fun findAllByFilter(filter: RestaurantFilter): List<RestaurantJpaEntity>
+
     fun countAllByFilter(filter: RestaurantFilter): Long
 }
 
@@ -17,4 +19,5 @@ data class RestaurantFilter(
     val category: String?,
     val region: String?,
     val searchArea: SquarePolygon?,
+    val celebrityId: Long?,
 )

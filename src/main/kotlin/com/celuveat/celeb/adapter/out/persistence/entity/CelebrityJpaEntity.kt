@@ -16,7 +16,7 @@ class CelebrityJpaEntity(
     val profileImageUrl: String,
     val introduction: String,
 ) : RootEntity<Long>() {
-    override fun id(): Long {
+    override fun readId(): Long {
         return this.id
     }
 }

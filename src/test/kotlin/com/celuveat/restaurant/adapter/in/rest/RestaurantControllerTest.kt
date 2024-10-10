@@ -258,6 +258,7 @@ class RestaurantControllerTest(
                 region = region,
                 category = category,
                 searchArea = null,
+                celebrityId = null,
                 page = page,
                 size = size,
             )
@@ -302,6 +303,7 @@ class RestaurantControllerTest(
                     lowLatitude = 35.0,
                     highLatitude = 36.0,
                 ),
+                celebrityId = null,
                 page = page,
                 size = size,
             )

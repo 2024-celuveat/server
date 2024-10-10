@@ -2,6 +2,7 @@ package com.celuveat.celeb.adapter.out.persistence
 
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityJpaRepository
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityPersistenceMapper
+import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityRestaurantJpaRepository
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityYoutubeContentJpaRepository
 import com.celuveat.celeb.adapter.out.persistence.entity.RestaurantInVideoJpaRepository
 import com.celuveat.celeb.adapter.out.persistence.entity.YoutubeContentJpaEntity
@@ -14,6 +15,7 @@ class CelebrityPersistenceAdapter(
     private val celebrityJpaRepository: CelebrityJpaRepository,
     private val celebrityYoutubeContentJpaRepository: CelebrityYoutubeContentJpaRepository,
     private val restaurantInVideoJpaRepository: RestaurantInVideoJpaRepository,
+    private val celebrityRestaurantJpaRepository: CelebrityRestaurantJpaRepository,
     private val celebrityPersistenceMapper: CelebrityPersistenceMapper,
 ) : ReadCelebritiesPort {
     override fun readVisitedCelebritiesByRestaurants(restaurantIds: List<Long>): Map<Long, List<Celebrity>> {
@@ -29,6 +31,13 @@ class CelebrityPersistenceAdapter(
                     )
                 }
             }
+    }
+
+    override fun readByRestaurants(restaurantIds: List<Long>): List<Celebrity> {
+        return celebrityRestaurantJpaRepository.findAllByRestaurantIdIn(restaurantIds)
+            .map { it.celebrity }
+            .distinct()
+            .map { celebrityPersistenceMapper.toDomainWithoutYoutubeContent(it) }
     }
 
     private fun celebritiesToContentMap(celebrityIds: List<Long>): Map<Long, List<YoutubeContentJpaEntity>> =

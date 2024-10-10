@@ -3,17 +3,21 @@ package com.celuveat.celeb.adapter.`in`.rest
 import com.celuveat.auth.application.port.`in`.ExtractMemberIdUseCase
 import com.celuveat.celeb.adapter.`in`.rest.response.BestCelebrityResponse
 import com.celuveat.celeb.adapter.`in`.rest.response.CelebrityWithInterestedResponse
+import com.celuveat.celeb.adapter.`in`.rest.response.SimpleCelebrityResponse
 import com.celuveat.celeb.application.port.`in`.AddInterestedCelebrityUseCase
 import com.celuveat.celeb.application.port.`in`.DeleteInterestedCelebrityUseCase
 import com.celuveat.celeb.application.port.`in`.ReadBestCelebritiesUseCase
+import com.celuveat.celeb.application.port.`in`.ReadCelebritiesInRestaurantConditionUseCase
 import com.celuveat.celeb.application.port.`in`.ReadCelebrityUseCase
 import com.celuveat.celeb.application.port.`in`.ReadInterestedCelebritiesUseCase
 import com.celuveat.celeb.application.port.`in`.command.AddInterestedCelebrityCommand
 import com.celuveat.celeb.application.port.`in`.command.DeleteInterestedCelebrityCommand
+import com.celuveat.celeb.application.port.`in`.query.ReadCelebritiesInRestaurantConditionQuery
 import com.celuveat.celeb.application.port.`in`.query.ReadCelebrityQuery
 import com.celuveat.celeb.application.port.`in`.result.BestCelebrityResult
 import com.celuveat.celeb.application.port.`in`.result.CelebrityResult
 import com.celuveat.celeb.application.port.`in`.result.CelebrityWithInterestedResult
+import com.celuveat.celeb.application.port.`in`.result.SimpleCelebrityResult
 import com.celuveat.support.sut
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.navercorp.fixturemonkey.kotlin.giveMeBuilder
@@ -36,6 +40,7 @@ class CelebrityControllerTest(
     @MockkBean val deleteInterestedCelebrityUseCase: DeleteInterestedCelebrityUseCase,
     @MockkBean val readBestCelebritiesUseCase: ReadBestCelebritiesUseCase,
     @MockkBean val readCelebrityUseCase: ReadCelebrityUseCase,
+    @MockkBean val readCelebritiesInRestaurantConditionUseCase: ReadCelebritiesInRestaurantConditionUseCase,
     // for AuthMemberArgumentResolver
     @MockkBean val extractMemberIdUseCase: ExtractMemberIdUseCase,
 ) : FunSpec({
@@ -146,6 +151,26 @@ class CelebrityControllerTest(
             mockMvc.get("/celebrities/{celebrityId}", celebrityId).andExpect {
                 status { isOk() }
                 content { json(mapper.writeValueAsString(CelebrityWithInterestedResponse.from(result))) }
+            }.andDo {
+                print()
+            }
+        }
+    }
+
+    context("음식점 검색 조건에 포함 되는 셀럽을 조회 한다") {
+        val query = ReadCelebritiesInRestaurantConditionQuery(category = "한식", region = "서울", searchArea = null)
+        val celebrities = sut.giveMeBuilder<SimpleCelebrityResult>()
+            .sampleList(3)
+        val results = celebrities.map { SimpleCelebrityResponse.from(it) }
+        test("조회 성공") {
+            every { readCelebritiesInRestaurantConditionUseCase.readCelebritiesInRestaurantCondition(query) } returns celebrities
+
+            mockMvc.get("/celebrities/in/restaurants/condition") {
+                param("category", query.category!!)
+                param("region", query.region!!)
+            }.andExpect {
+                status { isOk() }
+                content { json(mapper.writeValueAsString(results)) }
             }.andDo {
                 print()
             }

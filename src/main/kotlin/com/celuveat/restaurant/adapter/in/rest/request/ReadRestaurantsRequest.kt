@@ -48,6 +48,13 @@ data class ReadRestaurantsRequest(
         required = false,
     )
     val highLatitude: Double?,
+    @Parameter(
+        `in` = ParameterIn.QUERY,
+        description = "셀럽 ID",
+        example = "1",
+        required = false,
+    )
+    val celebrityId: Long?,
 ) {
     fun toQuery(
         memberId: Long?,
@@ -64,6 +71,7 @@ data class ReadRestaurantsRequest(
                 lowLatitude = lowLatitude,
                 highLatitude = highLatitude,
             ),
+            celebrityId = celebrityId,
             page = page,
             size = size,
         )

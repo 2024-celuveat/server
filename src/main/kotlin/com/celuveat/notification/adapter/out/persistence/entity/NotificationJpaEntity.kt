@@ -29,7 +29,7 @@ class NotificationJpaEntity(
     val content: String,
     var isRead: Boolean,
 ) : RootEntity<Long>() {
-    override fun id(): Long {
+    override fun readId(): Long {
         return this.id
     }
 }
