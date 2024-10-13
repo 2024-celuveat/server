@@ -12,15 +12,14 @@ import org.springframework.stereotype.Repository
 class CustomCelebrityRestaurantRepositoryImpl(
     private val executor: KotlinJdslJpqlExecutor,
 ) : CustomCelebrityRestaurantRepository {
-
     override fun findRestaurantsByCelebrityId(
         celebrityId: Long,
         pageable: Pageable,
-        sort: ReadCelebrityVisitedRestaurantSortCondition
+        sort: ReadCelebrityVisitedRestaurantSortCondition,
     ): Slice<RestaurantJpaEntity> {
         val findSlice = executor.findSlice(pageable) {
             select(
-                entity(RestaurantJpaEntity::class),
+                entity(CelebrityRestaurantJpaEntity::class),
             ).from(
                 entity(CelebrityRestaurantJpaEntity::class),
                 fetchJoin(CelebrityRestaurantJpaEntity::restaurant),
@@ -33,10 +32,10 @@ class CustomCelebrityRestaurantRepositoryImpl(
                     ReadCelebrityVisitedRestaurantSortCondition.CREATED_AT -> path(RestaurantJpaEntity::createdAt).desc()
                     ReadCelebrityVisitedRestaurantSortCondition.REVIEW -> path(RestaurantJpaEntity::reviewCount).desc()
                     ReadCelebrityVisitedRestaurantSortCondition.LIKE -> path(RestaurantJpaEntity::likeCount).desc()
-                }
+                },
             )
         }
-        val restaurants = findSlice.content.filterNotNull()
+        val restaurants = findSlice.content.filterNotNull().map { it.restaurant }
         return SliceImpl(
             restaurants,
             findSlice.pageable,

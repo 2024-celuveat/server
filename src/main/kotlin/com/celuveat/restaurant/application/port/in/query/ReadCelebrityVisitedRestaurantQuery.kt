@@ -9,5 +9,5 @@ data class ReadCelebrityVisitedRestaurantQuery(
     val celebrityId: Long,
     val page: Int = 0,
     val size: Int = DEFAULT_VISITED_RESTAURANTS_SIZE,
-    val sort: ReadCelebrityVisitedRestaurantSortCondition
+    val sort: ReadCelebrityVisitedRestaurantSortCondition,
 )

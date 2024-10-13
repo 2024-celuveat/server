@@ -16,18 +16,18 @@ data class Restaurant(
     var likeCount: Int = 0,
 ) {
     fun increaseReviewCount() {
-        reviewCount += 1;
+        reviewCount += 1
     }
 
     fun decreaseReviewCount() {
-        reviewCount -= 1;
+        reviewCount -= 1
     }
 
     fun increaseLikeCount() {
-        likeCount += 1;
+        likeCount += 1
     }
 
     fun decreaseLikeCount() {
-        likeCount -= 1;
+        likeCount -= 1
     }
 }

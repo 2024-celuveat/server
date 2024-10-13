@@ -5,7 +5,8 @@ import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 
-interface CelebrityRestaurantJpaRepository : JpaRepository<CelebrityRestaurantJpaEntity, Long>,
+interface CelebrityRestaurantJpaRepository :
+    JpaRepository<CelebrityRestaurantJpaEntity, Long>,
     CustomCelebrityRestaurantRepository {
     @Query(
         """

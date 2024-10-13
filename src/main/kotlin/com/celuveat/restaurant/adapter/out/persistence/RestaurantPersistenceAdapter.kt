@@ -36,7 +36,7 @@ class RestaurantPersistenceAdapter(
         val restaurantSlice = celebrityRestaurantJpaRepository.findRestaurantsByCelebrityId(
             celebrityId,
             pageRequest,
-            sort
+            sort,
         )
         val imagesByRestaurants = restaurantImageJpaRepository.findByRestaurantIn(restaurantSlice.content)
             .groupBy { it.restaurant.id }
@@ -129,8 +129,8 @@ class RestaurantPersistenceAdapter(
                 category = category,
                 region = region,
                 searchArea = searchArea,
-                celebrityId = celebrityId
-            )
+                celebrityId = celebrityId,
+            ),
         ).toInt()
     }
 

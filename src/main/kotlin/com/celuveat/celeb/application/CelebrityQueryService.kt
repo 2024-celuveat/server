@@ -41,7 +41,7 @@ class CelebrityQueryService(
                 celebrityId = it.id,
                 page = 0,
                 size = 3,
-                sort = LIKE,  // TODO 정렬 좋아요(인기)? or 최신 순??
+                sort = LIKE, // TODO 정렬 좋아요(인기)? or 최신 순??
             ).contents
         }
         val interestedRestaurants = readInterestedRestaurants(memberId, restaurantsByCelebrity)
