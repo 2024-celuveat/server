@@ -4,6 +4,7 @@ import com.celuveat.auth.adapter.`in`.rest.Auth
 import com.celuveat.auth.adapter.`in`.rest.AuthContext
 import com.celuveat.common.adapter.`in`.rest.response.SliceResponse
 import com.celuveat.common.utils.geometry.SquarePolygon
+import com.celuveat.restaurant.adapter.`in`.rest.request.ReadCelebrityVisitedRestaurantSortCondition
 import com.celuveat.restaurant.adapter.`in`.rest.request.ReadRestaurantsRequest
 import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantDetailResponse
 import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantPreviewResponse
@@ -39,6 +40,7 @@ import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RequestMapping("/restaurants")
@@ -115,14 +117,17 @@ class RestaurantController(
     override fun readCelebrityVisitedRestaurant(
         @Auth auth: AuthContext,
         @PathVariable celebrityId: Long,
+        @RequestParam("sort", required = false, defaultValue = "like") sortCondition: String,
         @PageableDefault(size = 10, page = 0) pageable: Pageable,
     ): SliceResponse<RestaurantPreviewResponse> {
+        val sort = ReadCelebrityVisitedRestaurantSortCondition.valueOf(sortCondition)
         val optionalMemberId = auth.optionalMemberId()
         val query = ReadCelebrityVisitedRestaurantQuery(
             memberId = optionalMemberId,
             celebrityId = celebrityId,
             page = pageable.pageNumber,
             size = pageable.pageSize,
+            sort = sort,
         )
         val visitedRestaurant = readCelebrityVisitedRestaurantUseCase.readCelebrityVisitedRestaurant(query)
         return SliceResponse.from(

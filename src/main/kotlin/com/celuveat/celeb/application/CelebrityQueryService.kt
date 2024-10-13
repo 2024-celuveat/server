@@ -12,6 +12,7 @@ import com.celuveat.celeb.application.port.`in`.result.CelebrityWithInterestedRe
 import com.celuveat.celeb.application.port.`in`.result.SimpleCelebrityResult
 import com.celuveat.celeb.application.port.out.ReadCelebritiesPort
 import com.celuveat.celeb.application.port.out.ReadInterestedCelebritiesPort
+import com.celuveat.restaurant.adapter.`in`.rest.request.ReadCelebrityVisitedRestaurantSortCondition.LIKE
 import com.celuveat.restaurant.application.port.`in`.result.RestaurantPreviewResult
 import com.celuveat.restaurant.application.port.out.ReadInterestedRestaurantPort
 import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
@@ -40,6 +41,7 @@ class CelebrityQueryService(
                 celebrityId = it.id,
                 page = 0,
                 size = 3,
+                sort = LIKE,  // TODO 정렬 좋아요(인기)? or 최신 순??
             ).contents
         }
         val interestedRestaurants = readInterestedRestaurants(memberId, restaurantsByCelebrity)

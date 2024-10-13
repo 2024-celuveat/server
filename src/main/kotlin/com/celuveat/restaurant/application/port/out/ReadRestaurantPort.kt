@@ -2,6 +2,7 @@ package com.celuveat.restaurant.application.port.out
 
 import com.celuveat.common.application.port.`in`.result.SliceResult
 import com.celuveat.common.utils.geometry.SquarePolygon
+import com.celuveat.restaurant.adapter.`in`.rest.request.ReadCelebrityVisitedRestaurantSortCondition
 import com.celuveat.restaurant.domain.Restaurant
 import java.time.LocalDate
 
@@ -10,6 +11,7 @@ interface ReadRestaurantPort {
         celebrityId: Long,
         page: Int,
         size: Int,
+        sort: ReadCelebrityVisitedRestaurantSortCondition,
     ): SliceResult<Restaurant>
 
     fun readById(id: Long): Restaurant

@@ -76,6 +76,7 @@ class RestaurantQueryService(
             query.celebrityId,
             query.page,
             query.size,
+            query.sort,
         )
         val visitedRestaurantIds = visitedRestaurants.contents.map { it.id }
         val interestedRestaurants = readInterestedRestaurants(query.memberId, visitedRestaurantIds)
