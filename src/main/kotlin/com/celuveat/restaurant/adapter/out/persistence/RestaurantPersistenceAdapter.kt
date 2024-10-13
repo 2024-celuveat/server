@@ -23,7 +23,7 @@ class RestaurantPersistenceAdapter(
     private val interestedRestaurantJpaRepository: InterestedRestaurantJpaRepository,
     private val celebrityRestaurantJpaRepository: CelebrityRestaurantJpaRepository,
     private val restaurantJpaRepository: RestaurantJpaRepository,
-) : ReadRestaurantPort {
+) : ReadRestaurantPort, SaveRestaurantPort {
     override fun readVisitedRestaurantByCelebrity(
         celebrityId: Long,
         page: Int,
@@ -204,5 +204,10 @@ class RestaurantPersistenceAdapter(
 
     companion object {
         val LATEST_SORTER = Sort.by("createdAt").descending()
+    }
+
+    override fun save(restaurant: Restaurant) {
+        val entity = restaurantPersistenceMapper.toEntity(restaurant)
+        restaurantJpaRepository.save(entity)
     }
 }

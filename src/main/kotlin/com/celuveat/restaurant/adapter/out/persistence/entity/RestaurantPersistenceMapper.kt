@@ -30,6 +30,8 @@ class RestaurantPersistenceMapper {
                     isThumbnail = imageJpaEntity.isThumbnail,
                 )
             },
+            reviewCount = restaurant.reviewCount,
+            likeCount = restaurant.likeCount,
         )
     }
 
@@ -46,6 +48,8 @@ class RestaurantPersistenceMapper {
             latitude = restaurant.latitude,
             longitude = restaurant.longitude,
             images = emptyList(),
+            reviewCount = restaurant.reviewCount,
+            likeCount = restaurant.likeCount,
         )
     }
 
@@ -61,6 +65,8 @@ class RestaurantPersistenceMapper {
             naverMapUrl = restaurant.naverMapUrl,
             latitude = restaurant.latitude,
             longitude = restaurant.longitude,
+            reviewCount = restaurant.reviewCount,
+            likeCount = restaurant.likeCount,
         )
     }
 }

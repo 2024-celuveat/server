@@ -3,6 +3,7 @@ package com.celuveat.review.application
 import com.celuveat.common.utils.throwWhen
 import com.celuveat.member.application.port.out.ReadMemberPort
 import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
+import com.celuveat.restaurant.application.port.out.SaveRestaurantPort
 import com.celuveat.review.application.port.`in`.ClickHelpfulReviewUseCase
 import com.celuveat.review.application.port.`in`.DeleteHelpfulReviewUseCase
 import com.celuveat.review.application.port.`in`.DeleteReviewUseCase
@@ -30,6 +31,7 @@ class ReviewService(
     private val saveReviewPort: SaveReviewPort,
     private val deleteReviewPort: DeleteReviewPort,
     private val deleteHelpfulReviewPort: DeleteHelpfulReviewPort,
+    private val saveRestaurantPort: SaveRestaurantPort,
 ) : WriteReviewUseCase,
     UpdateReviewUseCase,
     DeleteReviewUseCase,
@@ -39,6 +41,8 @@ class ReviewService(
         val member = readMemberPort.readById(command.memberId)
         val restaurant = readRestaurantPort.readById(command.restaurantId)
         val review = command.toReview(member, restaurant)
+        restaurant.increaseReviewCount()
+        saveRestaurantPort.save(restaurant)
         return saveReviewPort.save(review).id
     }
 
@@ -57,6 +61,8 @@ class ReviewService(
         val member = readMemberPort.readById(memberId)
         val review = readReviewPort.readById(reviewId)
         review.validateWriter(member)
+        review.restaurant.decreaseReviewCount()
+        saveRestaurantPort.save(review.restaurant)
         deleteReviewPort.delete(review)
     }
 
