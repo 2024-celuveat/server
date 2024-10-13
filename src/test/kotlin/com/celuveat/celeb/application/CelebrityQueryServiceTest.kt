@@ -77,7 +77,7 @@ class CelebrityQueryServiceTest : BehaviorSpec({
 
         When("회원이 조회하면") {
             every { readCelebritiesPort.readBestCelebrities() } returns celebrityResult
-            every { readRestaurantPort.readVisitedRestaurantByCelebrity(any(), any(), any()) } returns
+            every { readRestaurantPort.readVisitedRestaurantByCelebrity(any(), any(), any(), any()) } returns
                     SliceResult.of(restaurantsA, 0, false) andThen
                     SliceResult.of(restaurantsB, 0, false)
             every { readInterestedRestaurantPort.readInterestedRestaurantsByIds(memberId, any()) } returns
@@ -94,7 +94,7 @@ class CelebrityQueryServiceTest : BehaviorSpec({
 
         When("비회원이 조회하면") {
             every { readCelebritiesPort.readBestCelebrities() } returns celebrityResult
-            every { readRestaurantPort.readVisitedRestaurantByCelebrity(any(), any(), any()) } returns
+            every { readRestaurantPort.readVisitedRestaurantByCelebrity(any(), any(), any(), any()) } returns
                     SliceResult.of(restaurantsA, 0, false) andThen
                     SliceResult.of(restaurantsB, 0, false)
 

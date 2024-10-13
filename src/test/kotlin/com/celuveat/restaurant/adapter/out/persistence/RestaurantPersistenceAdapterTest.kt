@@ -6,6 +6,7 @@ import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityRestaurantJpaE
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityRestaurantJpaRepository
 import com.celuveat.member.adapter.out.persistence.entity.MemberJpaEntity
 import com.celuveat.member.adapter.out.persistence.entity.MemberJpaRepository
+import com.celuveat.restaurant.adapter.`in`.rest.request.ReadCelebrityVisitedRestaurantSortCondition.CREATED_AT
 import com.celuveat.restaurant.adapter.out.persistence.entity.InterestedRestaurantJpaEntity
 import com.celuveat.restaurant.adapter.out.persistence.entity.InterestedRestaurantJpaRepository
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantImageJpaEntity
@@ -66,6 +67,7 @@ class RestaurantPersistenceAdapterTest(
             celebrityId = savedCelebrity.id,
             page = 0,
             size = 2,
+            sort = CREATED_AT,
         )
 
         // then

@@ -60,7 +60,7 @@ class SocialLoginServiceTest : BehaviorSpec({
 
             every { fetchSocialMemberPort.fetchMember(serverType, authCode, redirectUrl) } returns member
             every { readMemberPort.findBySocialIdentifier(socialIdentifier) } returns null
-            every { saveMemberPort.save(member) } returns savedMember
+            every { saveMemberPort.save(any()) } returns savedMember
             val command = SocialLoginCommand(serverType, authCode, redirectUrl)
 
             val result = socialLoginService.login(command)
@@ -69,7 +69,7 @@ class SocialLoginServiceTest : BehaviorSpec({
 
                 verify { fetchSocialMemberPort.fetchMember(serverType, authCode, redirectUrl) }
                 verify { readMemberPort.findBySocialIdentifier(socialIdentifier) }
-                verify(exactly = 2) { saveMemberPort.save(member) }
+                verify(exactly = 2) { saveMemberPort.save(any()) }
             }
         }
 
@@ -84,7 +84,7 @@ class SocialLoginServiceTest : BehaviorSpec({
 
             every { fetchSocialMemberPort.fetchMember(serverType, authCode, redirectUrl) } returns member
             every { readMemberPort.findBySocialIdentifier(socialIdentifier) } returns savedMember
-            every { saveMemberPort.save(member) } returns member
+            every { saveMemberPort.save(any()) } returns savedMember
             val command = SocialLoginCommand(serverType, authCode, redirectUrl)
 
             val result = socialLoginService.login(command)
@@ -93,7 +93,7 @@ class SocialLoginServiceTest : BehaviorSpec({
 
                 verify { fetchSocialMemberPort.fetchMember(serverType, authCode, redirectUrl) }
                 verify { readMemberPort.findBySocialIdentifier(socialIdentifier) }
-                verify(exactly = 1) { saveMemberPort.save(member) }
+                verify(exactly = 1) { saveMemberPort.save(any()) }
             }
         }
     }

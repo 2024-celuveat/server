@@ -4,6 +4,7 @@ import com.celuveat.auth.application.port.`in`.ExtractMemberIdUseCase
 import com.celuveat.common.adapter.`in`.rest.response.SliceResponse
 import com.celuveat.common.application.port.`in`.result.SliceResult
 import com.celuveat.common.utils.geometry.SquarePolygon
+import com.celuveat.restaurant.adapter.`in`.rest.request.ReadCelebrityVisitedRestaurantSortCondition.LIKE
 import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantDetailResponse
 import com.celuveat.restaurant.adapter.`in`.rest.response.RestaurantPreviewResponse
 import com.celuveat.restaurant.application.port.`in`.AddInterestedRestaurantsUseCase
@@ -157,7 +158,7 @@ class RestaurantControllerTest(
                 hasNext = false,
             )
             val response = SliceResponse.from(results, RestaurantPreviewResponse::from)
-            val query = ReadCelebrityVisitedRestaurantQuery(memberId, celebrityId, page, size = 3)
+            val query = ReadCelebrityVisitedRestaurantQuery(memberId, celebrityId, page, size = 3, sort = LIKE)
 
             every { extractMemberIdUseCase.extract(accessToken) } returns memberId
             every { readCelebrityVisitedRestaurantUseCase.readCelebrityVisitedRestaurant(query) } returns results
@@ -183,7 +184,7 @@ class RestaurantControllerTest(
                 hasNext = false,
             )
             val response = SliceResponse.from(results, RestaurantPreviewResponse::from)
-            val query = ReadCelebrityVisitedRestaurantQuery(null, celebrityId, page, size = 3)
+            val query = ReadCelebrityVisitedRestaurantQuery(null, celebrityId, page, size = 3, sort = LIKE)
 
             every { readCelebrityVisitedRestaurantUseCase.readCelebrityVisitedRestaurant(query) } returns results
 
