@@ -120,7 +120,7 @@ class RestaurantController(
         @RequestParam("sort", required = false, defaultValue = "like") sortCondition: String,
         @PageableDefault(size = 10, page = 0) pageable: Pageable,
     ): SliceResponse<RestaurantPreviewResponse> {
-        val sort = ReadCelebrityVisitedRestaurantSortCondition.valueOf(sortCondition)
+        val sort = ReadCelebrityVisitedRestaurantSortCondition.from(sortCondition)
         val optionalMemberId = auth.optionalMemberId()
         val query = ReadCelebrityVisitedRestaurantQuery(
             memberId = optionalMemberId,

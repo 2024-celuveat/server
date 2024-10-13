@@ -17,6 +17,8 @@ data class RestaurantPreviewResult(
     val liked: Boolean,
     val visitedCelebrities: List<SimpleCelebrityResult>,
     val images: List<RestaurantImageResult>,
+    val reviewCount: Int,
+    val likeCount: Int,
 ) {
     companion object {
         fun of(
@@ -36,6 +38,8 @@ data class RestaurantPreviewResult(
                 liked = liked,
                 visitedCelebrities = visitedCelebrities.map { SimpleCelebrityResult.from(it) },
                 images = restaurant.images.map { RestaurantImageResult.from(it) },
+                reviewCount = restaurant.reviewCount,
+                likeCount = restaurant.likeCount,
             )
         }
     }
