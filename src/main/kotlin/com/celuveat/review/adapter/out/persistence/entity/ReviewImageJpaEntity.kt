@@ -22,7 +22,7 @@ class ReviewImageJpaEntity(
     val review: ReviewJpaEntity,
     val imageUrl: String,
 ) : RootEntity<Long>() {
-    override fun id(): Long {
+    override fun readId(): Long {
         return this.id
     }
 }

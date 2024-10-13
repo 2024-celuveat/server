@@ -5,6 +5,8 @@ import com.celuveat.celeb.domain.Celebrity
 interface ReadCelebritiesPort {
     fun readVisitedCelebritiesByRestaurants(restaurantIds: List<Long>): Map<Long, List<Celebrity>>
 
+    fun readByRestaurants(restaurantIds: List<Long>): List<Celebrity>
+
     fun readVisitedCelebritiesByRestaurant(restaurantId: Long): List<Celebrity>
 
     fun readBestCelebrities(): List<Celebrity>

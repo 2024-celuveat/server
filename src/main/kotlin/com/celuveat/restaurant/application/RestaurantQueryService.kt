@@ -27,10 +27,10 @@ import com.celuveat.restaurant.application.port.`in`.result.RestaurantDetailResu
 import com.celuveat.restaurant.application.port.`in`.result.RestaurantPreviewResult
 import com.celuveat.restaurant.application.port.out.ReadInterestedRestaurantPort
 import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
-import org.springframework.stereotype.Service
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.temporal.TemporalAdjusters
+import org.springframework.stereotype.Service
 
 @Service
 class RestaurantQueryService(
@@ -110,6 +110,7 @@ class RestaurantQueryService(
             category = query.category,
             region = query.region,
             searchArea = query.searchArea,
+            celebrityId = query.celebrityId,
             page = query.page,
             size = query.size,
         )
@@ -130,6 +131,7 @@ class RestaurantQueryService(
             category = query.category,
             region = query.region,
             searchArea = query.searchArea,
+            celebrityId = query.celebrityId,
         )
     }
 

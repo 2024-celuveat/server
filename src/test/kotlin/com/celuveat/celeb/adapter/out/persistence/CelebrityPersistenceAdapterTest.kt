@@ -2,6 +2,8 @@ package com.celuveat.celeb.adapter.out.persistence
 
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityJpaEntity
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityJpaRepository
+import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityRestaurantJpaEntity
+import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityRestaurantJpaRepository
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityYoutubeContentJpaEntity
 import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityYoutubeContentJpaRepository
 import com.celuveat.celeb.adapter.out.persistence.entity.RestaurantInVideoJpaEntity
@@ -32,6 +34,7 @@ class CelebrityPersistenceAdapterTest(
     private val videoJpaRepository: VideoJpaRepository,
     private val restaurantJpaRepository: RestaurantJpaRepository,
     private val restaurantInVideoJpaRepository: RestaurantInVideoJpaRepository,
+    private val celebrityRestaurantJpaRepository: CelebrityRestaurantJpaRepository,
 ) : FunSpec({
     test("식당을 방문한 셀럽을 조회 한다.") {
         // given
@@ -143,6 +146,37 @@ class CelebrityPersistenceAdapterTest(
             celebrities.size shouldBe 2
             celebrities.map { it.id } shouldContainExactly listOf(celebrityA.id, celebrityB.id)
         }
+    }
+
+    test("식당으로 셀럽을 조회 한다") {
+        // given
+        val savedCelebrities = celebrityJpaRepository.saveAll(sut.giveMeBuilder<CelebrityJpaEntity>().sampleList(3))
+        val celebrityA = savedCelebrities[0]
+        val celebrityB = savedCelebrities[1]
+
+        val restaurants = restaurantJpaRepository.saveAll(sut.giveMeBuilder<RestaurantJpaEntity>().sampleList(2))
+        celebrityRestaurantJpaRepository.saveAll(
+            listOf(
+                sut.giveMeBuilder<CelebrityRestaurantJpaEntity>()
+                    .set(CelebrityRestaurantJpaEntity::celebrity, celebrityA)
+                    .set(CelebrityRestaurantJpaEntity::restaurant, restaurants[0])
+                    .sample(),
+                sut.giveMeBuilder<CelebrityRestaurantJpaEntity>()
+                    .set(CelebrityRestaurantJpaEntity::celebrity, celebrityA)
+                    .set(CelebrityRestaurantJpaEntity::restaurant, restaurants[0])
+                    .sample(),
+                sut.giveMeBuilder<CelebrityRestaurantJpaEntity>()
+                    .set(CelebrityRestaurantJpaEntity::celebrity, celebrityB)
+                    .set(CelebrityRestaurantJpaEntity::restaurant, restaurants[1])
+                    .sample(),
+            ),
+        )
+
+        // when
+        val celebrities = celebrityPersistenceAdapter.readByRestaurants(restaurants.map { it.id })
+
+        // then
+        celebrities.size shouldBe 2
     }
 
     test("구독자가 많은 컨텐츠의 셀럽순으로 조회 한다.") {

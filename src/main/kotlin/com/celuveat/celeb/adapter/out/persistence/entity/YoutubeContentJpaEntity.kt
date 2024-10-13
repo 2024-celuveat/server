@@ -20,7 +20,7 @@ class YoutubeContentJpaEntity(
     val restaurantCount: Int,
     val subscriberCount: Long,
 ) : RootEntity<Long>() {
-    override fun id(): Long {
+    override fun readId(): Long {
         return this.id
     }
 }

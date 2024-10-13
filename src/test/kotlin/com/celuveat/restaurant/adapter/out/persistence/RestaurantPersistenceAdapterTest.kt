@@ -129,7 +129,7 @@ class RestaurantPersistenceAdapterTest(
         )
     }
 
-    test("조건에 따라 음식점을 검색한다.") {
+    test("조건에 따라 음식점을 페이징 검색한다.") {
         // given
         restaurantJpaRepository.saveAll(
             sut.giveMeBuilder<RestaurantJpaEntity>()
@@ -143,6 +143,7 @@ class RestaurantPersistenceAdapterTest(
             category = "한식",
             region = "서울",
             searchArea = null,
+            celebrityId = null,
             page = 0,
             size = 2,
         )
@@ -150,6 +151,27 @@ class RestaurantPersistenceAdapterTest(
         // then
         restaurants.size shouldBe 1
         restaurants.hasNext shouldBe false
+    }
+
+    test("조건에 따른 음식점을 전체 검색한다.") {
+        // given
+        restaurantJpaRepository.saveAll(
+            sut.giveMeBuilder<RestaurantJpaEntity>()
+                .setExp(RestaurantJpaEntity::category, "한식", 2)
+                .setExp(RestaurantJpaEntity::roadAddress, "서울", 1)
+                .sampleList(5),
+        )
+
+        // when
+        val restaurants = restaurantPersistenceAdapter.readRestaurantsByCondition(
+            category = "한식",
+            region = "서울",
+            searchArea = null,
+            celebrityId = null,
+        )
+
+        // then
+        restaurants.size shouldBe 1
     }
 
     test("존재하지 않는 조건은 생략하고 검색한다.") {
@@ -166,6 +188,7 @@ class RestaurantPersistenceAdapterTest(
             category = null,
             region = "서울",
             searchArea = null,
+            celebrityId = null,
             page = 0,
             size = 3,
         )
@@ -190,6 +213,7 @@ class RestaurantPersistenceAdapterTest(
             category = "한식",
             region = "서울",
             searchArea = null,
+            celebrityId = null,
         )
 
         // then
