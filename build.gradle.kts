@@ -89,12 +89,19 @@ tasks.named<JavaCompile>("compileJava") {
 
 tasks.named<Copy>("processResources") {
     dependsOn("copySecret")
+    dependsOn("copyFlyway")
 }
 
 tasks.register("copySecret", Copy::class) {
     from("./server-profile-submodule")
     include("application*.yml")
     into("./src/main/resources/")
+}
+
+tasks.register("copyFlyway", Copy::class) {
+    from("./server-profile-submodule/flyway")
+    include("V*.sql")
+    into("./src/main/resources/flyway")
 }
 
 // Disable jar task

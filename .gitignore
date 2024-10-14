@@ -41,6 +41,8 @@ out/
 .kotlin
 
 src/main/resources/application*
+src/main/resources/flyway/
+
 
 ### Fixture Monkey ###
 .jqwik-database
