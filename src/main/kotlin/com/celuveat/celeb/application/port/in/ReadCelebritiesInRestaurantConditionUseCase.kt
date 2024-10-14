@@ -4,6 +4,5 @@ import com.celuveat.celeb.application.port.`in`.query.ReadCelebritiesInRestauran
 import com.celuveat.celeb.application.port.`in`.result.SimpleCelebrityResult
 
 interface ReadCelebritiesInRestaurantConditionUseCase {
-
     fun readCelebritiesInRestaurantCondition(query: ReadCelebritiesInRestaurantConditionQuery): List<SimpleCelebrityResult>
 }

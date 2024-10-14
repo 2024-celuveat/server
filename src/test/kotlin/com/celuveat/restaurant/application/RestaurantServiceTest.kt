@@ -4,8 +4,12 @@ import com.celuveat.restaurant.application.port.`in`.command.AddInterestedRestau
 import com.celuveat.restaurant.application.port.`in`.command.DeleteInterestedRestaurantCommand
 import com.celuveat.restaurant.application.port.out.DeleteInterestedRestaurantPort
 import com.celuveat.restaurant.application.port.out.ReadInterestedRestaurantPort
+import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
 import com.celuveat.restaurant.application.port.out.SaveInterestedRestaurantPort
+import com.celuveat.restaurant.application.port.out.SaveRestaurantPort
+import com.celuveat.restaurant.domain.Restaurant
 import com.celuveat.restaurant.exception.AlreadyInterestedRestaurantException
+import com.celuveat.support.sut
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.core.test.TestCase
@@ -20,20 +24,27 @@ class RestaurantServiceTest : BehaviorSpec({
     val saveInterestedRestaurantPort: SaveInterestedRestaurantPort = mockk()
     val deleteInterestedRestaurantPort: DeleteInterestedRestaurantPort = mockk()
     val readInterestedRestaurantPort: ReadInterestedRestaurantPort = mockk()
+    val readRestaurantPort: ReadRestaurantPort = mockk()
+    val saveRestaurantPort: SaveRestaurantPort = mockk()
 
     val restaurantService = RestaurantService(
         saveInterestedRestaurantPort,
         deleteInterestedRestaurantPort,
         readInterestedRestaurantPort,
+        readRestaurantPort,
+        saveRestaurantPort,
     )
 
     Given("회원이 관심 음식점 추가 시") {
         val memberId = 1L
         val restaurantId = 1L
+        val restaurant = sut.giveMeOne(Restaurant::class.java)
 
         When("해당 음식점이") {
             every { saveInterestedRestaurantPort.saveInterestedRestaurant(memberId, restaurantId) } returns Unit
             every { readInterestedRestaurantPort.existsInterestedRestaurant(memberId, restaurantId) } returns false
+            every { readRestaurantPort.readById(restaurantId) } returns restaurant
+            every { saveRestaurantPort.save(any()) } returns Unit
 
             val command = AddInterestedRestaurantCommand(memberId, restaurantId)
             restaurantService.addInterestedRestaurant(command)
@@ -57,9 +68,12 @@ class RestaurantServiceTest : BehaviorSpec({
     Given("회원이 관심 음식점 삭제 시") {
         val memberId = 1L
         val restaurantId = 1L
+        val restaurant = sut.giveMeOne(Restaurant::class.java)
 
         When("해당 음식점이") {
             every { deleteInterestedRestaurantPort.deleteInterestedRestaurant(memberId, restaurantId) } returns Unit
+            every { readRestaurantPort.readById(restaurantId) } returns restaurant
+            every { saveRestaurantPort.save(any()) } returns Unit
 
             val command = DeleteInterestedRestaurantCommand(memberId, restaurantId)
             restaurantService.deleteInterestedRestaurant(command)

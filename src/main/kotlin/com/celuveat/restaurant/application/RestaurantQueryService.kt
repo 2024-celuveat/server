@@ -27,10 +27,10 @@ import com.celuveat.restaurant.application.port.`in`.result.RestaurantDetailResu
 import com.celuveat.restaurant.application.port.`in`.result.RestaurantPreviewResult
 import com.celuveat.restaurant.application.port.out.ReadInterestedRestaurantPort
 import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
+import org.springframework.stereotype.Service
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.temporal.TemporalAdjusters
-import org.springframework.stereotype.Service
 
 @Service
 class RestaurantQueryService(
@@ -76,6 +76,7 @@ class RestaurantQueryService(
             query.celebrityId,
             query.page,
             query.size,
+            query.sort,
         )
         val visitedRestaurantIds = visitedRestaurants.contents.map { it.id }
         val interestedRestaurants = readInterestedRestaurants(query.memberId, visitedRestaurantIds)

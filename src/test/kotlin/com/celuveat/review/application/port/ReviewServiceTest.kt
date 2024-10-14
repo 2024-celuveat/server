@@ -3,6 +3,7 @@ package com.celuveat.review.application.port
 import com.celuveat.member.application.port.out.ReadMemberPort
 import com.celuveat.member.domain.Member
 import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
+import com.celuveat.restaurant.application.port.out.SaveRestaurantPort
 import com.celuveat.restaurant.domain.Restaurant
 import com.celuveat.review.application.ReviewService
 import com.celuveat.review.application.port.`in`.command.UpdateReviewCommand
@@ -44,6 +45,7 @@ class ReviewServiceTest : BehaviorSpec({
     val saveReviewPort: SaveReviewPort = mockk()
     val deleteReviewPort: DeleteReviewPort = mockk()
     val deleteHelpfulReviewPort: DeleteHelpfulReviewPort = mockk()
+    val saveRestaurantPort: SaveRestaurantPort = mockk()
 
     val reviewService = ReviewService(
         readMemberPort,
@@ -54,6 +56,7 @@ class ReviewServiceTest : BehaviorSpec({
         saveReviewPort,
         deleteReviewPort,
         deleteHelpfulReviewPort,
+        saveRestaurantPort,
     )
 
     Given("리뷰 작성 시") {
@@ -64,6 +67,7 @@ class ReviewServiceTest : BehaviorSpec({
         every { readMemberPort.readById(1L) } returns member
         every { readRestaurantPort.readById(1L) } returns restaurant
         every { saveReviewPort.save(any()) } returns review
+        every { saveRestaurantPort.save(any()) } returns Unit
 
         When("회원이 리뷰를 작성하면") {
 
@@ -126,6 +130,7 @@ class ReviewServiceTest : BehaviorSpec({
             every { deleteReviewPort.delete(any()) } just Runs
             every { readMemberPort.readById(1L) } returns member
             every { readReviewPort.readById(1L) } returns review
+            every { saveRestaurantPort.save(any()) } returns Unit
             reviewService.delete(1L, 1L)
 
             Then("리뷰가 삭제된다.") {

@@ -4,6 +4,7 @@ import com.celuveat.celeb.application.port.out.ReadCelebritiesPort
 import com.celuveat.celeb.domain.Celebrity
 import com.celuveat.celeb.domain.YoutubeContent
 import com.celuveat.common.application.port.`in`.result.SliceResult
+import com.celuveat.restaurant.adapter.`in`.rest.request.ReadCelebrityVisitedRestaurantSortCondition.CREATED_AT
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityRecommendRestaurantsQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadCelebrityVisitedRestaurantQuery
 import com.celuveat.restaurant.application.port.`in`.query.ReadInterestedRestaurantsQuery
@@ -92,6 +93,7 @@ class RestaurantQueryServiceTest : BehaviorSpec({
         val celebrityId = 1L
         val page = 0
         val size = 2
+        val sort = CREATED_AT
         val visitedRestaurantResult = SliceResult.of(
             contents = sut.giveMeBuilder<Restaurant>().sampleList(2),
             currentPage = 0,
@@ -104,6 +106,7 @@ class RestaurantQueryServiceTest : BehaviorSpec({
                     celebrityId,
                     page,
                     size,
+                    sort,
                 )
             } returns visitedRestaurantResult
             val memberId = 1L
@@ -123,6 +126,7 @@ class RestaurantQueryServiceTest : BehaviorSpec({
                 celebrityId = celebrityId,
                 page = page,
                 size = size,
+                sort = sort,
             )
             val visitedRestaurants =
                 restaurantQueryService.readCelebrityVisitedRestaurant(readCelebrityVisitedRestaurantQuery)
@@ -139,6 +143,7 @@ class RestaurantQueryServiceTest : BehaviorSpec({
                     celebrityId,
                     page,
                     size,
+                    sort,
                 )
             } returns visitedRestaurantResult
             val readCelebrityVisitedRestaurantQuery = ReadCelebrityVisitedRestaurantQuery(
@@ -146,6 +151,7 @@ class RestaurantQueryServiceTest : BehaviorSpec({
                 celebrityId = celebrityId,
                 page = page,
                 size = size,
+                sort = sort,
             )
             val visitedRestaurants =
                 restaurantQueryService.readCelebrityVisitedRestaurant(readCelebrityVisitedRestaurantQuery)

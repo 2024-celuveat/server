@@ -4,17 +4,19 @@ import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityRestaurantJpaR
 import com.celuveat.common.annotation.Adapter
 import com.celuveat.common.application.port.`in`.result.SliceResult
 import com.celuveat.common.utils.geometry.SquarePolygon
+import com.celuveat.restaurant.adapter.`in`.rest.request.ReadCelebrityVisitedRestaurantSortCondition
 import com.celuveat.restaurant.adapter.out.persistence.entity.InterestedRestaurantJpaRepository
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantFilter
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantImageJpaRepository
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantJpaRepository
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantPersistenceMapper
 import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
+import com.celuveat.restaurant.application.port.out.SaveRestaurantPort
 import com.celuveat.restaurant.domain.Restaurant
-import java.time.LocalDate
-import java.time.LocalTime
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
+import java.time.LocalDate
+import java.time.LocalTime
 
 @Adapter
 class RestaurantPersistenceAdapter(
@@ -23,14 +25,19 @@ class RestaurantPersistenceAdapter(
     private val interestedRestaurantJpaRepository: InterestedRestaurantJpaRepository,
     private val celebrityRestaurantJpaRepository: CelebrityRestaurantJpaRepository,
     private val restaurantJpaRepository: RestaurantJpaRepository,
-) : ReadRestaurantPort {
+) : ReadRestaurantPort, SaveRestaurantPort {
     override fun readVisitedRestaurantByCelebrity(
         celebrityId: Long,
         page: Int,
         size: Int,
+        sort: ReadCelebrityVisitedRestaurantSortCondition,
     ): SliceResult<Restaurant> {
         val pageRequest = PageRequest.of(page, size, LATEST_SORTER)
-        val restaurantSlice = celebrityRestaurantJpaRepository.findRestaurantsByCelebrityId(celebrityId, pageRequest)
+        val restaurantSlice = celebrityRestaurantJpaRepository.findRestaurantsByCelebrityId(
+            celebrityId,
+            pageRequest,
+            sort,
+        )
         val imagesByRestaurants = restaurantImageJpaRepository.findByRestaurantIn(restaurantSlice.content)
             .groupBy { it.restaurant.id }
         return SliceResult.of(
@@ -122,8 +129,8 @@ class RestaurantPersistenceAdapter(
                 category = category,
                 region = region,
                 searchArea = searchArea,
-                celebrityId = celebrityId
-            )
+                celebrityId = celebrityId,
+            ),
         ).toInt()
     }
 
@@ -204,5 +211,10 @@ class RestaurantPersistenceAdapter(
 
     companion object {
         val LATEST_SORTER = Sort.by("createdAt").descending()
+    }
+
+    override fun save(restaurant: Restaurant) {
+        val entity = restaurantPersistenceMapper.toEntity(restaurant)
+        restaurantJpaRepository.save(entity)
     }
 }

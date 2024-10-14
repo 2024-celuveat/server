@@ -61,6 +61,14 @@ data class RestaurantPreviewResponse(
         description = "이미지 목록",
     )
     val images: List<RestaurantImageResponse>,
+    @Schema(
+        description = "리뷰 수",
+    )
+    val reviewCount: Int,
+    @Schema(
+        description = "좋아요 수",
+    )
+    val likeCount: Int,
 ) {
     companion object {
         fun from(result: RestaurantPreviewResult): RestaurantPreviewResponse {
@@ -76,6 +84,8 @@ data class RestaurantPreviewResponse(
                 liked = result.liked,
                 visitedCelebrities = result.visitedCelebrities.map { SimpleCelebrityResponse.from(it) },
                 images = result.images.map { RestaurantImageResponse.from(it) },
+                reviewCount = result.reviewCount,
+                likeCount = result.likeCount,
             )
         }
     }

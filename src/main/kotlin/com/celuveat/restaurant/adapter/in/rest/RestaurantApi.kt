@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestParam
 
 @Tag(name = "음식점 API")
 interface RestaurantApi {
@@ -75,6 +76,13 @@ interface RestaurantApi {
             required = true,
         )
         @PathVariable celebrityId: Long,
+        @Parameter(
+            `in` = ParameterIn.QUERY,
+            description = "정렬 조건 (생략 가능), review, like, createdAt 중 하나. 기본값은 like",
+            example = "review",
+            required = false,
+        )
+        @RequestParam("sort", required = false, defaultValue = "like") sortCondition: String,
         @PageableDefault(size = 10, page = 0) pageable: Pageable,
     ): SliceResponse<RestaurantPreviewResponse>
 

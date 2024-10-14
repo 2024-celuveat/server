@@ -21,6 +21,8 @@ class RestaurantJpaEntity(
     val naverMapUrl: String,
     val latitude: Double,
     val longitude: Double,
+    val reviewCount: Int = 0,
+    val likeCount: Int = 0,
 ) : RootEntity<Long>() {
     override fun readId(): Long {
         return this.id
