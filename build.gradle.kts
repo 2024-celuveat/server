@@ -46,6 +46,9 @@ dependencies {
     implementation("com.linecorp.kotlin-jdsl:jpql-render:3.5.1")
     implementation("com.linecorp.kotlin-jdsl:spring-data-jpa-support:3.5.1")
 
+    // flyway
+    implementation("org.flywaydb:flyway-core")
+    implementation("org.flywaydb:flyway-mysql")
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
@@ -86,12 +89,19 @@ tasks.named<JavaCompile>("compileJava") {
 
 tasks.named<Copy>("processResources") {
     dependsOn("copySecret")
+    dependsOn("copyFlyway")
 }
 
 tasks.register("copySecret", Copy::class) {
     from("./server-profile-submodule")
     include("application*.yml")
     into("./src/main/resources/")
+}
+
+tasks.register("copyFlyway", Copy::class) {
+    from("./server-profile-submodule/flyway")
+    include("V*.sql")
+    into("./src/main/resources/flyway")
 }
 
 // Disable jar task
