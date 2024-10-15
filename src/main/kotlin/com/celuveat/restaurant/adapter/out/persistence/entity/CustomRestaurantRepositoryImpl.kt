@@ -27,10 +27,11 @@ class CustomRestaurantRepositoryImpl(
             select(
                 entity(RestaurantJpaEntity::class),
             ).from(
-                entity(RestaurantJpaEntity::class),
-                leftJoin(CelebrityRestaurantJpaEntity::class).on(
-                    path(CelebrityRestaurantJpaEntity::restaurant)(RestaurantJpaEntity::id)
-                        .eq(path(RestaurantJpaEntity::id)),
+                entity(CelebrityRestaurantJpaEntity::class),
+                fetchJoin(RestaurantJpaEntity::class).on(
+                    path(CelebrityRestaurantJpaEntity::restaurant)(RestaurantJpaEntity::id).eq(
+                        path(RestaurantJpaEntity::id)
+                    ),
                 ),
             ).whereAnd(
                 filter.category?.let { path(RestaurantJpaEntity::category).eq(it) },

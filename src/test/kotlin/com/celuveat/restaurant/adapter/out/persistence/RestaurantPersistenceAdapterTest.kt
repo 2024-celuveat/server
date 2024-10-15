@@ -79,6 +79,56 @@ class RestaurantPersistenceAdapterTest(
         visitedRestaurants.hasNext shouldBe true
     }
 
+    test("셀럽이 방문한 음식점 조회 시 페이지에 따른 중복 데이터가 존재하지 않는다.") {
+        // given
+        val savedRestaurants =
+            restaurantJpaRepository.saveAll(sut.giveMeBuilder<RestaurantJpaEntity>().sampleList(20))
+        val savedCelebrity = celebrityJpaRepository.save(sut.giveMeOne())
+        celebrityRestaurantJpaRepository.saveAll(
+            savedRestaurants.map {
+                CelebrityRestaurantJpaEntity(
+                    celebrity = savedCelebrity,
+                    restaurant = it,
+                )
+            },
+        )
+
+        restaurantImageJpaRepository.saveAll(
+            savedRestaurants.map {
+                sut.giveMeBuilder<RestaurantImageJpaEntity>()
+                    .set(RestaurantImageJpaEntity::id, 0)
+                    .set(RestaurantImageJpaEntity::restaurant, it)
+                    .set(RestaurantImageJpaEntity::isThumbnail, true, 1)
+                    .sampleList(3)
+            }.flatten(),
+        )
+
+        // when
+        listOf(
+            restaurantPersistenceAdapter.readVisitedRestaurantByCelebrity(
+                celebrityId = savedCelebrity.id,
+                page = 0,
+                size = 2,
+                sort = CREATED_AT,
+            ).contents + restaurantPersistenceAdapter.readVisitedRestaurantByCelebrity(
+                celebrityId = savedCelebrity.id,
+                page = 1,
+                size = 2,
+                sort = CREATED_AT,
+            ).contents + restaurantPersistenceAdapter.readVisitedRestaurantByCelebrity(
+                celebrityId = savedCelebrity.id,
+                page = 2,
+                size = 2,
+                sort = CREATED_AT,
+            ).contents + restaurantPersistenceAdapter.readVisitedRestaurantByCelebrity(
+                celebrityId = savedCelebrity.id,
+                page = 3,
+                size = 2,
+                sort = CREATED_AT,
+            ).contents
+        ).flatten().distinctBy { it.id }.size shouldBe 8
+    }
+
     test("셀럽이 많이 다녀간 순서로 음식점을 조회한다.") {
         // given
         val savedRestaurants = restaurantJpaRepository.saveAll(sut.giveMeBuilder<RestaurantJpaEntity>().sampleList(2))
@@ -133,12 +183,23 @@ class RestaurantPersistenceAdapterTest(
 
     test("조건에 따라 음식점을 페이징 검색한다.") {
         // given
-        restaurantJpaRepository.saveAll(
+        val savedRestaurants = restaurantJpaRepository.saveAll(
             sut.giveMeBuilder<RestaurantJpaEntity>()
                 .setExp(RestaurantJpaEntity::category, "한식", 2)
                 .setExp(RestaurantJpaEntity::roadAddress, "서울", 1)
                 .sampleList(5),
         )
+        savedRestaurants.map {
+            celebrityRestaurantJpaRepository.save(
+                sut.giveMeBuilder<CelebrityRestaurantJpaEntity>()
+                    .set(CelebrityRestaurantJpaEntity::restaurant, it)
+                    .set(
+                        CelebrityRestaurantJpaEntity::celebrity,
+                        celebrityJpaRepository.save(sut.giveMeOne<CelebrityJpaEntity>())
+                    )
+                    .sample()
+            )
+        }
 
         // when
         val restaurants = restaurantPersistenceAdapter.readRestaurantsByCondition(
@@ -178,12 +239,24 @@ class RestaurantPersistenceAdapterTest(
 
     test("존재하지 않는 조건은 생략하고 검색한다.") {
         // given
-        restaurantJpaRepository.saveAll(
+        val savedRestaurants = restaurantJpaRepository.saveAll(
             sut.giveMeBuilder<RestaurantJpaEntity>()
                 .setExp(RestaurantJpaEntity::category, "한식", 1)
                 .setExp(RestaurantJpaEntity::roadAddress, "서울", 2)
-                .sampleList(4),
+                .sampleList(5),
         )
+
+        savedRestaurants.map {
+            celebrityRestaurantJpaRepository.save(
+                sut.giveMeBuilder<CelebrityRestaurantJpaEntity>()
+                    .set(CelebrityRestaurantJpaEntity::restaurant, it)
+                    .set(
+                        CelebrityRestaurantJpaEntity::celebrity,
+                        celebrityJpaRepository.save(sut.giveMeOne<CelebrityJpaEntity>())
+                    )
+                    .sample()
+            )
+        }
 
         // when
         val restaurants = restaurantPersistenceAdapter.readRestaurantsByCondition(
