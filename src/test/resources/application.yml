@@ -10,6 +10,10 @@ spring:
         use_sql_comments: true
         highlight_sql: true
 
+    hibernate:
+      ddl-auto: create
+
+
 oauth:
   kakao:
     client_id:

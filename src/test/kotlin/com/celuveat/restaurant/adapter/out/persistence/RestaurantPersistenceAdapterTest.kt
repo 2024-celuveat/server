@@ -408,4 +408,30 @@ class RestaurantPersistenceAdapterTest(
         result2.size shouldBe 3
         result3.size shouldBe 2
     }
+
+    test("카테고리를 검색 한다.") {
+        // given
+        restaurantJpaRepository.saveAll(
+            listOf(
+                sut.giveMeBuilder<RestaurantJpaEntity>()
+                    .setExp(RestaurantJpaEntity::name, "말랑이의 감자탕")
+                    .setExp(RestaurantJpaEntity::category, "찌개, 국, 탕")
+                    .sample(),
+                sut.giveMeBuilder<RestaurantJpaEntity>()
+                    .setExp(RestaurantJpaEntity::name, "말랑이의국밥")
+                    .setExp(RestaurantJpaEntity::category, "국밥")
+                    .sample(),
+                sut.giveMeBuilder<RestaurantJpaEntity>()
+                    .setExp(RestaurantJpaEntity::name, "로이스의 닭한마리")
+                    .setExp(RestaurantJpaEntity::category, "국물요리")
+                    .sample(),
+            ),
+        )
+
+        // when
+        val categories = restaurantPersistenceAdapter.readCategoriesByKeyword("국")
+
+        // then
+        categories.size shouldBe 3
+    }
 })
