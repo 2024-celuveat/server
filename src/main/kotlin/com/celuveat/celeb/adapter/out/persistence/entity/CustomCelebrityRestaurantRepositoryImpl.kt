@@ -1,5 +1,9 @@
 package com.celuveat.celeb.adapter.out.persistence.entity
 
+import com.celuveat.restaurant.adapter.`in`.rest.request.ReadCelebrityVisitedRestaurantSortCondition
+import com.celuveat.restaurant.adapter.`in`.rest.request.ReadCelebrityVisitedRestaurantSortCondition.CREATED_AT
+import com.celuveat.restaurant.adapter.`in`.rest.request.ReadCelebrityVisitedRestaurantSortCondition.LIKE
+import com.celuveat.restaurant.adapter.`in`.rest.request.ReadCelebrityVisitedRestaurantSortCondition.REVIEW
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantJpaEntity
 import com.linecorp.kotlinjdsl.support.spring.data.jpa.repository.KotlinJdslJpqlExecutor
 import org.springframework.data.domain.Pageable
@@ -14,6 +18,7 @@ class CustomCelebrityRestaurantRepositoryImpl(
     override fun findRestaurantsByCelebrityId(
         celebrityId: Long,
         pageable: Pageable,
+        sortCondition: ReadCelebrityVisitedRestaurantSortCondition,
     ): Slice<RestaurantJpaEntity> {
         val findSlice = executor.findSlice(pageable) {
             select(
@@ -29,7 +34,22 @@ class CustomCelebrityRestaurantRepositoryImpl(
                 path(CelebrityRestaurantJpaEntity::celebrity)
                     .path(CelebrityJpaEntity::id)
                     .eq(celebrityId),
-            )
+            ).orderBy(
+                when (sortCondition) {
+                    CREATED_AT -> {
+                        path(CelebrityRestaurantJpaEntity::createdAt).desc()
+                    }
+
+                    REVIEW -> {
+                        path(RestaurantJpaEntity::reviewCount).desc()
+                    }
+
+                    LIKE -> {
+                        path(RestaurantJpaEntity::likeCount).desc()
+                    }
+                },
+
+                )
         }
         val restaurants = findSlice.content.filterNotNull()
         return SliceImpl(
