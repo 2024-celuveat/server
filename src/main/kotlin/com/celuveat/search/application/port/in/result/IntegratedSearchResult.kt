@@ -9,17 +9,20 @@ data class IntegratedSearchResult(
     val regionResults: List<RegionResult>,
     val restaurantResults: List<ResultWithId>,
     val celebrityResults: List<ResultWithId>,
+    val categories: List<String>,
 ) {
     companion object {
         fun of(
             regions: List<Region>,
             restaurants: List<Restaurant>,
             celebrities: List<Celebrity>,
+            categories: List<String>,
         ): IntegratedSearchResult {
             return IntegratedSearchResult(
                 regionResults = regions.map { RegionResult.from(it) },
                 restaurantResults = restaurants.map { ResultWithId(id = it.id, name = it.name) },
                 celebrityResults = celebrities.map { ResultWithId(id = it.id, name = it.name) },
+                categories = categories,
             )
         }
     }

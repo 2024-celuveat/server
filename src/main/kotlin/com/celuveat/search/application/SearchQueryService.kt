@@ -18,6 +18,12 @@ class SearchQueryService(
         val regions = readRegionPort.readByName(query.name)
         val restaurants = readRestaurantPort.readByName(query.name)
         val celebrities = readCelebritiesPort.readByName(query.name)
-        return IntegratedSearchResult.of(regions = regions, restaurants = restaurants, celebrities = celebrities)
+        val categories = readRestaurantPort.readCategoriesByKeyword(query.name)
+        return IntegratedSearchResult.of(
+            regions = regions,
+            restaurants = restaurants,
+            celebrities = celebrities,
+            categories = categories,
+        )
     }
 }
