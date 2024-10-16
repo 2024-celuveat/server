@@ -18,7 +18,7 @@ class CustomCelebrityRestaurantRepositoryImpl(
     override fun findRestaurantsByCelebrityId(
         celebrityId: Long,
         pageable: Pageable,
-        sortCondition: ReadCelebrityVisitedRestaurantSortCondition,
+        sort: ReadCelebrityVisitedRestaurantSortCondition,
     ): Slice<RestaurantJpaEntity> {
         val findSlice = executor.findSlice(pageable) {
             select(
@@ -35,7 +35,7 @@ class CustomCelebrityRestaurantRepositoryImpl(
                     .path(CelebrityJpaEntity::id)
                     .eq(celebrityId),
             ).orderBy(
-                when (sortCondition) {
+                when (sort) {
                     CREATED_AT -> {
                         path(CelebrityRestaurantJpaEntity::createdAt).desc()
                     }
@@ -48,8 +48,8 @@ class CustomCelebrityRestaurantRepositoryImpl(
                         path(RestaurantJpaEntity::likeCount).desc()
                     }
                 },
-
-                )
+                path(CelebrityRestaurantJpaEntity::id).desc()
+            )
         }
         val restaurants = findSlice.content.filterNotNull()
         return SliceImpl(
