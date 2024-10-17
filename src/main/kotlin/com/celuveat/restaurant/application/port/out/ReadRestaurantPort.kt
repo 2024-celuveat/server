@@ -63,4 +63,6 @@ interface ReadRestaurantPort {
     fun readByName(name: String): List<Restaurant>
 
     fun countRestaurantByCelebrity(celebrityId: Long): Int
+
+    fun readCategoriesByKeyword(keyword: String): List<String>
 }

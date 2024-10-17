@@ -56,6 +56,10 @@ class RestaurantPersistenceAdapter(
         return celebrityRestaurantJpaRepository.countRestaurantsByCelebrityId(celebrityId).toInt()
     }
 
+    override fun readCategoriesByKeyword(keyword: String): List<String> {
+        return restaurantJpaRepository.findCategoriesByName(keyword)
+    }
+
     override fun readById(id: Long): Restaurant {
         val restaurant = restaurantJpaRepository.getById(id)
         val images = restaurantImageJpaRepository.findByRestaurant(restaurant)

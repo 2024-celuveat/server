@@ -43,4 +43,7 @@ interface RestaurantJpaRepository : JpaRepository<RestaurantJpaEntity, Long>, Cu
 
     @Query(value = "SELECT r FROM RestaurantJpaEntity r WHERE r.name LIKE %:name%")
     fun readByNameContains(name: String): List<RestaurantJpaEntity>
+
+    @Query(value = "SELECT DISTINCT r.category FROM RestaurantJpaEntity r WHERE r.category LIKE %:name%")
+    fun findCategoriesByName(name: String): List<String>
 }
