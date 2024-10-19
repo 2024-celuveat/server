@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestParam
 
 @Tag(name = "리뷰 API")
 interface ReviewApi {
@@ -99,6 +100,13 @@ interface ReviewApi {
             required = true,
         )
         @PathVariable restaurantId: Long,
+        @Parameter(
+            `in` = ParameterIn.QUERY,
+            description = "포토리뷰만 모아보기 필터 (생략 시 모두보기)",
+            example = "true",
+            required = false,
+        )
+        @RequestParam(name = "onlyPhotoReview", required = false, defaultValue = "false") onlyPhotoReview: Boolean,
         @PageableDefault(size = 10, page = 0) pageable: Pageable,
     ): SliceResponse<ReviewPreviewResponse>
 

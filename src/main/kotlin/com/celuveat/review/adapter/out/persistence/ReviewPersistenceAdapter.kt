@@ -45,11 +45,12 @@ class ReviewPersistenceAdapter(
 
     override fun readAllByRestaurantId(
         restaurantsId: Long,
+        onlyPhotoReview: Boolean,
         page: Int,
         size: Int,
     ): SliceResult<Review> {
         val pageRequest = PageRequest.of(page, size, LATEST_SORTER)
-        val reviews = reviewJpaRepository.findAllByRestaurantId(restaurantsId, pageRequest)
+        val reviews = reviewJpaRepository.findAllByRestaurantId(restaurantsId, onlyPhotoReview, pageRequest)
         return SliceResult.of(
             contents = reviews.content.map {
                 reviewPersistenceMapper.toDomain(

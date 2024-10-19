@@ -8,6 +8,7 @@ interface ReadReviewPort {
 
     fun readAllByRestaurantId(
         restaurantsId: Long,
+        onlyPhotoReview: Boolean,
         page: Int,
         size: Int,
     ): SliceResult<Review>

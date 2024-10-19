@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 // TODO test
@@ -92,10 +93,12 @@ class ReviewController(
     override fun readAllRestaurantsReviews(
         @Auth auth: AuthContext,
         @PathVariable restaurantId: Long,
+        @RequestParam(name = "onlyPhotoReview", required = false, defaultValue = "false") onlyPhotoReview: Boolean,
         @PageableDefault(size = 10, page = 0) pageable: Pageable,
     ): SliceResponse<ReviewPreviewResponse> {
         val reviews = readRestaurantReviewsUseCase.readAll(
             restaurantId = restaurantId,
+            onlyPhotoReview = onlyPhotoReview,
             page = pageable.pageNumber,
             size = pageable.pageSize,
             memberId = auth.optionalMemberId(),

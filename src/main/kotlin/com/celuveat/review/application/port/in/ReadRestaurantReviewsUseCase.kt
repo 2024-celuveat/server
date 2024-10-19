@@ -6,6 +6,7 @@ import com.celuveat.review.application.port.`in`.result.ReviewPreviewResult
 interface ReadRestaurantReviewsUseCase {
     fun readAll(
         memberId: Long?,
+        onlyPhotoReview: Boolean,
         restaurantId: Long,
         page: Int,
         size: Int,

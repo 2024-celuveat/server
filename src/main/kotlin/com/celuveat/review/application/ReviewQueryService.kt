@@ -20,11 +20,12 @@ class ReviewQueryService(
 ) : ReadRestaurantReviewsUseCase, ReadSingleReviewUseCase, ReadAmountOfRestaurantReviewsUseCase, ReadMyReviewsUseCase {
     override fun readAll(
         memberId: Long?,
+        onlyPhotoReview: Boolean,
         restaurantId: Long,
         page: Int,
         size: Int,
     ): SliceResult<ReviewPreviewResult> {
-        val reviewResults = readReviewPort.readAllByRestaurantId(restaurantId, page, size)
+        val reviewResults = readReviewPort.readAllByRestaurantId(restaurantId, onlyPhotoReview, page, size)
         val reviewHelpfulReviewMapping = memberId?.let {
             readHelpfulReviewPort.readHelpfulReviewByMemberAndReviews(it, reviewResults.contents)
                 .map { helpful -> helpful.review }.toSet()
