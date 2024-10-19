@@ -1,6 +1,7 @@
 package com.celuveat.review.application
 
 import com.celuveat.common.application.port.`in`.result.SliceResult
+import com.celuveat.review.adapter.`in`.rest.request.ReadReviewSortCondition
 import com.celuveat.review.application.port.`in`.ReadAmountOfRestaurantReviewsUseCase
 import com.celuveat.review.application.port.`in`.ReadMyReviewsUseCase
 import com.celuveat.review.application.port.`in`.ReadRestaurantReviewsUseCase
@@ -22,10 +23,11 @@ class ReviewQueryService(
         memberId: Long?,
         onlyPhotoReview: Boolean,
         restaurantId: Long,
+        sort: ReadReviewSortCondition,
         page: Int,
         size: Int,
     ): SliceResult<ReviewPreviewResult> {
-        val reviewResults = readReviewPort.readAllByRestaurantId(restaurantId, onlyPhotoReview, page, size)
+        val reviewResults = readReviewPort.readAllByRestaurantId(restaurantId, onlyPhotoReview, sort, page, size)
         val reviewHelpfulReviewMapping = memberId?.let {
             readHelpfulReviewPort.readHelpfulReviewByMemberAndReviews(it, reviewResults.contents)
                 .map { helpful -> helpful.review }.toSet()

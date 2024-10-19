@@ -107,6 +107,17 @@ interface ReviewApi {
             required = false,
         )
         @RequestParam(name = "onlyPhotoReview", required = false, defaultValue = "false") onlyPhotoReview: Boolean,
+        @Parameter(
+            `in` = ParameterIn.QUERY,
+            description = """
+                정렬 조건 (생략 가능).
+                high_rating(별점 높은 순), low_rating(별점 낮은 순), helpful(도움돼요 순), createdAt(최신 순) 중 하나. 
+                기본값은 high_rating
+                """,
+            example = "review",
+            required = false,
+        )
+        @RequestParam("sort", required = false, defaultValue = "high_rating") sortCondition: String,
         @PageableDefault(size = 10, page = 0) pageable: Pageable,
     ): SliceResponse<ReviewPreviewResponse>
 

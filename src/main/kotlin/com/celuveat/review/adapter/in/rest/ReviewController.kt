@@ -3,6 +3,7 @@ package com.celuveat.review.adapter.`in`.rest
 import com.celuveat.auth.adapter.`in`.rest.Auth
 import com.celuveat.auth.adapter.`in`.rest.AuthContext
 import com.celuveat.common.adapter.`in`.rest.response.SliceResponse
+import com.celuveat.review.adapter.`in`.rest.request.ReadReviewSortCondition
 import com.celuveat.review.adapter.`in`.rest.request.UpdateReviewRequest
 import com.celuveat.review.adapter.`in`.rest.request.WriteReviewRequest
 import com.celuveat.review.adapter.`in`.rest.response.ReviewPreviewResponse
@@ -94,14 +95,17 @@ class ReviewController(
         @Auth auth: AuthContext,
         @PathVariable restaurantId: Long,
         @RequestParam(name = "onlyPhotoReview", required = false, defaultValue = "false") onlyPhotoReview: Boolean,
+        @RequestParam("sort", required = false, defaultValue = "high_rating") sortCondition: String,
         @PageableDefault(size = 10, page = 0) pageable: Pageable,
     ): SliceResponse<ReviewPreviewResponse> {
+        val sort = ReadReviewSortCondition.from(sortCondition)
         val reviews = readRestaurantReviewsUseCase.readAll(
             restaurantId = restaurantId,
             onlyPhotoReview = onlyPhotoReview,
             page = pageable.pageNumber,
             size = pageable.pageSize,
             memberId = auth.optionalMemberId(),
+            sort = sort,
         )
         return SliceResponse.from(
             sliceResult = reviews,

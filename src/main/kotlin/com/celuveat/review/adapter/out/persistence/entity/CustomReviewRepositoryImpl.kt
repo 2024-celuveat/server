@@ -1,7 +1,7 @@
 package com.celuveat.review.adapter.out.persistence.entity
 
-import com.celuveat.celeb.adapter.out.persistence.entity.CelebrityRestaurantJpaEntity
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantJpaEntity
+import com.celuveat.review.adapter.`in`.rest.request.ReadReviewSortCondition
 import com.linecorp.kotlinjdsl.support.spring.data.jpa.repository.KotlinJdslJpqlExecutor
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Slice
@@ -16,6 +16,7 @@ class CustomReviewRepositoryImpl(
     override fun findAllByRestaurantId(
         restaurantsId: Long,
         onlyPhotoReview: Boolean,
+        sort: ReadReviewSortCondition,
         page: Pageable
     ): Slice<ReviewJpaEntity> {
         val findSlice = executor.findSlice(page) {
@@ -33,7 +34,24 @@ class CustomReviewRepositoryImpl(
                     null
                 }
             ).orderBy(
-                path(CelebrityRestaurantJpaEntity::id).desc()
+                when (sort) {
+                    ReadReviewSortCondition.CREATED_AT -> {
+                        path(ReviewJpaEntity::createdAt).desc()
+                    }
+
+                    ReadReviewSortCondition.HIGH_RATING -> {
+                        path(ReviewJpaEntity::star).desc()
+                    }
+
+                    ReadReviewSortCondition.LOW_RATING -> {
+                        path(ReviewJpaEntity::star).asc()
+                    }
+
+                    ReadReviewSortCondition.HELPFUL -> {
+                        path(ReviewJpaEntity::helps).desc()
+                    }
+                },
+                path(ReviewJpaEntity::id).desc()
             )
         }
         val restaurants = findSlice.content.filterNotNull()

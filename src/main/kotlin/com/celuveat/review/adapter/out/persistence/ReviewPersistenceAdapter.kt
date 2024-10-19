@@ -2,6 +2,7 @@ package com.celuveat.review.adapter.out.persistence
 
 import com.celuveat.common.annotation.Adapter
 import com.celuveat.common.application.port.`in`.result.SliceResult
+import com.celuveat.review.adapter.`in`.rest.request.ReadReviewSortCondition
 import com.celuveat.review.adapter.out.persistence.entity.ReviewImageJpaRepository
 import com.celuveat.review.adapter.out.persistence.entity.ReviewImagePersistenceMapper
 import com.celuveat.review.adapter.out.persistence.entity.ReviewJpaRepository
@@ -46,11 +47,12 @@ class ReviewPersistenceAdapter(
     override fun readAllByRestaurantId(
         restaurantsId: Long,
         onlyPhotoReview: Boolean,
+        sort: ReadReviewSortCondition,
         page: Int,
         size: Int,
     ): SliceResult<Review> {
         val pageRequest = PageRequest.of(page, size, LATEST_SORTER)
-        val reviews = reviewJpaRepository.findAllByRestaurantId(restaurantsId, onlyPhotoReview, pageRequest)
+        val reviews = reviewJpaRepository.findAllByRestaurantId(restaurantsId, onlyPhotoReview, sort, pageRequest)
         return SliceResult.of(
             contents = reviews.content.map {
                 reviewPersistenceMapper.toDomain(
