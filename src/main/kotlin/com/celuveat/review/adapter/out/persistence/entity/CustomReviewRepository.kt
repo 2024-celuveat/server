@@ -5,7 +5,6 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Slice
 
 interface CustomReviewRepository {
-
     fun findAllByRestaurantId(
         restaurantsId: Long,
         onlyPhotoReview: Boolean,

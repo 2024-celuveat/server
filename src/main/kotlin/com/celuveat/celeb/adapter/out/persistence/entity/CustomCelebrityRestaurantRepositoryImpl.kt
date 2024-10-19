@@ -27,7 +27,7 @@ class CustomCelebrityRestaurantRepositoryImpl(
                 entity(CelebrityRestaurantJpaEntity::class),
                 fetchJoin(RestaurantJpaEntity::class).on(
                     path(CelebrityRestaurantJpaEntity::restaurant)(RestaurantJpaEntity::id).eq(
-                        path(RestaurantJpaEntity::id)
+                        path(RestaurantJpaEntity::id),
                     ),
                 ),
             ).whereAnd(
@@ -48,7 +48,7 @@ class CustomCelebrityRestaurantRepositoryImpl(
                         path(RestaurantJpaEntity::likeCount).desc()
                     }
                 },
-                path(CelebrityRestaurantJpaEntity::id).desc()
+                path(CelebrityRestaurantJpaEntity::id).desc(),
             )
         }
         val restaurants = findSlice.content.filterNotNull()

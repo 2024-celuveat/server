@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController
 class RegionController(
     private val readRepresentativeRegionsUseCase: ReadRepresentativeRegionsUseCase,
 ) : RegionApi {
-
     @GetMapping("/representative")
     override fun readRepresentativeRegions(): List<RepresentativeRegionResponse> {
         return readRepresentativeRegionsUseCase.readRepresentativeRegions()

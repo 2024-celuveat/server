@@ -12,12 +12,11 @@ import org.springframework.stereotype.Repository
 class CustomReviewRepositoryImpl(
     private val executor: KotlinJdslJpqlExecutor,
 ) : CustomReviewRepository {
-
     override fun findAllByRestaurantId(
         restaurantsId: Long,
         onlyPhotoReview: Boolean,
         sort: ReadReviewSortCondition,
-        page: Pageable
+        page: Pageable,
     ): Slice<ReviewJpaEntity> {
         val findSlice = executor.findSlice(page) {
             select(
@@ -32,7 +31,7 @@ class CustomReviewRepositoryImpl(
                     path(ReviewJpaEntity::hasPhoto).eq(true)
                 } else {
                     null
-                }
+                },
             ).orderBy(
                 when (sort) {
                     ReadReviewSortCondition.CREATED_AT -> {
@@ -51,7 +50,7 @@ class CustomReviewRepositoryImpl(
                         path(ReviewJpaEntity::helps).desc()
                     }
                 },
-                path(ReviewJpaEntity::id).desc()
+                path(ReviewJpaEntity::id).desc(),
             )
         }
         val restaurants = findSlice.content.filterNotNull()
@@ -60,6 +59,5 @@ class CustomReviewRepositoryImpl(
             findSlice.pageable,
             findSlice.hasNext(),
         )
-
     }
 }

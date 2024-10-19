@@ -125,7 +125,7 @@ class RestaurantPersistenceAdapterTest(
                 page = 3,
                 size = 2,
                 sort = CREATED_AT,
-            ).contents
+            ).contents,
         ).flatten().distinctBy { it.id }.size shouldBe 8
     }
 
@@ -195,9 +195,9 @@ class RestaurantPersistenceAdapterTest(
                     .set(CelebrityRestaurantJpaEntity::restaurant, it)
                     .set(
                         CelebrityRestaurantJpaEntity::celebrity,
-                        celebrityJpaRepository.save(sut.giveMeOne<CelebrityJpaEntity>())
+                        celebrityJpaRepository.save(sut.giveMeOne<CelebrityJpaEntity>()),
                     )
-                    .sample()
+                    .sample(),
             )
         }
 
@@ -252,9 +252,9 @@ class RestaurantPersistenceAdapterTest(
                     .set(CelebrityRestaurantJpaEntity::restaurant, it)
                     .set(
                         CelebrityRestaurantJpaEntity::celebrity,
-                        celebrityJpaRepository.save(sut.giveMeOne<CelebrityJpaEntity>())
+                        celebrityJpaRepository.save(sut.giveMeOne<CelebrityJpaEntity>()),
                     )
-                    .sample()
+                    .sample(),
             )
         }
 

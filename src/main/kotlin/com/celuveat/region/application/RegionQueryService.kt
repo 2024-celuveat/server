@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service
 class RegionQueryService(
     private val readRegionPort: ReadRegionPort,
 ) : ReadRepresentativeRegionsUseCase {
-
     override fun readRepresentativeRegions(): List<RepresentativeRegionResult> {
         return readRegionPort.readRepresentativeRegions()
     }

@@ -5,5 +5,6 @@ import com.celuveat.region.domain.Region
 
 interface ReadRegionPort {
     fun readByName(name: String): List<Region>
+
     fun readRepresentativeRegions(): List<RepresentativeRegionResult>
 }
