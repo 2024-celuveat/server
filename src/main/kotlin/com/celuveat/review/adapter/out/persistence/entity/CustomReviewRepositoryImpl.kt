@@ -27,11 +27,7 @@ class CustomReviewRepositoryImpl(
                 path(ReviewJpaEntity::restaurant)
                     .path(RestaurantJpaEntity::id)
                     .eq(restaurantsId),
-                if (onlyPhotoReview) {
-                    path(ReviewJpaEntity::hasPhoto).eq(true)
-                } else {
-                    null
-                },
+                takeIf { onlyPhotoReview }?.let { path(ReviewJpaEntity::hasPhoto).eq(true) },
             ).orderBy(
                 when (sort) {
                     ReadReviewSortCondition.CREATED_AT -> {
