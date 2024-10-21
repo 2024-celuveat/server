@@ -10,7 +10,7 @@ class Review(
     val restaurant: Restaurant,
     val writer: Member,
     var content: String,
-    // 조회수
+    // 별점
     var star: Star,
     // 조회수
     var views: Long = 0,
