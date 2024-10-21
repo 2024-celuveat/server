@@ -3,8 +3,8 @@ package com.celuveat.review.adapter.`in`.rest.request
 enum class ReadReviewSortCondition(
     private val value: String,
 ) {
-    HIGH_RATING("high_rating"), // 별점 높은 순
-    LOW_RATING("low_rating"), // 별점 낮은 순
+    HIGH_RATING("highRating"), // 별점 높은 순
+    LOW_RATING("lowRating"), // 별점 낮은 순
     HELPFUL("helpful"), // 도움돼요 순
     CREATED_AT("createdAt"), // 최신 순
     ;
