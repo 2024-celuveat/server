@@ -95,7 +95,7 @@ class ReviewController(
         @Auth auth: AuthContext,
         @PathVariable restaurantId: Long,
         @RequestParam(name = "onlyPhotoReview", required = false, defaultValue = "false") onlyPhotoReview: Boolean,
-        @RequestParam("sort", required = false, defaultValue = "high_rating") sortCondition: String,
+        @RequestParam("sort", required = false, defaultValue = "highRating") sortCondition: String,
         @PageableDefault(size = 10, page = 0) pageable: Pageable,
     ): SliceResponse<ReviewPreviewResponse> {
         val sort = ReadReviewSortCondition.from(sortCondition)

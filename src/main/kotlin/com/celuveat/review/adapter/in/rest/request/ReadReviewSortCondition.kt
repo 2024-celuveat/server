@@ -13,7 +13,7 @@ enum class ReadReviewSortCondition(
         fun from(sortCondition: String): ReadReviewSortCondition {
             return ReadReviewSortCondition.entries
                 .findLast { it.value.equals(sortCondition, ignoreCase = true) }
-                ?: throw IllegalArgumentException("정렬 조건은 high_rating, low_rating, review, createdAt 중 하나입니다. 현재 : $sortCondition")
+                ?: throw IllegalArgumentException("정렬 조건은 highRating, lowRating, review, createdAt 중 하나입니다. 현재 : $sortCondition")
         }
     }
 }
