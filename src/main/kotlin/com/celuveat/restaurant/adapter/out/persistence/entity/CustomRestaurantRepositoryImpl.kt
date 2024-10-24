@@ -83,7 +83,12 @@ class CustomRestaurantRepositoryImpl(
             select(
                 count(entity(RestaurantJpaEntity::class)),
             ).from(
-                entity(RestaurantJpaEntity::class),
+                entity(CelebrityRestaurantJpaEntity::class),
+                fetchJoin(RestaurantJpaEntity::class).on(
+                    path(CelebrityRestaurantJpaEntity::restaurant)(RestaurantJpaEntity::id).eq(
+                        path(RestaurantJpaEntity::id),
+                    ),
+                ),
             ).whereAnd(
                 filter.category?.let { path(RestaurantJpaEntity::category).eq(it) },
                 filter.region?.let { path(RestaurantJpaEntity::roadAddress).like("%$it%") },
@@ -94,6 +99,7 @@ class CustomRestaurantRepositoryImpl(
                     )
                 },
                 filter.searchArea?.let { path(RestaurantJpaEntity::latitude).between(it.lowLatitude, it.highLatitude) },
+                filter.celebrityId?.let { path(CelebrityRestaurantJpaEntity::celebrity)(CelebrityJpaEntity::id).eq(it) },
             )
         }
 

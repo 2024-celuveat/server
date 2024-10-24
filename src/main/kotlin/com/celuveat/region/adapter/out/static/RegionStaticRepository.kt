@@ -15,7 +15,7 @@ class RegionStaticRepository(
         RepresentativeRegionResult("을지로", "${property.domain}/regions/euljiro.webp"),
         RepresentativeRegionResult("압구정", "${property.domain}/regions/apgujeong.webp"),
         RepresentativeRegionResult("여의도", "${property.domain}/regions/yeouido.webp"),
-        RepresentativeRegionResult("이태원", "${property.domain}/regions/itaewon.webp"),
+        RepresentativeRegionResult("이태원", "${property.domain}/regions/leetaewon.webp"),
     )
 
     fun readRepresentativeRegions(): List<RepresentativeRegionResult> {
