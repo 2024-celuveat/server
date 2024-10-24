@@ -33,6 +33,7 @@ class ReviewJpaEntity(
     var views: Long = 0,
     // '도움돼요' 수.
     var helps: Long = 0,
+    var hasPhoto: Boolean,
     createdAt: LocalDateTime,
     updatedAt: LocalDateTime,
 ) : RootEntity<Long>() {

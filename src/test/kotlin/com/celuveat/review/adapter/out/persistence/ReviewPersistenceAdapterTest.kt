@@ -6,6 +6,7 @@ import com.celuveat.member.adapter.out.persistence.entity.MemberPersistenceMappe
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantJpaEntity
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantJpaRepository
 import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantPersistenceMapper
+import com.celuveat.review.adapter.`in`.rest.request.ReadReviewSortCondition
 import com.celuveat.review.adapter.out.persistence.entity.ReviewImageJpaEntity
 import com.celuveat.review.adapter.out.persistence.entity.ReviewImageJpaRepository
 import com.celuveat.review.adapter.out.persistence.entity.ReviewJpaEntity
@@ -131,7 +132,13 @@ class ReviewPersistenceAdapterTest(
         reviewImageJpaRepository.saveAll(reviewAImages + reviewBImages)
 
         When("음식점에 달린 리뷰를 조회한 경우") {
-            val sliceResult = reviewPersistenceAdapter.readAllByRestaurantId(restaurant.id, 0, 1)
+            val sliceResult = reviewPersistenceAdapter.readAllByRestaurantId(
+                restaurant.id,
+                false,
+                ReadReviewSortCondition.HIGH_RATING,
+                0,
+                1,
+            )
 
             Then("리뷰가 조회된다") {
                 sliceResult.contents.size shouldBe 1

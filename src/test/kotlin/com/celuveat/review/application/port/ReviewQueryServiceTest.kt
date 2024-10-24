@@ -1,6 +1,7 @@
 package com.celuveat.review.application.port
 
 import com.celuveat.common.application.port.`in`.result.SliceResult
+import com.celuveat.review.adapter.`in`.rest.request.ReadReviewSortCondition.HIGH_RATING
 import com.celuveat.review.application.ReviewQueryService
 import com.celuveat.review.application.port.out.ReadHelpfulReviewPort
 import com.celuveat.review.application.port.out.ReadReviewPort
@@ -80,7 +81,7 @@ class ReviewQueryServiceTest : BehaviorSpec({
             .sample()
         val reviewResults = SliceResult.of(reviews, page, false)
         When("회원이 음식점의 리뷰를 조회하면") {
-            every { readReviewPort.readAllByRestaurantId(restaurantId, page, size) } returns reviewResults
+            every { readReviewPort.readAllByRestaurantId(restaurantId, false, HIGH_RATING, page, size) } returns reviewResults
             every {
                 readHelpfulReviewPort.readHelpfulReviewByMemberAndReviews(
                     memberId,
@@ -88,7 +89,7 @@ class ReviewQueryServiceTest : BehaviorSpec({
                 )
             } returns listOf(helpFulReview)
 
-            val result = reviewQueryService.readAll(memberId, restaurantId, page, size)
+            val result = reviewQueryService.readAll(memberId, false, restaurantId, HIGH_RATING, page, size)
             Then("리뷰 목록의 도움돼요 클릭 여부가 반환 된다.") {
                 result.contents.size shouldBe reviewResults.contents.size
                 result.contents.filter { it.clickedHelpful }.size shouldBe 1
@@ -96,9 +97,9 @@ class ReviewQueryServiceTest : BehaviorSpec({
         }
 
         When("비회원이 음식점의 리뷰를 조회하면") {
-            every { readReviewPort.readAllByRestaurantId(restaurantId, page, size) } returns reviewResults
+            every { readReviewPort.readAllByRestaurantId(restaurantId, false, HIGH_RATING, page, size) } returns reviewResults
 
-            val result = reviewQueryService.readAll(null, restaurantId, page, size)
+            val result = reviewQueryService.readAll(null, false, restaurantId, HIGH_RATING, page, size)
             Then("리뷰 목록의 도움돼요 클릭 여부는 false로 반환 된다.") {
                 result.contents.size shouldBe reviewResults.contents.size
                 result.contents.filter { it.clickedHelpful }.size shouldBe 0

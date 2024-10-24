@@ -39,6 +39,7 @@ class ReviewPersistenceMapper(
             star = review.star.score,
             views = review.views,
             helps = review.helps,
+            hasPhoto = review.images.isNotEmpty(),
             createdAt = review.createdAt,
             updatedAt = review.updatedAt,
         )

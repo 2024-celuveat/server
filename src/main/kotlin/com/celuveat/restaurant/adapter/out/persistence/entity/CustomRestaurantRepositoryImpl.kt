@@ -30,7 +30,7 @@ class CustomRestaurantRepositoryImpl(
                 entity(CelebrityRestaurantJpaEntity::class),
                 fetchJoin(RestaurantJpaEntity::class).on(
                     path(CelebrityRestaurantJpaEntity::restaurant)(RestaurantJpaEntity::id).eq(
-                        path(RestaurantJpaEntity::id)
+                        path(RestaurantJpaEntity::id),
                     ),
                 ),
             ).whereAnd(
