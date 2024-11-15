@@ -16,6 +16,7 @@ import io.kotest.core.test.TestResult
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.unmockkAll
+import jakarta.servlet.http.Cookie
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.test.web.servlet.MockMvc
@@ -108,7 +109,7 @@ class SocialLoginControllerTest(
 
             mockMvc.delete("/social-login/withdraw", socialLoginType) {
                 header("Origin", requestOrigin)
-                header("Authorization", "Bearer $accessToken")
+                cookie(Cookie("accessToken", "$accessToken"))
             }.andExpect {
                 status { isNoContent() }
             }

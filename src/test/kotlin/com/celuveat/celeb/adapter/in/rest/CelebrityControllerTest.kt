@@ -24,6 +24,7 @@ import com.navercorp.fixturemonkey.kotlin.giveMeBuilder
 import com.ninjasquad.springmockk.MockkBean
 import io.kotest.core.spec.style.FunSpec
 import io.mockk.every
+import jakarta.servlet.http.Cookie
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.test.web.servlet.MockMvc
@@ -55,7 +56,7 @@ class CelebrityControllerTest(
             every { readInterestedCelebritiesUseCase.getInterestedCelebrities(memberId) } returns results
 
             mockMvc.get("/celebrities/interested") {
-                header("Authorization", "Bearer $accessToken")
+                cookie(Cookie("accessToken", "$accessToken"))
             }.andExpect {
                 status { isOk() }
                 content { json(mapper.writeValueAsString(results)) }
@@ -76,7 +77,7 @@ class CelebrityControllerTest(
             every { addInterestedCelebrityUseCase.addInterestedCelebrity(command) } returns Unit
 
             mockMvc.post("/celebrities/interested/{celebrityId}", celebrityId) {
-                header("Authorization", "Bearer $accessToken")
+                cookie(Cookie("accessToken", "$accessToken"))
             }.andExpect {
                 status { isOk() }
             }.andDo {
@@ -96,7 +97,7 @@ class CelebrityControllerTest(
             every { deleteInterestedCelebrityUseCase.deleteInterestedCelebrity(command) } returns Unit
 
             mockMvc.delete("/celebrities/interested/{celebrityId}", celebrityId) {
-                header("Authorization", "Bearer $accessToken")
+                cookie(Cookie("accessToken", "$accessToken"))
             }.andExpect {
                 status { isOk() }
             }.andDo {
@@ -134,7 +135,7 @@ class CelebrityControllerTest(
             every { readCelebrityUseCase.readCelebrity(query) } returns result
 
             mockMvc.get("/celebrities/{celebrityId}", celebrityId) {
-                header("Authorization", "Bearer $accessToken")
+                cookie(Cookie("accessToken", "$accessToken"))
             }.andExpect {
                 status { isOk() }
                 content { json(mapper.writeValueAsString(CelebrityWithInterestedResponse.from(result))) }

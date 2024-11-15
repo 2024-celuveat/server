@@ -4,11 +4,13 @@ import com.celuveat.auth.adapter.`in`.rest.Auth
 import com.celuveat.auth.adapter.`in`.rest.AuthContext
 import com.celuveat.member.adapter.`in`.rest.response.LoginResponse
 import com.celuveat.member.domain.SocialLoginType
+import io.swagger.v3.oas.annotations.Hidden
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.enums.ParameterIn
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -41,6 +43,7 @@ interface SocialLoginApi {
             example = "http://localhost:3000",
         )
         @RequestHeader(HttpHeaders.ORIGIN) requestOrigin: String,
+        response: HttpServletResponse,
     ): LoginResponse
 
     @Operation(summary = "소셜 로그인을 위한 Url 로 redirect")

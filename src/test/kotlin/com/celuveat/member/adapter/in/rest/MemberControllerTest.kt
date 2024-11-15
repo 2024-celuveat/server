@@ -19,6 +19,7 @@ import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.unmockkAll
+import jakarta.servlet.http.Cookie
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.MediaType
@@ -47,7 +48,7 @@ class MemberControllerTest(
             every { extractMemberIdUseCase.extract(accessToken) } returns memberId
 
             mockMvc.get("/members/profile") {
-                header("Authorization", "Bearer $accessToken")
+                cookie(Cookie("accessToken", "$accessToken"))
             }.andExpect {
                 status { isOk() }
                 content { json(mapper.writeValueAsString(response)) }
@@ -80,7 +81,7 @@ class MemberControllerTest(
             every { extractMemberIdUseCase.extract(accessToken) } returns memberId
 
             mockMvc.patch("/members/profile") {
-                header("Authorization", "Bearer $accessToken")
+                cookie(Cookie("accessToken", "$accessToken"))
                 contentType = MediaType.APPLICATION_JSON
                 content = mapper.writeValueAsString(request)
             }.andExpect {

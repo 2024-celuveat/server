@@ -1,6 +1,7 @@
 package com.celuveat.auth.adapter.`in`.rest
 
 import com.celuveat.auth.application.port.`in`.ExtractMemberIdUseCase
+import com.celuveat.common.adapter.`in`.rest.getAccessTokenFromCookie
 import com.celuveat.common.adapter.`in`.rest.getTokenAuthorizationOrNull
 import com.celuveat.common.adapter.`in`.rest.toHttpServletRequest
 import org.springframework.core.MethodParameter
@@ -26,7 +27,7 @@ class AuthContextArgumentResolver(
         binderFactory: WebDataBinderFactory?,
     ): Any? {
         val httpServletRequest = webRequest.toHttpServletRequest()
-        return httpServletRequest.getTokenAuthorizationOrNull()
+        return httpServletRequest.getAccessTokenFromCookie()
             ?.let { AuthContext(extractMemberIdUseCase.extract(it)) }
             ?: AuthContext.guest()
     }
