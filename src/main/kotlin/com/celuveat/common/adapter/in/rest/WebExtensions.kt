@@ -14,3 +14,7 @@ inline fun NativeWebRequest.toHttpServletRequest(
 fun HttpServletRequest.getTokenAuthorizationOrNull(): String? {
     return this.getHeader("Authorization")?.removePrefix(TOKEN_AUTHORIZATION_SCHEME) ?: return null
 }
+
+fun HttpServletRequest.getAccessTokenFromCookie(): String? {
+    return this.cookies?.firstOrNull { it.name == "accessToken" }?.value
+}

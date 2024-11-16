@@ -43,6 +43,7 @@ import io.kotest.core.test.TestResult
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.unmockkAll
+import jakarta.servlet.http.Cookie
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.test.web.servlet.MockMvc
@@ -90,7 +91,7 @@ class RestaurantControllerTest(
             every { readInterestedRestaurantsUseCase.readInterestedRestaurant(query) } returns results
 
             mockMvc.get("/restaurants/interested") {
-                header("Authorization", "Bearer $accessToken")
+                cookie(Cookie("accessToken", "$accessToken"))
                 param("page", page.toString())
                 param("size", "3")
             }.andExpect {
@@ -114,7 +115,7 @@ class RestaurantControllerTest(
             every { addInterestedRestaurantsUseCase.addInterestedRestaurant(command) } returns Unit
 
             mockMvc.post("/restaurants/interested/{restaurantId}", restaurantId) {
-                header("Authorization", "Bearer $accessToken")
+                cookie(Cookie("accessToken", "$accessToken"))
             }.andExpect {
                 status { isOk() }
             }.andDo {
@@ -135,7 +136,7 @@ class RestaurantControllerTest(
             every { deleteInterestedRestaurantsUseCase.deleteInterestedRestaurant(command) } returns Unit
 
             mockMvc.delete("/restaurants/interested/{restaurantId}", restaurantId) {
-                header("Authorization", "Bearer $accessToken")
+                cookie(Cookie("accessToken", "$accessToken"))
             }.andExpect {
                 status { isOk() }
             }.andDo {
@@ -164,7 +165,7 @@ class RestaurantControllerTest(
             every { readCelebrityVisitedRestaurantUseCase.readCelebrityVisitedRestaurant(query) } returns results
 
             mockMvc.get("/restaurants/celebrity/$celebrityId") {
-                header("Authorization", "Bearer $accessToken")
+                cookie(Cookie("accessToken", "$accessToken"))
                 param("page", page.toString())
                 param("size", "3")
             }.andExpect {
@@ -211,7 +212,7 @@ class RestaurantControllerTest(
             every { readCelebrityRecommendRestaurantsUseCase.readCelebrityRecommendRestaurants(any()) } returns results
 
             mockMvc.get("/restaurants/celebrity/recommend") {
-                header("Authorization", "Bearer $accessToken")
+                cookie(Cookie("accessToken", "$accessToken"))
             }.andExpect {
                 status { isOk() }
                 content { json(mapper.writeValueAsString(response)) }
@@ -268,7 +269,7 @@ class RestaurantControllerTest(
 
             val response = SliceResponse.from(sliceResult, RestaurantPreviewResponse::from)
             mockMvc.get("/restaurants") {
-                header("Authorization", "Bearer $accessToken")
+                cookie(Cookie("accessToken", "$accessToken"))
                 param("category", category)
                 param("region", region)
                 param("page", page.toString())
@@ -313,7 +314,7 @@ class RestaurantControllerTest(
 
             val response = SliceResponse.from(sliceResult, RestaurantPreviewResponse::from)
             mockMvc.get("/restaurants") {
-                header("Authorization", "Bearer $accessToken")
+                cookie(Cookie("accessToken", "$accessToken"))
                 param("category", category)
                 param("region", region)
                 param("lowLongitude", "127.0")
@@ -356,7 +357,7 @@ class RestaurantControllerTest(
 
             val response = SliceResponse.from(sliceResult, RestaurantPreviewResponse::from)
             mockMvc.get("/restaurants/weekly") {
-                header("Authorization", "Bearer $accessToken")
+                cookie(Cookie("accessToken", "$accessToken"))
                 param("page", page.toString())
                 param("size", size.toString())
             }.andExpect {
@@ -382,7 +383,7 @@ class RestaurantControllerTest(
             every { readNearbyRestaurantsUseCase.readNearbyRestaurants(query) } returns results
 
             mockMvc.get("/restaurants/nearby/{restaurantId}", 1L) {
-                header("Authorization", "Bearer $accessToken")
+                cookie(Cookie("accessToken", "$accessToken"))
             }.andExpect {
                 status { isOk() }
                 content { json(mapper.writeValueAsString(response)) }
@@ -407,7 +408,7 @@ class RestaurantControllerTest(
             every { readRestaurantDetailUseCase.readRestaurantDetail(query) } returns results
 
             mockMvc.get("/restaurants/{restaurantId}", restaurantId) {
-                header("Authorization", "Bearer $accessToken")
+                cookie(Cookie("accessToken", "$accessToken"))
             }.andExpect {
                 status { isOk() }
                 content { json(mapper.writeValueAsString(response)) }
@@ -429,7 +430,7 @@ class RestaurantControllerTest(
             every { extractMemberIdUseCase.extract(accessToken) } returns memberId
 
             mockMvc.get("/restaurants/popular") {
-                header("Authorization", "Bearer $accessToken")
+                cookie(Cookie("accessToken", "$accessToken"))
             }.andExpect {
                 status { isOk() }
                 content { json(mapper.writeValueAsString(response)) }
