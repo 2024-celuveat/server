@@ -4,7 +4,6 @@ import com.celuveat.auth.adapter.`in`.rest.Auth
 import com.celuveat.auth.adapter.`in`.rest.AuthContext
 import com.celuveat.member.adapter.`in`.rest.response.LoginResponse
 import com.celuveat.member.domain.SocialLoginType
-import io.swagger.v3.oas.annotations.Hidden
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.enums.ParameterIn
@@ -44,7 +43,7 @@ interface SocialLoginApi {
         )
         @RequestHeader(HttpHeaders.ORIGIN) requestOrigin: String,
         response: HttpServletResponse,
-    ): LoginResponse
+    ): ResponseEntity<LoginResponse>
 
     @Operation(summary = "소셜 로그인을 위한 Url 로 redirect")
     @GetMapping("/url/{socialLoginType}")

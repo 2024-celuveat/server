@@ -11,9 +11,10 @@ import com.celuveat.member.application.port.`in`.WithdrawSocialLoginUseCase
 import com.celuveat.member.application.port.`in`.command.SocialLoginCommand
 import com.celuveat.member.application.port.`in`.command.WithdrawSocialLoginCommand
 import com.celuveat.member.domain.SocialLoginType
-import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletResponse
+import java.net.URI
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -37,7 +38,7 @@ class SocialLoginController(
         @RequestParam authCode: String,
         @RequestHeader(HttpHeaders.ORIGIN) requestOrigin: String,
         response: HttpServletResponse,
-    ): LoginResponse {
+    ): ResponseEntity<LoginResponse> {
         val command = SocialLoginCommand(socialLoginType, authCode, requestOrigin)
         val memberId = socialLoginUseCase.login(command)
         val token = createAccessTokenUseCase.create(memberId)
@@ -45,7 +46,9 @@ class SocialLoginController(
             name = "accessToken",
             value = token.token,
         )
-        return LoginResponse.from(token)
+        return ResponseEntity.status(HttpStatus.FOUND)
+            .location(URI.create(requestOrigin))
+            .build()
     }
 
     @GetMapping("/url/{socialLoginType}")
