@@ -44,6 +44,7 @@ class SocialLoginController(
         response.addSecureCookie(
             name = "accessToken",
             value = token.token,
+            sameSite = "None"
         )
         return ResponseEntity.status(HttpStatus.OK)
             .build()
