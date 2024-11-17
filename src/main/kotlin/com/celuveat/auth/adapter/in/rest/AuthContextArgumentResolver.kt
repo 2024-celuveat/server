@@ -2,7 +2,6 @@ package com.celuveat.auth.adapter.`in`.rest
 
 import com.celuveat.auth.application.port.`in`.ExtractMemberIdUseCase
 import com.celuveat.common.adapter.`in`.rest.getAccessTokenFromCookie
-import com.celuveat.common.adapter.`in`.rest.getTokenAuthorizationOrNull
 import com.celuveat.common.adapter.`in`.rest.toHttpServletRequest
 import org.springframework.core.MethodParameter
 import org.springframework.stereotype.Component

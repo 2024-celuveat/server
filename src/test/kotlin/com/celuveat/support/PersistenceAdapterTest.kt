@@ -18,7 +18,8 @@ import org.springframework.context.annotation.Import
     useDefaultFilters = false,
     includeFilters = [
         ComponentScan.Filter(type = FilterType.ANNOTATION, classes = [Adapter::class, Mapper::class]),
-        ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = [EnablePropertiesConfiguration::class])],
+        ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = [EnablePropertiesConfiguration::class]),
+    ],
     excludeFilters = [ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = [TokenAdapter::class])],
 )
 @Import(JpaConfig::class, KotlinJdslAutoConfiguration::class, JdslConfig::class)
