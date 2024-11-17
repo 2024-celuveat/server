@@ -46,8 +46,7 @@ class SocialLoginController(
             name = "accessToken",
             value = token.token,
         )
-        return ResponseEntity.status(HttpStatus.FOUND)
-            .location(URI.create(requestOrigin))
+        return ResponseEntity.status(HttpStatus.OK)
             .build()
     }
 

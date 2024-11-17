@@ -49,7 +49,7 @@ class SocialLoginControllerTest(
                 param("authCode", authCode)
                 header("Origin", requestOrigin)
             }.andExpect {
-                status { isFound() }
+                status { isOk() }
                 header { string("Location", requestOrigin) }
                 cookie { exists("accessToken") }
             }.andDo {
