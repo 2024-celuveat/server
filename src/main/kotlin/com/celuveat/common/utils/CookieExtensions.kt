@@ -9,7 +9,7 @@ inline fun HttpServletResponse.addSecureCookie(
     path: String = "/",
     maxAge: Int = -1,
     isHttpOnly: Boolean = true,
-    isSecure: Boolean = true
+    isSecure: Boolean = true,
 ) {
     val cookie = Cookie(name, value).apply {
         this.isHttpOnly = isHttpOnly

@@ -12,7 +12,6 @@ import com.celuveat.member.application.port.`in`.command.SocialLoginCommand
 import com.celuveat.member.application.port.`in`.command.WithdrawSocialLoginCommand
 import com.celuveat.member.domain.SocialLoginType
 import jakarta.servlet.http.HttpServletResponse
-import java.net.URI
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
