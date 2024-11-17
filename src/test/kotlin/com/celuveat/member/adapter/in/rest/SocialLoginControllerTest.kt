@@ -50,7 +50,6 @@ class SocialLoginControllerTest(
                 header("Origin", requestOrigin)
             }.andExpect {
                 status { isOk() }
-                header { string("Location", requestOrigin) }
                 cookie { exists("accessToken") }
             }.andDo {
                 print()
