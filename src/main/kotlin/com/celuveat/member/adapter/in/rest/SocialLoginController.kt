@@ -4,6 +4,7 @@ import com.celuveat.auth.adapter.`in`.rest.Auth
 import com.celuveat.auth.adapter.`in`.rest.AuthContext
 import com.celuveat.auth.application.port.`in`.CreateAccessTokenUseCase
 import com.celuveat.common.utils.addSecureCookie
+import com.celuveat.common.utils.expireCookie
 import com.celuveat.member.adapter.`in`.rest.response.LoginResponse
 import com.celuveat.member.application.port.`in`.ReadSocialLoginUrlUseCase
 import com.celuveat.member.application.port.`in`.SocialLoginUseCase
@@ -44,7 +45,7 @@ class SocialLoginController(
         response.addSecureCookie(
             name = "accessToken",
             value = token.token,
-            sameSite = "None"
+            sameSite = "None",
         )
         return ResponseEntity.status(HttpStatus.OK)
             .build()
@@ -57,6 +58,17 @@ class SocialLoginController(
     ): String {
         val socialLoginUrl = readSocialLoginUrlUseCase.getSocialLoginUrl(socialLoginType, requestOrigin)
         return socialLoginUrl
+    }
+
+    @GetMapping("/logout")
+    override fun logout(
+        @Auth auth: AuthContext,
+        response: HttpServletResponse,
+    ) {
+        response.expireCookie(
+            name = "accessToken",
+            sameSite = "None",
+        )
     }
 
     @DeleteMapping("/withdraw")

@@ -10,9 +10,8 @@ inline fun HttpServletResponse.addSecureCookie(
     maxAge: Long = -1,
     isHttpOnly: Boolean = true,
     isSecure: Boolean = true,
-    sameSite: String = "Lex",
+    sameSite: String = "Lax",
 ) {
-
     val cookie = ResponseCookie.from(name, value)
         .path(path)
         .sameSite(sameSite)
@@ -22,4 +21,22 @@ inline fun HttpServletResponse.addSecureCookie(
         .build()
 
     this.addHeader("Set-Cookie", cookie.toString())
+}
+
+inline fun HttpServletResponse.expireCookie(
+    name: String,
+    path: String = "/",
+    isHttpOnly: Boolean = true,
+    isSecure: Boolean = true,
+    sameSite: String = "Lax",
+) {
+    val expiredCookie = ResponseCookie.from(name, "")
+        .path(path)
+        .sameSite(sameSite)
+        .httpOnly(isHttpOnly)
+        .secure(isSecure)
+        .maxAge(0) // 즉시 만료
+        .build()
+
+    this.addHeader("Set-Cookie", expiredCookie.toString())
 }
