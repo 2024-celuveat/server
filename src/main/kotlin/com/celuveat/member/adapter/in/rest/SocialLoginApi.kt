@@ -63,6 +63,13 @@ interface SocialLoginApi {
         @RequestHeader(HttpHeaders.ORIGIN) requestOrigin: String,
     ): String
 
+    @Operation(summary = "로그아웃")
+    @GetMapping("/logout")
+    fun logout(
+        @Auth auth: AuthContext,
+        response: HttpServletResponse,
+    )
+
     @SecurityRequirement(name = "JWT")
     @Operation(summary = "소셜 회원 탈퇴")
     @DeleteMapping("/withdraw")
