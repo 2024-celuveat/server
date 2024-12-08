@@ -19,6 +19,7 @@ class RestaurantImageJpaEntity(
     val id: Long = 0,
     val name: String,
     val author: String,
+    val sourceLink: String? = null,
     val url: String,
     val isThumbnail: Boolean,
     @ManyToOne(fetch = FetchType.LAZY)

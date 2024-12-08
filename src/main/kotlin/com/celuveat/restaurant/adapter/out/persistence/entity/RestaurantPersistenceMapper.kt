@@ -28,6 +28,7 @@ class RestaurantPersistenceMapper {
                     author = imageJpaEntity.author,
                     url = imageJpaEntity.url,
                     isThumbnail = imageJpaEntity.isThumbnail,
+                    sourceLink = imageJpaEntity.sourceLink,
                 )
             },
             reviewCount = restaurant.reviewCount,
