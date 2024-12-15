@@ -60,6 +60,7 @@ class GoogleSocialLoginClient(
             .queryParam("client_id", googleSocialLoginProperty.clientId)
             .queryParam("redirect_uri", toRedirectUrl(requestOrigin))
             .queryParam("response_type", "code")
+            .queryParam("access_type", "offline") // for refresh token
             .queryParam("scope", googleSocialLoginProperty.scope.joinToString(" "))
             .build()
             .toUriString()

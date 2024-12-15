@@ -5,6 +5,7 @@ import com.celuveat.common.utils.throwWhen
 import com.celuveat.member.adapter.out.oauth.SocialLoginClient
 import com.celuveat.member.adapter.out.oauth.kakao.response.KakaoMemberInfoResponse
 import com.celuveat.member.adapter.out.oauth.kakao.response.KakaoSocialLoginToken
+import com.celuveat.member.adapter.out.oauth.kakao.response.KakaoTokenRefreshResponse
 import com.celuveat.member.domain.Member
 import com.celuveat.member.domain.SocialLoginType
 import com.celuveat.member.exception.NotAllowedRedirectUriException
@@ -75,7 +76,7 @@ class KakaoSocialLoginClient(
         kakaoApiClient.withdraw("Bearer ${socialLoginToken.accessToken}")
     }
 
-    private fun refreshToken(refreshToken: String): KakaoSocialLoginToken {
+    private fun refreshToken(refreshToken: String): KakaoTokenRefreshResponse {
         val tokenRequestBody = mapOf(
             "grant_type" to "refresh_token",
             "client_id" to kakaoSocialLoginProperty.clientId,

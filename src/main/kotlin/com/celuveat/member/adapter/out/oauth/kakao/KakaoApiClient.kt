@@ -2,6 +2,7 @@ package com.celuveat.member.adapter.out.oauth.kakao
 
 import com.celuveat.member.adapter.out.oauth.kakao.response.KakaoMemberInfoResponse
 import com.celuveat.member.adapter.out.oauth.kakao.response.KakaoSocialLoginToken
+import com.celuveat.member.adapter.out.oauth.kakao.response.KakaoTokenRefreshResponse
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE
 import org.springframework.web.bind.annotation.RequestHeader
@@ -26,7 +27,7 @@ interface KakaoApiClient {
     @PostExchange(url = "https://kauth.kakao.com/oauth/token", contentType = APPLICATION_FORM_URLENCODED_VALUE)
     fun refreshToken(
         @RequestParam body: Map<String, String>,
-    ): KakaoSocialLoginToken
+    ): KakaoTokenRefreshResponse
 
     // ref - https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api#unlink
     @PostExchange(url = "https://kapi.kakao.com/v1/user/unlink", contentType = APPLICATION_FORM_URLENCODED_VALUE)
