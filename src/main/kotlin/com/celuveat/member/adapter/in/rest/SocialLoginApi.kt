@@ -87,5 +87,6 @@ interface SocialLoginApi {
             example = "http://localhost:3000",
         )
         @RequestHeader(HttpHeaders.ORIGIN) requestOrigin: String,
+        response: HttpServletResponse,
     ): ResponseEntity<Unit>
 }

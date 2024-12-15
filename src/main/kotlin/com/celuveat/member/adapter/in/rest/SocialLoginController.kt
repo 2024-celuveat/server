@@ -75,10 +75,15 @@ class SocialLoginController(
     override fun withdraw(
         @Auth auth: AuthContext,
         @RequestHeader(HttpHeaders.ORIGIN) requestOrigin: String,
+        response: HttpServletResponse,
     ): ResponseEntity<Unit> {
         val memberId = auth.memberId()
         val command = WithdrawSocialLoginCommand(memberId, requestOrigin)
         withdrawSocialLoginUseCase.withdraw(command)
+        response.expireCookie(
+            name = "accessToken",
+            sameSite = "None",
+        )
         return ResponseEntity.noContent().build()
     }
 }
