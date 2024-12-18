@@ -13,10 +13,10 @@ import com.celuveat.restaurant.adapter.out.persistence.entity.RestaurantPersiste
 import com.celuveat.restaurant.application.port.out.ReadRestaurantPort
 import com.celuveat.restaurant.application.port.out.SaveRestaurantPort
 import com.celuveat.restaurant.domain.Restaurant
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Sort
 import java.time.LocalDate
 import java.time.LocalTime
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 
 @Adapter
 class RestaurantPersistenceAdapter(
@@ -44,7 +44,7 @@ class RestaurantPersistenceAdapter(
             contents = restaurantSlice.content.map {
                 restaurantPersistenceMapper.toDomain(
                     it,
-                    imagesByRestaurants[it.id]!!,
+                    imagesByRestaurants[it.id] ?: emptyList(),
                 )
             },
             currentPage = page,
@@ -73,7 +73,7 @@ class RestaurantPersistenceAdapter(
         return restaurants.map {
             restaurantPersistenceMapper.toDomain(
                 it,
-                imagesByRestaurants[it.id]!!,
+                imagesByRestaurants[it.id] ?: emptyList(),
             )
         }
     }
@@ -156,7 +156,7 @@ class RestaurantPersistenceAdapter(
             contents = restaurants.content.map {
                 restaurantPersistenceMapper.toDomain(
                     it,
-                    imagesByRestaurants[it.id]!!,
+                    imagesByRestaurants[it.id] ?: emptyList(),
                 )
             },
             currentPage = page,
@@ -185,7 +185,7 @@ class RestaurantPersistenceAdapter(
         return restaurants.map {
             restaurantPersistenceMapper.toDomain(
                 it,
-                imagesByRestaurants[it.id]!!,
+                imagesByRestaurants[it.id] ?: emptyList(),
             )
         }
     }
@@ -203,7 +203,7 @@ class RestaurantPersistenceAdapter(
         return restaurants.map {
             restaurantPersistenceMapper.toDomain(
                 it,
-                imagesByRestaurants[it.id]!!,
+                imagesByRestaurants[it.id] ?: emptyList(),
             )
         }
     }

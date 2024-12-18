@@ -40,7 +40,7 @@ class InterestedRestaurantPersistenceAdapter(
             contents = interests.content.map {
                 interestedRestaurantPersistenceMapper.toDomain(
                     it,
-                    imagesByRestaurants[it.restaurant.id]!!,
+                    imagesByRestaurants[it.id] ?: emptyList(),
                 )
             },
             currentPage = page,
